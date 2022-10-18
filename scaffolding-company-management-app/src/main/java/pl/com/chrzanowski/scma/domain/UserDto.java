@@ -1,85 +1,44 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.domain;
 
+import pl.com.chrzanowski.scma.model.Authority;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class UserDto {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "login", nullable = false, unique = true)
+    @NotEmpty(message = "Email should not be empty")
     private String login;
-
-    @Column(name = "first_name")
     private String firstName;
-
-    @Column(name = "second_name")
     private String secondName;
-
-    @Column(name = "password_hash",nullable = false)
+    @NotEmpty(message = "Password should not be empty")
     private String passwordHash;
-
-    @Column(name = "LANGUAGE")
     private String language;
-
-    @Column(name = "regulation_accepted")
     private Boolean regulationAccepted;
-
-    @Column(name = "newsletter_accepted")
     private Boolean newsletterAccepted;
-
-    @Column(name = "is_enabled")
     private Boolean isEnabled;
-
-    @Column(name = "email_confirmed")
     private Boolean isEmailConfirmed;
-
-    @Column(name = "registration_datetime")
-    private LocalDateTime registrationDateTime;
-
-    @Column(name = "registration_ip")
+    private LocalDateTime registrationDate;
     private String registrationIp;
-
-    @Column(name = "registration_user_agent")
     private String registrationUserAgent;
-
-    @Column(name = "delete_datetime")
     private LocalDateTime deleteDateTime;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authorities",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities = new ArrayList<>();
-
-    public User() {
-    }
-
-    public User(Long id,
-                String login,
-                String firstName,
-                String secondName,
-                String passwordHash,
-                String language,
-                Boolean regulationAccepted,
-                Boolean newsletterAccepted,
-                Boolean isEnabled,
-                Boolean isEmailConfirmed,
-                LocalDateTime registrationDateTime,
-                String registrationIp,
-                String registrationUserAgent,
-                LocalDateTime deleteDateTime,
-                List<Authority> authorities) {
+    public UserDto(Long id,
+                   String login,
+                   String firstName,
+                   String secondName,
+                   String passwordHash,
+                   String language,
+                   Boolean regulationAccepted,
+                   Boolean newsletterAccepted,
+                   Boolean isEnabled,
+                   Boolean isEmailConfirmed,
+                   LocalDateTime registrationDate,
+                   String registrationIp,
+                   String registrationUserAgent,
+                   LocalDateTime deleteDateTime) {
         this.id = id;
         this.login = login;
         this.firstName = firstName;
@@ -90,13 +49,14 @@ public class User {
         this.newsletterAccepted = newsletterAccepted;
         this.isEnabled = isEnabled;
         this.isEmailConfirmed = isEmailConfirmed;
-        this.registrationDateTime = registrationDateTime;
+        this.registrationDate = registrationDate;
         this.registrationIp = registrationIp;
         this.registrationUserAgent = registrationUserAgent;
         this.deleteDateTime = deleteDateTime;
-        this.authorities = authorities;
     }
 
+    public UserDto() {
+    }
 
     public Long getId() {
         return id;
@@ -178,12 +138,12 @@ public class User {
         isEmailConfirmed = emailConfirmed;
     }
 
-    public LocalDateTime getRegistrationDateTime() {
-        return registrationDateTime;
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setRegistrationDateTime(LocalDateTime registrationDateTime) {
-        this.registrationDateTime = registrationDateTime;
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public String getRegistrationIp() {
@@ -210,11 +170,4 @@ public class User {
         this.deleteDateTime = deleteDateTime;
     }
 
-    public List<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
 }

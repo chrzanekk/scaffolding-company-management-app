@@ -3,6 +3,8 @@ package pl.com.chrzanowski.scma.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name= "authorities")
@@ -14,7 +16,7 @@ public class Authority {
     private Long id;
 
     @Column(name = "authority")
-    private String authority;
+    private String name;
 
     @Column(name = "create_date")
     private LocalDateTime createDateTime;
@@ -24,6 +26,9 @@ public class Authority {
 
     @Column(name = "remove_date")
     private LocalDateTime removeDateTime;
+
+    @ManyToMany(mappedBy = "authorities")
+    private List<User> users = new ArrayList<>();
 
     public Authority() {
     }
@@ -36,12 +41,12 @@ public class Authority {
         this.id = id;
     }
 
-    public String getAuthority() {
-        return authority;
+    public String getName() {
+        return name;
     }
 
-    public void setAuthority(String authority) {
-        this.authority = authority;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDateTime getCreateDateTime() {
