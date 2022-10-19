@@ -13,7 +13,6 @@ import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.security.AuthoritiesTypes;
 import pl.com.chrzanowski.scma.service.UserService;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,8 @@ public class UserServiceImpl implements UserService {
     public void saveUser(UserDto userDto) {
 
         Authority authority = authorityRepository.findByName(AuthoritiesTypes.ADMIN);
-        if(authority==null) {
-            authority = checkRoleExist();
+        if (authority == null) {
+            authority = checkAuthorityExist();
         }
         User user = UserBuilder.anUser()
                 .withLogin(userDto.getLogin())
@@ -87,7 +86,9 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private Authority checkRoleExist() {
-        return null;
+    private Authority checkAuthorityExist() {
+        Authority authority = new Authority();
+        authority.setName(AuthoritiesTypes.ADMIN);
+        return authorityRepository.save(authority);
     }
 }
