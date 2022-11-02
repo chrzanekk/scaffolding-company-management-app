@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.service.impl;
 
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.UserDto;
@@ -14,20 +15,16 @@ import pl.com.chrzanowski.scma.security.AuthoritiesTypes;
 import pl.com.chrzanowski.scma.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private AuthorityRepository authorityRepository;
-    private PasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -38,15 +35,15 @@ public class UserServiceImpl implements UserService {
             authority = checkAuthorityExist();
         }
         User user = UserBuilder.anUser()
-                .withLogin(userDto.getLogin())
+                .withEmail(userDto.getEmail())
                 .withFirstName(userDto.getFirstName())
                 .withSecondName(userDto.getSecondName())
                 .withPasswordHash(passwordEncoder.encode(userDto.getPasswordHash()))
                 .withLanguage(userDto.getLanguage())
                 .withRegulationAccepted(userDto.getRegulationAccepted())
                 .withNewsletterAccepted(userDto.getNewsletterAccepted())
-                .withIsEnabled(userDto.getEnabled())
-                .withIsEmailConfirmed(userDto.getEmailConfirmed())
+                .withIsEnabled(userDto.getIsEnabled())
+                .withIsEmailConfirmed(userDto.getIsEmailConfirmed())
                 .withRegistrationDateTime(userDto.getRegistrationDate())
                 .withRegistrationIp(userDto.getRegistrationIp())
                 .withRegistrationUserAgent(userDto.getRegistrationUserAgent())
@@ -58,8 +55,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -72,14 +69,14 @@ public class UserServiceImpl implements UserService {
 
     private UserDto mapToUserDto(User user) {
         return UserDtoBuilder.anUserDto()
-                .withLogin(user.getLogin())
+                .withEmail(user.getEmail())
                 .withFirstName(user.getFirstName())
                 .withSecondName(user.getSecondName())
                 .withLanguage(user.getLanguage())
                 .withRegulationAccepted(user.getRegulationAccepted())
                 .withNewsletterAccepted(user.getNewsletterAccepted())
-                .withIsEnabled(user.getEnabled())
-                .withIsEmailConfirmed(user.getEmailConfirmed())
+                .withIsEnabled(user.getIsEnabled())
+                .withIsEmailConfirmed(user.getIsEmailConfirmed())
                 .withRegistrationDate(user.getRegistrationDateTime())
                 .withRegistrationIp(user.getRegistrationIp())
                 .withRegistrationUserAgent(user.getRegistrationUserAgent())

@@ -1,12 +1,21 @@
 package pl.com.chrzanowski.scma.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name= "authorities")
 public class Authority {
 
@@ -30,46 +39,5 @@ public class Authority {
     @ManyToMany(mappedBy = "authorities")
     private List<User> users = new ArrayList<>();
 
-    public Authority() {
-    }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public void setCreateDateTime(LocalDateTime createDateTime) {
-        this.createDateTime = createDateTime;
-    }
-
-    public LocalDateTime getModifyDateTime() {
-        return modifyDateTime;
-    }
-
-    public void setModifyDateTime(LocalDateTime modifyDateTime) {
-        this.modifyDateTime = modifyDateTime;
-    }
-
-    public LocalDateTime getRemoveDateTime() {
-        return removeDateTime;
-    }
-
-    public void setRemoveDateTime(LocalDateTime removeDateTime) {
-        this.removeDateTime = removeDateTime;
-    }
 }

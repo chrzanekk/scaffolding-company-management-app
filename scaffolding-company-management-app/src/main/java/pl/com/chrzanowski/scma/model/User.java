@@ -1,24 +1,32 @@
 package pl.com.chrzanowski.scma.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login", nullable = false, unique = true)
-    private String login;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "first_name")
     private String firstName;
@@ -62,159 +70,33 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities = new ArrayList<>();
 
-    public User() {
+    @Override
+    public String getPassword() {
+        return null;
     }
 
-    public User(Long id,
-                String login,
-                String firstName,
-                String secondName,
-                String passwordHash,
-                String language,
-                Boolean regulationAccepted,
-                Boolean newsletterAccepted,
-                Boolean isEnabled,
-                Boolean isEmailConfirmed,
-                LocalDateTime registrationDateTime,
-                String registrationIp,
-                String registrationUserAgent,
-                LocalDateTime deleteDateTime,
-                List<Authority> authorities) {
-        this.id = id;
-        this.login = login;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.passwordHash = passwordHash;
-        this.language = language;
-        this.regulationAccepted = regulationAccepted;
-        this.newsletterAccepted = newsletterAccepted;
-        this.isEnabled = isEnabled;
-        this.isEmailConfirmed = isEmailConfirmed;
-        this.registrationDateTime = registrationDateTime;
-        this.registrationIp = registrationIp;
-        this.registrationUserAgent = registrationUserAgent;
-        this.deleteDateTime = deleteDateTime;
-        this.authorities = authorities;
+    @Override
+    public String getUsername() {
+        return null;
     }
 
-
-    public Long getId() {
-        return id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
     }
 
-    public String getLogin() {
-        return login;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public Boolean getRegulationAccepted() {
-        return regulationAccepted;
-    }
-
-    public void setRegulationAccepted(Boolean regulationAccepted) {
-        this.regulationAccepted = regulationAccepted;
-    }
-
-    public Boolean getNewsletterAccepted() {
-        return newsletterAccepted;
-    }
-
-    public void setNewsletterAccepted(Boolean newsletterAccepted) {
-        this.newsletterAccepted = newsletterAccepted;
-    }
-
-    public Boolean getEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public Boolean getEmailConfirmed() {
-        return isEmailConfirmed;
-    }
-
-    public void setEmailConfirmed(Boolean emailConfirmed) {
-        isEmailConfirmed = emailConfirmed;
-    }
-
-    public LocalDateTime getRegistrationDateTime() {
-        return registrationDateTime;
-    }
-
-    public void setRegistrationDateTime(LocalDateTime registrationDateTime) {
-        this.registrationDateTime = registrationDateTime;
-    }
-
-    public String getRegistrationIp() {
-        return registrationIp;
-    }
-
-    public void setRegistrationIp(String registrationIp) {
-        this.registrationIp = registrationIp;
-    }
-
-    public String getRegistrationUserAgent() {
-        return registrationUserAgent;
-    }
-
-    public void setRegistrationUserAgent(String registrationUserAgent) {
-        this.registrationUserAgent = registrationUserAgent;
-    }
-
-    public LocalDateTime getDeleteDateTime() {
-        return deleteDateTime;
-    }
-
-    public void setDeleteDateTime(LocalDateTime deleteDateTime) {
-        this.deleteDateTime = deleteDateTime;
-    }
-
-    public List<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }

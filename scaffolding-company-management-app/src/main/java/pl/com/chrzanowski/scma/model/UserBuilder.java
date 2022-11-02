@@ -2,11 +2,10 @@ package pl.com.chrzanowski.scma.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public final class UserBuilder {
     private Long id;
-    private String login;
+    private String email;
     private String firstName;
     private String secondName;
     private String passwordHash;
@@ -33,8 +32,8 @@ public final class UserBuilder {
         return this;
     }
 
-    public UserBuilder withLogin(String login) {
-        this.login = login;
+    public UserBuilder withEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -104,6 +103,6 @@ public final class UserBuilder {
     }
 
     public User build() {
-        return new User(id, login, firstName, secondName, passwordHash, language, regulationAccepted, newsletterAccepted, isEnabled, isEmailConfirmed, registrationDateTime, registrationIp, registrationUserAgent, deleteDateTime, authorities);
+        return new User(id, email, firstName, secondName, passwordHash, language, regulationAccepted, newsletterAccepted, isEnabled, isEmailConfirmed, registrationDateTime, registrationIp, registrationUserAgent, deleteDateTime, authorities);
     }
 }

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public final class UserDtoBuilder {
     private Long id;
-    private @NotEmpty(message = "Email should not be empty") String login;
+    private @NotEmpty(message = "Email should not be empty") String email;
     private String firstName;
     private String secondName;
     private @NotEmpty(message = "Password should not be empty") String passwordHash;
@@ -31,8 +31,8 @@ public final class UserDtoBuilder {
         return this;
     }
 
-    public UserDtoBuilder withLogin(String login) {
-        this.login = login;
+    public UserDtoBuilder withEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -97,6 +97,6 @@ public final class UserDtoBuilder {
     }
 
     public UserDto build() {
-        return new UserDto(id, login, firstName, secondName, passwordHash, language, regulationAccepted, newsletterAccepted, isEnabled, isEmailConfirmed, registrationDate, registrationIp, registrationUserAgent, deleteDateTime);
+        return new UserDto(id, email, firstName, secondName, passwordHash, language, regulationAccepted, newsletterAccepted, isEnabled, isEmailConfirmed, registrationDate, registrationIp, registrationUserAgent, deleteDateTime);
     }
 }
