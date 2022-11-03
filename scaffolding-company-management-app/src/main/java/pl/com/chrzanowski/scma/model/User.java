@@ -1,15 +1,15 @@
 package pl.com.chrzanowski.scma.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -17,6 +17,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -70,33 +71,63 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities = new ArrayList<>();
 
+    public User(String email,
+                String firstName,
+                String secondName,
+                String passwordHash,
+                String language,
+                Boolean regulationAccepted,
+                Boolean newsletterAccepted,
+                Boolean isEnabled,
+                Boolean isEmailConfirmed,
+                LocalDateTime registrationDateTime,
+                String registrationIp,
+                String registrationUserAgent,
+                LocalDateTime deleteDateTime,
+                List<Authority> authorities) {
+        this.email = email;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.passwordHash = passwordHash;
+        this.language = language;
+        this.regulationAccepted = regulationAccepted;
+        this.newsletterAccepted = newsletterAccepted;
+        this.isEnabled = isEnabled;
+        this.isEmailConfirmed = isEmailConfirmed;
+        this.registrationDateTime = registrationDateTime;
+        this.registrationIp = registrationIp;
+        this.registrationUserAgent = registrationUserAgent;
+        this.deleteDateTime = deleteDateTime;
+        this.authorities = authorities;
+    }
+
     @Override
     public String getPassword() {
-        return null;
+        return passwordHash;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isEnabled;
     }
 }

@@ -2,6 +2,9 @@ package pl.com.chrzanowski.scma.service.impl;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.UserDto;
@@ -15,17 +18,17 @@ import pl.com.chrzanowski.scma.security.AuthoritiesTypes;
 import pl.com.chrzanowski.scma.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
+
+    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     @Override
     public void saveUser(UserDto userDto) {
@@ -55,8 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
     @Override
@@ -87,5 +90,10 @@ public class UserServiceImpl implements UserService {
         Authority authority = new Authority();
         authority.setName(AuthoritiesTypes.ADMIN);
         return authorityRepository.save(authority);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 }

@@ -1,16 +1,16 @@
 package pl.com.chrzanowski.scma.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.com.chrzanowski.scma.domain.UserDto;
 import pl.com.chrzanowski.scma.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     void saveUser(UserDto userDto);
 
-    Optional<User> findUserByEmail(String email);
+    User findUserByEmail(String email);
 
     List<UserDto> findAllUsers();
 }
