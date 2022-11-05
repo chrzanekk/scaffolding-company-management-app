@@ -5,14 +5,12 @@ CREATE TABLE users(
 	password_hash VARCHAR(200) NOT NULL,
 	first_name VARCHAR(50) NOT NULL,
 	second_name VARCHAR(75) NOT NULL, LANGUAGE VARCHAR(20) NOT NULL,
-	regulation_accepted boolean,
-	newsletter_accepted boolean,
 	is_enabled boolean,
 	registration_datetime DATETIME DEFAULT NOW(),
-	registration_ip VARCHAR(200),
-	registration_user_agent VARCHAR(1000),
-	email_confirmed boolean NOT NULL,
-	delete_datetime DATETIME, PRIMARY KEY (id)
+	modified_datetime DATETIME,
+	delete_datetime DATETIME, PRIMARY KEY (id),
+	provider_user_id VARCHAR(255) NOT NULL UNIQUE,
+	provider VARCHAR(255) NOT NULL UNIQUE
 	);
 CREATE TABLE authorities(
 	id INT AUTO_INCREMENT,

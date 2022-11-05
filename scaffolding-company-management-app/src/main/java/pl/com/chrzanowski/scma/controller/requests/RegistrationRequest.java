@@ -13,17 +13,16 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 public class RegistrationRequest {
-    private final String email;
-    private final String firstName;
-    private final String secondName;
-    private final String passwordHash;
-//    private final String language;
-//    private final Boolean regulationAccepted;
-//    private final Boolean newsletterAccepted;
-//    private final Boolean isEnabled;
-//    private final Boolean isEmailConfirmed;
-//    private final LocalDateTime registrationDate;
-//    private final String registrationIp;
-//    private final String registrationUserAgent;
-//    private final LocalDateTime deleteDateTime;
+    private String providerUserId;
+    @NotEmpty(message = "Email should not be empty")
+    private String email;
+    private String firstName;
+    private String secondName;
+    @NotEmpty(message = "Password should not be empty")
+    private String passwordHash;
+    private Boolean isEnabled;
+    private LocalDateTime registrationDate;
+    private LocalDateTime deleteDateTime;
+    private LocalDateTime modifyDateTime;
+    private String provider;
 }

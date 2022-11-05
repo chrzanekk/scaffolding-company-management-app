@@ -1,7 +1,8 @@
 package pl.com.chrzanowski.scma.controller;
 
 import org.springframework.web.bind.annotation.*;
-import pl.com.chrzanowski.scma.domain.UserDto;
+import pl.com.chrzanowski.scma.domain.UserDTO;
+import pl.com.chrzanowski.scma.model.User;
 import pl.com.chrzanowski.scma.service.UserService;
 
 import java.util.List;
@@ -17,13 +18,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<UserDto> getUsers() {
+    public List<User> getUsers() {
         return userService.findAllUsers();
     }
 
-    @PostMapping("/users")
-    void addUser(@RequestBody UserDto userDto) {
-        userService.saveUser(userDto);
-    }
 
 }

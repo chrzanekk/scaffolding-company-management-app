@@ -2,98 +2,57 @@ package pl.com.chrzanowski.scma.service.impl;
 
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.scma.domain.UserDto;
-import pl.com.chrzanowski.scma.domain.UserDtoBuilder;
-import pl.com.chrzanowski.scma.model.Authority;
+import pl.com.chrzanowski.scma.controller.requests.RegistrationRequest;
+import pl.com.chrzanowski.scma.domain.LocalUser;
+import pl.com.chrzanowski.scma.domain.UserDTO;
+import pl.com.chrzanowski.scma.exception.UserAlreadyExistsAuthenticationException;
 import pl.com.chrzanowski.scma.model.User;
-import pl.com.chrzanowski.scma.model.UserBuilder;
 import pl.com.chrzanowski.scma.repository.AuthorityRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
-import pl.com.chrzanowski.scma.security.AuthoritiesTypes;
 import pl.com.chrzanowski.scma.service.UserService;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
-
-    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void saveUser(UserDto userDto) {
-
-        Authority authority = authorityRepository.findByName(AuthoritiesTypes.ADMIN);
-        if (authority == null) {
-            authority = checkAuthorityExist();
-        }
-        User user = UserBuilder.anUser()
-                .withEmail(userDto.getEmail())
-                .withFirstName(userDto.getFirstName())
-                .withSecondName(userDto.getSecondName())
-                .withPasswordHash(passwordEncoder.encode(userDto.getPasswordHash()))
-                .withLanguage(userDto.getLanguage())
-                .withRegulationAccepted(userDto.getRegulationAccepted())
-                .withNewsletterAccepted(userDto.getNewsletterAccepted())
-                .withIsEnabled(userDto.getIsEnabled())
-                .withIsEmailConfirmed(userDto.getIsEmailConfirmed())
-                .withRegistrationDateTime(userDto.getRegistrationDate())
-                .withRegistrationIp(userDto.getRegistrationIp())
-                .withRegistrationUserAgent(userDto.getRegistrationUserAgent())
-                .withAuthorities(List.of(authority))
-                .build();
-
-        userRepository.save(user);
-
+    @Transactional
+    public User registerNewUser(final RegistrationRequest request) throws UserAlreadyExistsAuthenticationException {
+        if(request.getId)
+        return null;
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+    public User findUserByEmail(final String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
-    public List<UserDto> findAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(this::mapToUserDto)
-                .collect(Collectors.toList());
-    }
-
-    private UserDto mapToUserDto(User user) {
-        return UserDtoBuilder.anUserDto()
-                .withEmail(user.getEmail())
-                .withFirstName(user.getFirstName())
-                .withSecondName(user.getSecondName())
-                .withLanguage(user.getLanguage())
-                .withRegulationAccepted(user.getRegulationAccepted())
-                .withNewsletterAccepted(user.getNewsletterAccepted())
-                .withIsEnabled(user.getIsEnabled())
-                .withIsEmailConfirmed(user.getIsEmailConfirmed())
-                .withRegistrationDate(user.getRegistrationDateTime())
-                .withRegistrationIp(user.getRegistrationIp())
-                .withRegistrationUserAgent(user.getRegistrationUserAgent())
-                .build();
-    }
-
-    private Authority checkAuthorityExist() {
-        Authority authority = new Authority();
-        authority.setName(AuthoritiesTypes.ADMIN);
-        return authorityRepository.save(authority);
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+        return null;
     }
 }
+
