@@ -2,9 +2,8 @@ package pl.com.chrzanowski.scma.service;
 
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
-import pl.com.chrzanowski.scma.controller.requests.RegistrationRequest;
+import pl.com.chrzanowski.scma.domain.RegistrationRequest;
 import pl.com.chrzanowski.scma.domain.LocalUser;
-import pl.com.chrzanowski.scma.domain.UserDTO;
 import pl.com.chrzanowski.scma.exception.UserAlreadyExistsAuthenticationException;
 import pl.com.chrzanowski.scma.model.User;
 
