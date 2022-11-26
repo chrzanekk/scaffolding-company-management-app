@@ -18,8 +18,6 @@ import pl.com.chrzanowski.scma.payload.request.LoginRequest;
 import pl.com.chrzanowski.scma.payload.request.SignUpRequest;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
-import pl.com.chrzanowski.scma.repository.RoleRepository;
-import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.services.UserDetailsImpl;
 import pl.com.chrzanowski.scma.service.RoleService;

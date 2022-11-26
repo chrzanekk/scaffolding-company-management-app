@@ -24,7 +24,7 @@ public class JwtUtils {
     @Value("${scaff.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    @Value("${scaff.app.jwt.CookieName}")
+    @Value("${scaff.app.jwtCookieName}")
     private String jwtCookie;
 
     public String getJwtFromCookie(HttpServletRequest request) {
