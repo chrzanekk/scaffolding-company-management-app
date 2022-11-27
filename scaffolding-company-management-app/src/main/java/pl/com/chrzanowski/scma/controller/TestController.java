@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.scma.controllers;
+package pl.com.chrzanowski.scma.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;

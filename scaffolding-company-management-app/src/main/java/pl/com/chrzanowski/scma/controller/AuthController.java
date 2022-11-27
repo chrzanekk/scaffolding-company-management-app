@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.scma.controllers;
+package pl.com.chrzanowski.scma.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
