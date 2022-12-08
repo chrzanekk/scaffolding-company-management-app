@@ -1,6 +1,7 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.domain;
 
 import lombok.*;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 
 import javax.persistence.*;
 
