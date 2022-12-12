@@ -18,7 +18,7 @@ import java.util.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Entity
-@Table(name="users", uniqueConstraints = {
+@Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 public class User implements UserDetails {
@@ -64,7 +64,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for(Role role : roles) {
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.toString()));
         }
         return authorities;
