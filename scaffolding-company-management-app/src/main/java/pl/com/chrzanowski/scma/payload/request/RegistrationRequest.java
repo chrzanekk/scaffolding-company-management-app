@@ -22,9 +22,6 @@ public class RegistrationRequest {
     private String email;
     private String firstName;
     private String secondName;
-
-    private Set<String> roles;
-
     @NotBlank
     @Size(min = 6, max = 20)
     private String password;

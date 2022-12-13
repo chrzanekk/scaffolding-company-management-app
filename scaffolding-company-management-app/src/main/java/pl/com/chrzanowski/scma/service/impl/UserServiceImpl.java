@@ -9,6 +9,7 @@ import pl.com.chrzanowski.scma.payload.request.RegistrationRequest;
 import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.UserService;
 
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -18,13 +19,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findOneByLogin(username).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, username)));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND,
+                email)));
     }
-
 
     @Override
     public String register(RegistrationRequest request) {
-        return "works";
+        return "it works";
     }
 }
