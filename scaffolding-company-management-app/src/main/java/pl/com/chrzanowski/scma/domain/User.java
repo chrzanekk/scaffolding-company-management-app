@@ -34,7 +34,6 @@ public class User implements UserDetails {
     private String secondName;
 
     @NotBlank
-    @Size(max = 20)
     private String password;
     private Boolean locked = false;
     private Boolean enabled = false;

@@ -1,9 +1,9 @@
 package pl.com.chrzanowski.scma.service;
 
 
-import pl.com.chrzanowski.scma.payload.request.RegistrationRequest;
+import pl.com.chrzanowski.scma.model.UserDTO;
 
 public interface UserService {
 
-    String register(RegistrationRequest request);
+    String createNewUser(UserDTO user);
 }
