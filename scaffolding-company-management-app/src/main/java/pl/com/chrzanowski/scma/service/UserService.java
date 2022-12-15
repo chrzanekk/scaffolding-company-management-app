@@ -5,5 +5,7 @@ import pl.com.chrzanowski.scma.model.UserDTO;
 
 public interface UserService {
 
-    String createNewUser(UserDTO user);
+    String createUser(UserDTO user);
+
+    public int enableUser(String email);
 }

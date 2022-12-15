@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.com.chrzanowski.scma.domain.ConfirmationToken;
+import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.model.UserDTO;
 import pl.com.chrzanowski.scma.repository.UserRepository;
+import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @Service
@@ -19,6 +24,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final static String USER_NOT_FOUND = "user with email %s not found";
 
     private final UserRepository userRepository;
+
+    private final ConfirmationTokenService confirmationTokenService;
 
     private final UserMapper userMapper;
 
@@ -30,18 +37,31 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public String createNewUser(UserDTO user) {
+    public String createUser(UserDTO user) {
         boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
 
         if (userExists) {
             throw new IllegalStateException("Email already taken");
         }
 
-        userRepository.save(userMapper.userDTOtoUser(user));
+        User savedUser = userRepository.save(userMapper.userDTOtoUser(user));
         //TODO: validate and create user roles -> save to DB
 
+        String token = UUID.randomUUID().toString();
         //TODO: Send confirmation token
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                savedUser);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        return "registered";
+//        TODO: send email
+        return token;
+    }
+
+    @Override
+    public int enableUser(String email) {
+        return userRepository.enableUser(email);
     }
 }
