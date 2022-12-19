@@ -14,6 +14,7 @@ import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -63,5 +64,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public int enableUser(String email) {
         return userRepository.enableUser(email);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

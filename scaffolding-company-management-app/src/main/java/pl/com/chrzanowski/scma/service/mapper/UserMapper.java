@@ -18,7 +18,7 @@ public class UserMapper {
             user.setPassword(userDTO.getPassword());
             user.setLocked(userDTO.isLocked());
             user.setEnabled(userDTO.isEnabled());
-//            user.setRoles(userDTO.getRoles());
+            user.setRoles(userDTO.getRoles());
             return user;
         }
     }
