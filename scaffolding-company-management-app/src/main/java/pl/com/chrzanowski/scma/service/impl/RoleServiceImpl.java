@@ -7,6 +7,7 @@ import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

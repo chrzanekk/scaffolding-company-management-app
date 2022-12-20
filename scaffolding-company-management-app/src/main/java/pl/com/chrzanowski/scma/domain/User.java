@@ -1,9 +1,6 @@
 package pl.com.chrzanowski.scma.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +14,7 @@ import java.util.*;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")

@@ -13,6 +13,7 @@ import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND,
                 email)));
