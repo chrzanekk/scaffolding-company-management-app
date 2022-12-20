@@ -70,9 +70,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         Set<Role> userRoles = new HashSet<>();
         List<User> users = userService.findAll();
         if(users.isEmpty()) {
-            userRoles.add(roleService.findByName("ROLE_ADMIN").get());
+            userRoles.add(roleService.findByName(ERole.ROLE_ADMIN).get());
         } else {
-            userRoles.add(roleService.findByName(ERole.ROLE_USER.name()).get());
+            userRoles.add(roleService.findByName(ERole.ROLE_USER).get());
         }
         return userRoles;
     }

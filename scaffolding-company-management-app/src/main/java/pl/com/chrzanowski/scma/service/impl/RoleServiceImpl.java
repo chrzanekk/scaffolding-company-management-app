@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
 
@@ -24,7 +25,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
+    public Optional<Role> findByName(ERole name) {
         return roleRepository.findByName(name);
     }
 }
