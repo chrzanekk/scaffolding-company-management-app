@@ -14,6 +14,7 @@ import java.util.*;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -36,7 +37,7 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

@@ -1,13 +1,12 @@
 package pl.com.chrzanowski.scma.domain;
 
 import lombok.*;
-import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="roles")
+@Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,14 +18,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ERole name;
+    private String name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    public Role(ERole name) {
-        this.name = name;
-    }
 }

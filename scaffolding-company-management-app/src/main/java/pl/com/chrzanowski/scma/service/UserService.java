@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface UserService {
 
-    String createUser(UserDTO user);
+    User saveUser(UserDTO userDTO);
 
-    public int enableUser(String email);
+    void addRoleToUser(String email, String roleName);
+
+    User getUser(String email);
 
     List<User> findAll();
 }
