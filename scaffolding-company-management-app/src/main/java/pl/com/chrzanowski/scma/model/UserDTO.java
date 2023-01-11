@@ -10,8 +10,7 @@ import java.util.Set;
 @Getter
 public class UserDTO {
     private String email;
-    private String firstName;
-    private String secondName;
+    private String username;
     private String password;
     private boolean isLocked;
     private boolean isEnabled;

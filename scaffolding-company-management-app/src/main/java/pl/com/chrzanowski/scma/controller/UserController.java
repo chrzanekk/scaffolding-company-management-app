@@ -38,9 +38,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @Data
-    class RoleToUserForm {
-        private String email;
-        private String roleName;
-    }
+
+}
+
+@Data
+class RoleToUserForm {
+    private String email;
+    private String roleName;
 }

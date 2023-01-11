@@ -10,12 +10,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Data
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
@@ -29,8 +27,7 @@ public class User implements UserDetails {
     @NotBlank
     @Size(max = 50)
     private String email;
-    private String firstName;
-    private String secondName;
+    private String username;
 
     @NotBlank
     private String password;
@@ -44,15 +41,13 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     public User(String email,
-                String firstName,
-                String secondName,
+                String username,
                 String password,
                 Boolean locked,
                 Boolean enabled,
                 Set<Role> roles) {
         this.email = email;
-        this.firstName = firstName;
-        this.secondName = secondName;
+        this.username = username;
         this.password = password;
         this.locked = locked;
         this.enabled = enabled;

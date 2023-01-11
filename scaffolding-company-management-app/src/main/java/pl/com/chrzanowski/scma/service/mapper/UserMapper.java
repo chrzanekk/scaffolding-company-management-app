@@ -13,8 +13,7 @@ public class UserMapper {
         } else {
             User user = new User();
             user.setEmail(userDTO.getEmail());
-            user.setFirstName(userDTO.getFirstName());
-            user.setSecondName(userDTO.getSecondName());
+            user.setUsername(userDTO.getUsername());
             user.setPassword(userDTO.getPassword());
             user.setLocked(userDTO.isLocked());
             user.setEnabled(userDTO.isEnabled());
