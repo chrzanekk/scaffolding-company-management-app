@@ -1,11 +1,12 @@
 package pl.com.chrzanowski.scma.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.com.chrzanowski.scma.model.ERole;
-import pl.com.chrzanowski.scma.model.Role;
+import org.springframework.stereotype.Repository;
+import pl.com.chrzanowski.scma.domain.Role;
 
 import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
-    Optional<Role> findByName(ERole name);
+@Repository
+public interface RoleRepository extends JpaRepository<Role,Long> {
+    Optional<Role> findByName(String name);
 }

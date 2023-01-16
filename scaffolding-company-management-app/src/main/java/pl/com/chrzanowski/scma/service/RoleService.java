@@ -1,12 +1,16 @@
 package pl.com.chrzanowski.scma.service;
 
-import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.scma.model.ERole;
-import pl.com.chrzanowski.scma.model.Role;
+import pl.com.chrzanowski.scma.domain.Role;
+import pl.com.chrzanowski.scma.model.RoleDTO;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface RoleService {
 
-    Optional<Role> findByName(ERole name);
+    Set<Role> findAll();
+
+    Optional<Role> findByName(String name);
+
+    Role saveRole(RoleDTO roleDTO);
 }

@@ -1,18 +1,18 @@
 package pl.com.chrzanowski.scma.service;
 
-import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.scma.model.User;
 
-import java.util.Optional;
+import pl.com.chrzanowski.scma.domain.User;
+import pl.com.chrzanowski.scma.model.UserDTO;
 
+import java.util.List;
 
 public interface UserService {
 
-    Optional<User> findByUsername(String username);
+    User saveUser(UserDTO userDTO);
 
-    Boolean existsByUsername(String username);
+    void addRoleToUser(String email, String roleName);
 
-    Boolean existsByEmail(String email);
+    User getUser(String email);
 
-    void save(User user);
+    List<User> findAll();
 }
