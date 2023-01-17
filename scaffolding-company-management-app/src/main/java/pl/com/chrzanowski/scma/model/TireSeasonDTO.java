@@ -1,0 +1,20 @@
+package pl.com.chrzanowski.scma.model;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+
+@Getter
+@EqualsAndHashCode
+@AllArgsConstructor
+public class TireSeasonDTO {
+
+    private Long id;
+    private String name;
+    private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
+    private LocalDateTime removeDate;
+}

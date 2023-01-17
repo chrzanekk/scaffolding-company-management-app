@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,11 +16,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
-@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final RoleService roleService;
+
+    public UserController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
@@ -32,17 +37,4 @@ public class UserController {
         return ResponseEntity.created(uri).body(userService.saveUser(userDTO));
     }
 
-    @PostMapping("/user/addroletouser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        userService.addRoleToUser(form.getEmail(), form.getRoleName());
-        return ResponseEntity.ok().build();
-    }
-
-
-}
-
-@Data
-class RoleToUserForm {
-    private String email;
-    private String roleName;
 }
