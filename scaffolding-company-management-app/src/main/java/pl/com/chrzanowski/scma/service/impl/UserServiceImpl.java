@@ -1,8 +1,5 @@
 package pl.com.chrzanowski.scma.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +11,6 @@ import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.model.UserDTO;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
-import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 
