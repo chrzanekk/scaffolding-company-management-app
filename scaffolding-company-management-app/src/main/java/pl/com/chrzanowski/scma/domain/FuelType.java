@@ -1,13 +1,10 @@
 package pl.com.chrzanowski.scma.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @Entity
@@ -84,24 +81,13 @@ public class FuelType {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         FuelType fuelType = (FuelType) o;
-
-        if (id != null ? !id.equals(fuelType.id) : fuelType.id != null) return false;
-        if (name != null ? !name.equals(fuelType.name) : fuelType.name != null) return false;
-        if (createDate != null ? !createDate.equals(fuelType.createDate) : fuelType.createDate != null) return false;
-        if (modifyDate != null ? !modifyDate.equals(fuelType.modifyDate) : fuelType.modifyDate != null) return false;
-        return removeDate != null ? removeDate.equals(fuelType.removeDate) : fuelType.removeDate == null;
+        return Objects.equals(id, fuelType.id) && Objects.equals(name, fuelType.name) && Objects.equals(createDate, fuelType.createDate) && Objects.equals(modifyDate, fuelType.modifyDate) && Objects.equals(removeDate, fuelType.removeDate);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
-        result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, createDate, modifyDate, removeDate);
     }
 
     @Override

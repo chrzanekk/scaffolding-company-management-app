@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.model;
 
 import pl.com.chrzanowski.scma.domain.Role;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class UserDTO {
@@ -93,28 +94,13 @@ public class UserDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserDTO userDTO = (UserDTO) o;
-
-        if (isLocked != userDTO.isLocked) return false;
-        if (isEnabled != userDTO.isEnabled) return false;
-        if (id != null ? !id.equals(userDTO.id) : userDTO.id != null) return false;
-        if (email != null ? !email.equals(userDTO.email) : userDTO.email != null) return false;
-        if (username != null ? !username.equals(userDTO.username) : userDTO.username != null) return false;
-        if (password != null ? !password.equals(userDTO.password) : userDTO.password != null) return false;
-        return roles != null ? roles.equals(userDTO.roles) : userDTO.roles == null;
+        return isLocked == userDTO.isLocked && isEnabled == userDTO.isEnabled && Objects.equals(id, userDTO.id) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && Objects.equals(roles, userDTO.roles);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (isLocked ? 1 : 0);
-        result = 31 * result + (isEnabled ? 1 : 0);
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        return result;
+        return Objects.hash(id, email, username, password, isLocked, isEnabled, roles);
     }
 
     @Override

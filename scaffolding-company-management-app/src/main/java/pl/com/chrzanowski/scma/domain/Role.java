@@ -1,8 +1,7 @@
 package pl.com.chrzanowski.scma.domain;
 
-import lombok.*;
-
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -55,20 +54,13 @@ public class Role {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Role role = (Role) o;
-
-        if (id != null ? !id.equals(role.id) : role.id != null) return false;
-        if (name != null ? !name.equals(role.name) : role.name != null) return false;
-        return users != null ? users.equals(role.users) : role.users == null;
+        return Objects.equals(id, role.id) && Objects.equals(name, role.name) && Objects.equals(users, role.users);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (users != null ? users.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, users);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.model;
 
+import java.util.Objects;
+
 public class RoleDTO {
     private long id;
     private String name;
@@ -37,18 +39,13 @@ public class RoleDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         RoleDTO roleDTO = (RoleDTO) o;
-
-        if (id != roleDTO.id) return false;
-        return name != null ? name.equals(roleDTO.name) : roleDTO.name == null;
+        return id == roleDTO.id && Objects.equals(name, roleDTO.name);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name);
     }
 
     @Override
