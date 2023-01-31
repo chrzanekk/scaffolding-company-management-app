@@ -29,6 +29,9 @@ public class FuelType {
         this.name = name;
     }
 
+    public FuelType() {
+    }
+
     public FuelType(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;

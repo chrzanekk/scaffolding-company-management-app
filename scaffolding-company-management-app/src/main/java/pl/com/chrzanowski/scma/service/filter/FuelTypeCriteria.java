@@ -8,7 +8,7 @@ import pl.com.chrzanowski.scma.service.filter.basic.StringFilter;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class FuelTypeFilter implements Serializable, Filter {
+public class FuelTypeCriteria implements Serializable, Criteria {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,7 @@ public class FuelTypeFilter implements Serializable, Filter {
     private LocalDateTimeFilter modifyDate;
     private LocalDateTimeFilter removeDate;
 
-    public FuelTypeFilter(FuelTypeFilter other) {
+    public FuelTypeCriteria(FuelTypeCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.createDate = other.createDate == null ? null : other.createDate.copy();
@@ -27,10 +27,9 @@ public class FuelTypeFilter implements Serializable, Filter {
     }
 
     @Override
-    public FuelTypeFilter copy() {
-        return new FuelTypeFilter(this);
+    public FuelTypeCriteria copy() {
+        return new FuelTypeCriteria(this);
     }
-
 
     public LongFilter getId() {
         return id;
@@ -76,7 +75,7 @@ public class FuelTypeFilter implements Serializable, Filter {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FuelTypeFilter that = (FuelTypeFilter) o;
+        FuelTypeCriteria that = (FuelTypeCriteria) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
