@@ -66,10 +66,8 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public List<FuelTypeDTO> find(FuelTypeFilter fuelTypeFilter) {
         log.debug("Find all fuel types by filter {}.", fuelTypeFilter);
-//todo figureout if this solution is good
-        Specification<FuelType> specification = new FuelTypeSpecification(fuelTypeFilter);
-
-        return fuelTypeMapper.toDto(fuelTypeRepository.findAll(specification));
+        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }
 
 }
