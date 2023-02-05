@@ -40,6 +40,18 @@ public class FuelType {
         this.removeDate = removeDate;
     }
 
+    private FuelType(Builder builder) {
+        setId(builder.id);
+        setName(builder.name);
+        setCreateDate(builder.createDate);
+        setModifyDate(builder.modifyDate);
+        setRemoveDate(builder.removeDate);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public Long getId() {
         return id;
     }
@@ -102,5 +114,46 @@ public class FuelType {
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
                 '}';
+    }
+
+
+    public static final class Builder {
+        private Long id;
+        private @NotNull @NotBlank String name;
+        private LocalDateTime createDate;
+        private LocalDateTime modifyDate;
+        private LocalDateTime removeDate;
+
+        private Builder() {
+        }
+
+        public Builder id(Long val) {
+            id = val;
+            return this;
+        }
+
+        public Builder name(@NotNull @NotBlank String val) {
+            name = val;
+            return this;
+        }
+
+        public Builder createDate(LocalDateTime val) {
+            createDate = val;
+            return this;
+        }
+
+        public Builder modifyDate(LocalDateTime val) {
+            modifyDate = val;
+            return this;
+        }
+
+        public Builder removeDate(LocalDateTime val) {
+            removeDate = val;
+            return this;
+        }
+
+        public FuelType build() {
+            return new FuelType(this);
+        }
     }
 }

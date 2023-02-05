@@ -70,4 +70,9 @@ public class FuelTypeServiceImpl implements FuelTypeService {
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }
 
+    @Override
+    public void delete(Long id) {
+        log.debug("Delete fuel typ of id: {}", id);
+        fuelTypeRepository.deleteFuelTypeById(id);
+    }
 }

@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import pl.com.chrzanowski.scma.domain.FuelType;
 
 public interface FuelTypeRepository extends JpaRepository<FuelType,Long>, JpaSpecificationExecutor<FuelType> {
+    void deleteFuelTypeById(Long id);
 }
