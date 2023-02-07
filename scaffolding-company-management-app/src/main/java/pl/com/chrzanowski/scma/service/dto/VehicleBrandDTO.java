@@ -1,17 +1,16 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class ServiceActionTypeDTO {
-
+public class VehicleBrandDTO {
     private Long id;
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
 
-    public ServiceActionTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public VehicleBrandDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -19,7 +18,7 @@ public class ServiceActionTypeDTO {
         this.removeDate = removeDate;
     }
 
-    private ServiceActionTypeDTO(Builder builder) {
+    private VehicleBrandDTO(Builder builder) {
         id = builder.id;
         name = builder.name;
         createDate = builder.createDate;
@@ -51,7 +50,7 @@ public class ServiceActionTypeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServiceActionTypeDTO that = (ServiceActionTypeDTO) o;
+        VehicleBrandDTO that = (VehicleBrandDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
@@ -62,7 +61,7 @@ public class ServiceActionTypeDTO {
 
     @Override
     public String toString() {
-        return "ServiceActionTypeDTO{" +
+        return "VehicleBrandDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDate=" + createDate +
@@ -111,8 +110,8 @@ public class ServiceActionTypeDTO {
             return this;
         }
 
-        public ServiceActionTypeDTO build() {
-            return new ServiceActionTypeDTO(this);
+        public VehicleBrandDTO build() {
+            return new VehicleBrandDTO(this);
         }
     }
 }

@@ -1,13 +1,9 @@
-package pl.com.chrzanowski.scma.service.filter;
+package pl.com.chrzanowski.scma.service.filter.vehicletype;
 
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class FuelTypeFilter implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class VehicleTypeFilter {
 
     private Long id;
     private String name;
@@ -18,19 +14,22 @@ public class FuelTypeFilter implements Serializable {
     private LocalDateTime removeDateStartWith;
     private LocalDateTime removeDateEndWith;
 
-    public FuelTypeFilter() {
+    public VehicleTypeFilter() {
     }
 
+    private VehicleTypeFilter(Builder builder) {
+        id = builder.id;
+        name = builder.name;
+        createDateStartWith = builder.createDateStartWith;
+        createDateEndWith = builder.createDateEndWith;
+        modifyDateStartWith = builder.modifyDateStartWith;
+        modifyDateEndWith = builder.modifyDateEndWith;
+        removeDateStartWith = builder.removeDateStartWith;
+        removeDateEndWith = builder.removeDateEndWith;
+    }
 
-    private FuelTypeFilter(Builder builder) {
-        setId(builder.id);
-        setName(builder.name);
-        setCreateDateStartWith(builder.createDateStartWith);
-        setCreateDateEndWith(builder.createDateEndWith);
-        setModifyDateStartWith(builder.modifyDateStartWith);
-        setModifyDateEndWith(builder.modifyDateEndWith);
-        setRemoveDateStartWith(builder.removeDateStartWith);
-        setRemoveDateEndWith(builder.removeDateEndWith);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -65,62 +64,44 @@ public class FuelTypeFilter implements Serializable {
         return removeDateEndWith;
     }
 
-    public FuelTypeFilter setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public FuelTypeFilter setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public FuelTypeFilter setCreateDateStartWith(LocalDateTime createDateStartWith) {
-        this.createDateStartWith = createDateStartWith;
-        return this;
-    }
-
-    public FuelTypeFilter setCreateDateEndWith(LocalDateTime createDateEndWith) {
-        this.createDateEndWith = createDateEndWith;
-        return this;
-    }
-
-    public FuelTypeFilter setModifyDateStartWith(LocalDateTime modifyDateStartWith) {
-        this.modifyDateStartWith = modifyDateStartWith;
-        return this;
-    }
-
-    public FuelTypeFilter setModifyDateEndWith(LocalDateTime modifyDateEndWith) {
-        this.modifyDateEndWith = modifyDateEndWith;
-        return this;
-    }
-
-    public FuelTypeFilter setRemoveDateStartWith(LocalDateTime removeDateStartWith) {
-        this.removeDateStartWith = removeDateStartWith;
-        return this;
-    }
-
-    public FuelTypeFilter setRemoveDateEndWith(LocalDateTime removeDateEndWith) {
-        this.removeDateEndWith = removeDateEndWith;
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FuelTypeFilter that = (FuelTypeFilter) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDateStartWith, that.createDateStartWith) && Objects.equals(createDateEndWith, that.createDateEndWith) && Objects.equals(modifyDateStartWith, that.modifyDateStartWith) && Objects.equals(modifyDateEndWith, that.modifyDateEndWith) && Objects.equals(removeDateStartWith, that.removeDateStartWith) && Objects.equals(removeDateEndWith, that.removeDateEndWith);
+
+        VehicleTypeFilter that = (VehicleTypeFilter) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(createDateStartWith, that.createDateStartWith))
+            return false;
+        if (!Objects.equals(createDateEndWith, that.createDateEndWith))
+            return false;
+        if (!Objects.equals(modifyDateStartWith, that.modifyDateStartWith))
+            return false;
+        if (!Objects.equals(modifyDateEndWith, that.modifyDateEndWith))
+            return false;
+        if (!Objects.equals(removeDateStartWith, that.removeDateStartWith))
+            return false;
+        return Objects.equals(removeDateEndWith, that.removeDateEndWith);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createDateStartWith, createDateEndWith, modifyDateStartWith, modifyDateEndWith, removeDateStartWith, removeDateEndWith);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (createDateStartWith != null ? createDateStartWith.hashCode() : 0);
+        result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
+        result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
+        result = 31 * result + (modifyDateEndWith != null ? modifyDateEndWith.hashCode() : 0);
+        result = 31 * result + (removeDateStartWith != null ? removeDateStartWith.hashCode() : 0);
+        result = 31 * result + (removeDateEndWith != null ? removeDateEndWith.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "FuelTypeCriteria{" +
+        return "VehicleTypeFilter{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDateStartWith=" + createDateStartWith +
@@ -131,7 +112,6 @@ public class FuelTypeFilter implements Serializable {
                 ", removeDateEndWith=" + removeDateEndWith +
                 '}';
     }
-
 
     public static final class Builder {
         private Long id;
@@ -144,10 +124,6 @@ public class FuelTypeFilter implements Serializable {
         private LocalDateTime removeDateEndWith;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {
@@ -190,10 +166,8 @@ public class FuelTypeFilter implements Serializable {
             return this;
         }
 
-        public FuelTypeFilter build() {
-            return new FuelTypeFilter(this);
+        public VehicleTypeFilter build() {
+            return new VehicleTypeFilter(this);
         }
     }
 }
-
-

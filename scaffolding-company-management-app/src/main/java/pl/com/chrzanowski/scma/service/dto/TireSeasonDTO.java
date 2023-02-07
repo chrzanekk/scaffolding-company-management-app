@@ -1,10 +1,10 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-public class FuelTypeDTO {
+public class TireSeasonDTO {
 
     private Long id;
     private String name;
@@ -12,7 +12,7 @@ public class FuelTypeDTO {
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
 
-    public FuelTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public TireSeasonDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -20,7 +20,7 @@ public class FuelTypeDTO {
         this.removeDate = removeDate;
     }
 
-    private FuelTypeDTO(Builder builder) {
+    private TireSeasonDTO(Builder builder) {
         id = builder.id;
         name = builder.name;
         createDate = builder.createDate;
@@ -52,7 +52,7 @@ public class FuelTypeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FuelTypeDTO that = (FuelTypeDTO) o;
+        TireSeasonDTO that = (TireSeasonDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
@@ -63,7 +63,7 @@ public class FuelTypeDTO {
 
     @Override
     public String toString() {
-        return "FuelTypeDTO{" +
+        return "TireSeasonDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDate=" + createDate +
@@ -112,8 +112,8 @@ public class FuelTypeDTO {
             return this;
         }
 
-        public FuelTypeDTO build() {
-            return new FuelTypeDTO(this);
+        public TireSeasonDTO build() {
+            return new TireSeasonDTO(this);
         }
     }
 }

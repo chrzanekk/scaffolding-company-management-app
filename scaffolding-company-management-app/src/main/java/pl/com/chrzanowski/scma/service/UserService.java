@@ -2,7 +2,7 @@ package pl.com.chrzanowski.scma.service;
 
 
 import pl.com.chrzanowski.scma.domain.User;
-import pl.com.chrzanowski.scma.model.UserDTO;
+import pl.com.chrzanowski.scma.service.dto.UserDTO;
 
 import java.util.List;
 

@@ -1,17 +1,18 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
-public class VehicleTypeDTO {
+public class FuelTypeDTO {
+
     private Long id;
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
 
-    public VehicleTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public FuelTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -19,10 +20,7 @@ public class VehicleTypeDTO {
         this.removeDate = removeDate;
     }
 
-    public VehicleTypeDTO() {
-    }
-
-    private VehicleTypeDTO(Builder builder) {
+    private FuelTypeDTO(Builder builder) {
         id = builder.id;
         name = builder.name;
         createDate = builder.createDate;
@@ -54,7 +52,7 @@ public class VehicleTypeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VehicleTypeDTO that = (VehicleTypeDTO) o;
+        FuelTypeDTO that = (FuelTypeDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
@@ -65,7 +63,7 @@ public class VehicleTypeDTO {
 
     @Override
     public String toString() {
-        return "VehicleTypeDTO{" +
+        return "FuelTypeDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDate=" + createDate +
@@ -73,6 +71,7 @@ public class VehicleTypeDTO {
                 ", removeDate=" + removeDate +
                 '}';
     }
+
 
     public static final class Builder {
         private Long id;
@@ -113,8 +112,8 @@ public class VehicleTypeDTO {
             return this;
         }
 
-        public VehicleTypeDTO build() {
-            return new VehicleTypeDTO(this);
+        public FuelTypeDTO build() {
+            return new FuelTypeDTO(this);
         }
     }
 }

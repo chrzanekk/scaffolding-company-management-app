@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.FuelType;
-import pl.com.chrzanowski.scma.model.FuelTypeDTO;
+import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.repository.FuelTypeRepository;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
-import pl.com.chrzanowski.scma.service.filter.FuelTypeFilter;
-import pl.com.chrzanowski.scma.service.filter.FuelTypeSpecification;
+import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
+import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
 
 import javax.transaction.Transactional;
@@ -65,7 +65,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
 
     @Override
     public List<FuelTypeDTO> find(FuelTypeFilter fuelTypeFilter) {
-        log.debug("Find all fuel types by filter {}.", fuelTypeFilter);
+        log.debug("Find all fuel types by filter: {}.", fuelTypeFilter);
         Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }

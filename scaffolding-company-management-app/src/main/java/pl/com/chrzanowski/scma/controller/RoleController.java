@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.domain.Role;
-import pl.com.chrzanowski.scma.model.RoleDTO;
+import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.service.RoleService;
 
 import java.net.URI;

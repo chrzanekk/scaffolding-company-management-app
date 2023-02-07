@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

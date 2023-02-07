@@ -5,28 +5,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.com.chrzanowski.scma.model.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
-import pl.com.chrzanowski.scma.service.filter.FuelTypeFilter;
-import pl.com.chrzanowski.scma.service.impl.FuelTypeServiceImpl;
-import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
+import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
+import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/fuelTypes")
 public class FuelTypeController {
-    private final Logger log = LoggerFactory.getLogger(FuelTypeServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(FuelTypeController.class);
 
     private static final String ENTITY_NAME = "fuelType";
 
     private final FuelTypeService fuelTypeService;
-    private final FuelTypeMapper fuelTypeMapper;
 
     // todo create endpoint to get all fuel types with pagination
-    public FuelTypeController(FuelTypeService fuelTypeService, FuelTypeMapper fuelTypeMapper) {
+    public FuelTypeController(FuelTypeService fuelTypeService) {
         this.fuelTypeService = fuelTypeService;
-        this.fuelTypeMapper = fuelTypeMapper;
     }
 
     @GetMapping("/getAll")
@@ -59,9 +55,9 @@ public class FuelTypeController {
 
     @PutMapping("/update")
     public ResponseEntity<FuelTypeDTO> updateFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
-        log.debug("REST request to add new fuelType: {}", fuelTypeDTO);
+        log.debug("REST request to update fuelType: {}", fuelTypeDTO);
         FuelTypeDTO updatedFuelTypeDTO = fuelTypeService.update(fuelTypeDTO);
-        return new ResponseEntity<>(updatedFuelTypeDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedFuelTypeDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

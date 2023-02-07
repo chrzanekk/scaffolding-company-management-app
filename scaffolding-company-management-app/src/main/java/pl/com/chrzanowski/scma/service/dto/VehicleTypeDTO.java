@@ -1,16 +1,17 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class VehicleBrandDTO {
+
+public class VehicleTypeDTO {
     private Long id;
     private String name;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
 
-    public VehicleBrandDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public VehicleTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -18,7 +19,10 @@ public class VehicleBrandDTO {
         this.removeDate = removeDate;
     }
 
-    private VehicleBrandDTO(Builder builder) {
+    public VehicleTypeDTO() {
+    }
+
+    private VehicleTypeDTO(Builder builder) {
         id = builder.id;
         name = builder.name;
         createDate = builder.createDate;
@@ -50,7 +54,7 @@ public class VehicleBrandDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VehicleBrandDTO that = (VehicleBrandDTO) o;
+        VehicleTypeDTO that = (VehicleTypeDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
@@ -61,7 +65,7 @@ public class VehicleBrandDTO {
 
     @Override
     public String toString() {
-        return "VehicleBrandDTO{" +
+        return "VehicleTypeDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDate=" + createDate +
@@ -69,7 +73,6 @@ public class VehicleBrandDTO {
                 ", removeDate=" + removeDate +
                 '}';
     }
-
 
     public static final class Builder {
         private Long id;
@@ -110,8 +113,8 @@ public class VehicleBrandDTO {
             return this;
         }
 
-        public VehicleBrandDTO build() {
-            return new VehicleBrandDTO(this);
+        public VehicleTypeDTO build() {
+            return new VehicleTypeDTO(this);
         }
     }
 }

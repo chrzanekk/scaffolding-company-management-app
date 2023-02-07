@@ -1,10 +1,9 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
-public class TireSeasonDTO {
+public class ServiceActionTypeDTO {
 
     private Long id;
     private String name;
@@ -12,7 +11,7 @@ public class TireSeasonDTO {
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
 
-    public TireSeasonDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public ServiceActionTypeDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -20,7 +19,7 @@ public class TireSeasonDTO {
         this.removeDate = removeDate;
     }
 
-    private TireSeasonDTO(Builder builder) {
+    private ServiceActionTypeDTO(Builder builder) {
         id = builder.id;
         name = builder.name;
         createDate = builder.createDate;
@@ -52,7 +51,7 @@ public class TireSeasonDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TireSeasonDTO that = (TireSeasonDTO) o;
+        ServiceActionTypeDTO that = (ServiceActionTypeDTO) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
     }
 
@@ -63,7 +62,7 @@ public class TireSeasonDTO {
 
     @Override
     public String toString() {
-        return "TireSeasonDTO{" +
+        return "ServiceActionTypeDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", createDate=" + createDate +
@@ -112,8 +111,8 @@ public class TireSeasonDTO {
             return this;
         }
 
-        public TireSeasonDTO build() {
-            return new TireSeasonDTO(this);
+        public ServiceActionTypeDTO build() {
+            return new ServiceActionTypeDTO(this);
         }
     }
 }

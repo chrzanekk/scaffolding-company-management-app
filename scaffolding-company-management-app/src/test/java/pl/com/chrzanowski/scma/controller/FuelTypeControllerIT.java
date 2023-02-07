@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.FuelType;
-import pl.com.chrzanowski.scma.model.FuelTypeDTO;
+import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.repository.FuelTypeRepository;
 import pl.com.chrzanowski.scma.service.impl.FuelTypeServiceImpl;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;

@@ -1,7 +1,7 @@
 package pl.com.chrzanowski.scma.service;
 
-import pl.com.chrzanowski.scma.model.FuelTypeDTO;
-import pl.com.chrzanowski.scma.service.filter.FuelTypeFilter;
+import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
+import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 
 import java.util.List;
 

@@ -2,16 +2,17 @@ package pl.com.chrzanowski.scma.service.mapper;
 
 import org.mapstruct.Mapper;
 import pl.com.chrzanowski.scma.domain.FuelType;
-import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
+import pl.com.chrzanowski.scma.domain.VehicleType;
+import pl.com.chrzanowski.scma.service.dto.VehicleTypeDTO;
 
 @Mapper(componentModel = "spring", uses = {})
-public interface FuelTypeMapper extends EntityMapper<FuelTypeDTO, FuelType> {
+public interface VehicleTypeMapper extends EntityMapper<VehicleTypeDTO, VehicleType> {
 
-    default FuelType fromId(Long id) {
+    default VehicleType fromId(Long id) {
         if (id == null) {
             return null;
         }
-        FuelType fuelType = new FuelType();
+        VehicleType fuelType = new VehicleType();
         fuelType.setId(id);
         return fuelType;
     }

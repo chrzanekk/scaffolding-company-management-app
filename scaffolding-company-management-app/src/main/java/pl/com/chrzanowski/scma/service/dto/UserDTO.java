@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.scma.model;
+package pl.com.chrzanowski.scma.service.dto;
 
 import pl.com.chrzanowski.scma.domain.Role;
 
