@@ -30,7 +30,7 @@ public class ServiceActionTypeController {
         return new ResponseEntity<>(serviceActionTypeDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public ResponseEntity<List<ServiceActionTypeDTO>> getAllServiceTypesByFilter(ServiceActionTypeFilter serviceActionTypeFilter) {
         log.debug("REST request to get all serviceActionTypes by filter: {}", serviceActionTypeFilter);
         List<ServiceActionTypeDTO> serviceActionTypeDTOList = serviceActionTypeService.find(serviceActionTypeFilter);

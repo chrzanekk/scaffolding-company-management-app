@@ -30,7 +30,7 @@ public class VehicleTypeController {
         return new ResponseEntity<>(vehicleTypeDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public ResponseEntity<List<VehicleTypeDTO>> getAllVehicleTypesByFilter(VehicleTypeFilter vehicleTypeFilter) {
         log.debug("REST request to get all vehicleTypes by filter: {}", vehicleTypeFilter);
         List<VehicleTypeDTO> vehicleTypeDTOList = vehicleTypeService.find(vehicleTypeFilter);

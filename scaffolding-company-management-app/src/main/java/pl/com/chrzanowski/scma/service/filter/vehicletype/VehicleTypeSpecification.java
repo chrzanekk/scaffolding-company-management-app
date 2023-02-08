@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.service.filter.vehicletype;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.VehicleType;
 import pl.com.chrzanowski.scma.service.filter.SearchCriteria;
 import pl.com.chrzanowski.scma.service.filter.SearchOperation;
@@ -11,7 +12,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class VehicleTypeSpecification implements Specification<VehicleType> {
 
     public static final String ID = "id";

@@ -32,7 +32,7 @@ public class FuelTypeController {
         return new ResponseEntity<>(fuelTypeList, HttpStatus.OK);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/get")
     public ResponseEntity<List<FuelTypeDTO>> getFuelTypesByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("REST request to get fuelTypes by filter {}: ", fuelTypeFilter);
         List<FuelTypeDTO> fuelTypeDTOList = fuelTypeService.find(fuelTypeFilter);

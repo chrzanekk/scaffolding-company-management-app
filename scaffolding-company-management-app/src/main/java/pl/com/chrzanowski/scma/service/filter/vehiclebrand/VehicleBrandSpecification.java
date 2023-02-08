@@ -1,8 +1,8 @@
-package pl.com.chrzanowski.scma.service.filter.serviceactiontype;
+package pl.com.chrzanowski.scma.service.filter.vehiclebrand;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.scma.domain.ServiceActionType;
+import pl.com.chrzanowski.scma.domain.VehicleBrand;
 import pl.com.chrzanowski.scma.service.filter.SearchCriteria;
 import pl.com.chrzanowski.scma.service.filter.SearchOperation;
 
@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 @Component
-public class ServiceActionTypeSpecification implements Specification<ServiceActionType> {
+public class VehicleBrandSpecification implements Specification<VehicleBrand> {
 
     public static final String ID = "id";
     public static final String NAME = "name";
@@ -21,25 +21,26 @@ public class ServiceActionTypeSpecification implements Specification<ServiceActi
     public static final String MODIFY_DATE = "modifyDate";
     public static final String REMOVE_DATE = "removeDate";
 
-    private final ServiceActionTypeFilter serviceActionTypeFilter;
+    private final VehicleBrandFilter vehicleBrandFilter;
 
-    public ServiceActionTypeSpecification() {
-        this.serviceActionTypeFilter = new ServiceActionTypeFilter();
+    public VehicleBrandSpecification() {
+        this.vehicleBrandFilter = new VehicleBrandFilter();
     }
 
-    private ServiceActionTypeSpecification(Builder builder) {
-        serviceActionTypeFilter = builder.serviceActionTypeFilter;
+    private VehicleBrandSpecification(Builder builder) {
+        vehicleBrandFilter = builder.vehicleBrandFilter;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+
     @Override
-    public Predicate toPredicate(Root<ServiceActionType> root,
+    public Predicate toPredicate(Root<VehicleBrand> root,
                                  CriteriaQuery<?> query,
                                  CriteriaBuilder criteriaBuilder) {
-        List<SearchCriteria> searchCriteria = createSearchCriteria(serviceActionTypeFilter);
+        List<SearchCriteria> searchCriteria = createSearchCriteria(vehicleBrandFilter);
         List<Predicate> predicates = new ArrayList<>();
 
         searchCriteria.forEach(criteria -> {
@@ -94,62 +95,62 @@ public class ServiceActionTypeSpecification implements Specification<ServiceActi
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
-    private List<SearchCriteria> createSearchCriteria(ServiceActionTypeFilter serviceActionTypeFilter) {
+    private List<SearchCriteria> createSearchCriteria(VehicleBrandFilter vehicleBrandFilter) {
         List<SearchCriteria> searchCriteria = new ArrayList<>();
-        if (serviceActionTypeFilter != null) {
-            if (serviceActionTypeFilter.getId() != null) {
+        if (vehicleBrandFilter != null) {
+            if (vehicleBrandFilter.getId() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(ID)
-                        .value(serviceActionTypeFilter.getId())
+                        .value(vehicleBrandFilter.getId())
                         .operation(SearchOperation.EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getName() != null) {
+            if (vehicleBrandFilter.getName() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(NAME)
-                        .value(serviceActionTypeFilter.getName())
+                        .value(vehicleBrandFilter.getName())
                         .operation(SearchOperation.MATCH_START)
                         .build());
             }
-            if (serviceActionTypeFilter.getCreateDateStartWith() != null) {
+            if (vehicleBrandFilter.getCreateDateStartWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(CREATE_DATE)
-                        .value(serviceActionTypeFilter.getCreateDateStartWith())
+                        .value(vehicleBrandFilter.getCreateDateStartWith())
                         .operation(SearchOperation.GREATER_THAN_EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getCreateDateEndWith() != null) {
+            if (vehicleBrandFilter.getCreateDateEndWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(CREATE_DATE)
-                        .value(serviceActionTypeFilter.getCreateDateEndWith())
+                        .value(vehicleBrandFilter.getCreateDateEndWith())
                         .operation(SearchOperation.LESS_THAN_EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getModifyDateStartWith() != null) {
+            if (vehicleBrandFilter.getModifyDateStartWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(MODIFY_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateStartWith())
+                        .value(vehicleBrandFilter.getModifyDateStartWith())
                         .operation(SearchOperation.GREATER_THAN_EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getModifyDateEndWith() != null) {
+            if (vehicleBrandFilter.getModifyDateEndWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(MODIFY_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateEndWith())
+                        .value(vehicleBrandFilter.getModifyDateEndWith())
                         .operation(SearchOperation.LESS_THAN_EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getRemoveDateStartWith() != null) {
+            if (vehicleBrandFilter.getRemoveDateStartWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(REMOVE_DATE)
-                        .value(serviceActionTypeFilter.getRemoveDateStartWith())
+                        .value(vehicleBrandFilter.getRemoveDateStartWith())
                         .operation(SearchOperation.GREATER_THAN_EQUAL)
                         .build());
             }
-            if (serviceActionTypeFilter.getRemoveDateEndWith() != null) {
+            if (vehicleBrandFilter.getRemoveDateEndWith() != null) {
                 searchCriteria.add(SearchCriteria.builder()
                         .key(REMOVE_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateEndWith())
+                        .value(vehicleBrandFilter.getModifyDateEndWith())
                         .operation(SearchOperation.LESS_THAN_EQUAL)
                         .build());
             }
@@ -158,29 +159,29 @@ public class ServiceActionTypeSpecification implements Specification<ServiceActi
     }
 
     @Override
-    public Specification<ServiceActionType> and(Specification<ServiceActionType> other) {
+    public Specification<VehicleBrand> and(Specification<VehicleBrand> other) {
         return Specification.super.and(other);
     }
 
     @Override
-    public Specification<ServiceActionType> or(Specification<ServiceActionType> other) {
+    public Specification<VehicleBrand> or(Specification<VehicleBrand> other) {
         return Specification.super.or(other);
     }
 
 
     public static final class Builder {
-        private ServiceActionTypeFilter serviceActionTypeFilter;
+        private VehicleBrandFilter vehicleBrandFilter;
 
         private Builder() {
         }
 
-        public Builder serviceActionTypeFilter(ServiceActionTypeFilter serviceActionTypeFilter) {
-            this.serviceActionTypeFilter = serviceActionTypeFilter;
+        public Builder vehicleBrandFilter(VehicleBrandFilter vehicleBrandFilter) {
+            this.vehicleBrandFilter = vehicleBrandFilter;
             return this;
         }
 
-        public ServiceActionTypeSpecification build() {
-            return new ServiceActionTypeSpecification(this);
+        public VehicleBrandSpecification build() {
+            return new VehicleBrandSpecification(this);
         }
     }
 }
