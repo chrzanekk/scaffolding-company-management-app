@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.FuelType;
+import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.repository.FuelTypeRepository;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
@@ -52,7 +53,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public FuelTypeDTO findById(Long id) {
         log.debug("Find fuel type by id: {}", id);
         Optional<FuelType> fuelTypeOptional = fuelTypeRepository.findById(id);
-        return fuelTypeMapper.toDto(fuelTypeOptional.orElseThrow(() -> new IllegalArgumentException("Fuel type not " +
+        return fuelTypeMapper.toDto(fuelTypeOptional.orElseThrow(() -> new ObjectNotFoundException("Fuel type not " +
                 "found")));
     }
 

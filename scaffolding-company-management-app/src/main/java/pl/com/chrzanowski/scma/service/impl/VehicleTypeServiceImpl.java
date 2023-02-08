@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.VehicleType;
+import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.repository.VehicleTypeRepository;
 import pl.com.chrzanowski.scma.service.VehicleTypeService;
 import pl.com.chrzanowski.scma.service.dto.VehicleTypeDTO;
@@ -57,7 +58,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     public VehicleTypeDTO findById(Long id) {
         log.debug("Find vehicle type by id: {}", id);
         Optional<VehicleType> vehicleType = vehicleTypeRepository.findById(id);
-        return vehicleTypeMapper.toDto(vehicleType.orElseThrow( () -> new IllegalArgumentException(" Vehicle type " +
+        return vehicleTypeMapper.toDto(vehicleType.orElseThrow( () -> new ObjectNotFoundException(" Vehicle type " +
                 "not found")));
     }
 

@@ -1,7 +1,6 @@
 package pl.com.chrzanowski.scma.service.mapper;
 
 import org.mapstruct.Mapper;
-import pl.com.chrzanowski.scma.domain.FuelType;
 import pl.com.chrzanowski.scma.domain.VehicleType;
 import pl.com.chrzanowski.scma.service.dto.VehicleTypeDTO;
 
