@@ -2,6 +2,8 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.ServiceActionType;
@@ -49,11 +51,20 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
     }
 
     @Override
-    public List<ServiceActionTypeDTO> find(ServiceActionTypeFilter serviceActionTypeFilter) {
+    public List<ServiceActionTypeDTO> findByFilter(ServiceActionTypeFilter serviceActionTypeFilter) {
         log.debug("Find service action type by filter: {}", serviceActionTypeFilter);
         Specification<ServiceActionType> spec =
                 ServiceActionTypeSpecification.builder().serviceActionTypeFilter(serviceActionTypeFilter).build();
         return serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll(spec));
+    }
+
+    @Override
+    public Page<ServiceActionTypeDTO> findByFilterAndPage(ServiceActionTypeFilter serviceActionTypeFilter,
+                                                          Pageable pageable) {
+        log.debug("Find service action type by filter: {}", serviceActionTypeFilter);
+        Specification<ServiceActionType> spec =
+                ServiceActionTypeSpecification.builder().serviceActionTypeFilter(serviceActionTypeFilter).build();
+        return serviceActionTypeRepository.findAll(spec, pageable).map(serviceActionTypeMapper::toDto);
     }
 
     @Override

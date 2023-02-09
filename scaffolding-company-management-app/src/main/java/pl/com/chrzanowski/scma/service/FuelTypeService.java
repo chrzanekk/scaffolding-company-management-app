@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 
@@ -10,7 +12,8 @@ public interface FuelTypeService {
 
     FuelTypeDTO update(FuelTypeDTO fuelTypeDTO);
 
-    List<FuelTypeDTO> find(FuelTypeFilter fuelTypeFilter);
+    List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter);
+    Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable);
 
     FuelTypeDTO findById(Long id);
 

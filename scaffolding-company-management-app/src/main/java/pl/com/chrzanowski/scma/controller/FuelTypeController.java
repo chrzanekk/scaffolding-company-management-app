@@ -2,9 +2,14 @@ package pl.com.chrzanowski.scma.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
 import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
@@ -20,51 +25,59 @@ public class FuelTypeController {
 
     private final FuelTypeService fuelTypeService;
 
-    // todo create endpoint to get all fuel types with pagination
     public FuelTypeController(FuelTypeService fuelTypeService) {
         this.fuelTypeService = fuelTypeService;
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<FuelTypeDTO>> getAllFuelTypes() {
         log.debug("REST request to get all fuelTypes");
         List<FuelTypeDTO> fuelTypeList = fuelTypeService.findAll();
-        return new ResponseEntity<>(fuelTypeList, HttpStatus.OK);
+        return ResponseEntity.ok().body(fuelTypeList);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<List<FuelTypeDTO>> getFuelTypesByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("REST request to get fuelTypes by filter {}: ", fuelTypeFilter);
-        List<FuelTypeDTO> fuelTypeDTOList = fuelTypeService.find(fuelTypeFilter);
-        return new ResponseEntity<>(fuelTypeDTOList, HttpStatus.OK);
+        List<FuelTypeDTO> fuelTypeDTOList = fuelTypeService.findByFilter(fuelTypeFilter);
+        return ResponseEntity.ok().body(fuelTypeDTOList);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<FuelTypeDTO>> getFuelTypesByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable) {
+        log.debug("REST request to get fuelTypes by filter {}: ", fuelTypeFilter);
+        Page<FuelTypeDTO> page = fuelTypeService.findByFilterAndPage(fuelTypeFilter,pageable);
+        HttpHeaders headers =
+                PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<FuelTypeDTO> getFuelTypeById(@PathVariable Long id) {
         log.debug("REST request to get fuelType by id:  {}", id);
         FuelTypeDTO fuelTypeDTO = fuelTypeService.findById(id);
-        return new ResponseEntity<>(fuelTypeDTO, HttpStatus.OK);
+        return ResponseEntity.ok().body(fuelTypeDTO);
     }
 
     @PostMapping("/add")
     public ResponseEntity<FuelTypeDTO> addFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to add new fuelType: {}", fuelTypeDTO);
         FuelTypeDTO newFuelTypeDTO = fuelTypeService.save(fuelTypeDTO);
-        return new ResponseEntity<>(newFuelTypeDTO, HttpStatus.CREATED);
+        return ResponseEntity.ok().body(newFuelTypeDTO);
     }
 
     @PutMapping("/update")
     public ResponseEntity<FuelTypeDTO> updateFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to update fuelType: {}", fuelTypeDTO);
         FuelTypeDTO updatedFuelTypeDTO = fuelTypeService.update(fuelTypeDTO);
-        return new ResponseEntity<>(updatedFuelTypeDTO, HttpStatus.OK);
+        return ResponseEntity.ok().body(updatedFuelTypeDTO);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteFuelType(@PathVariable Long id) {
         log.debug("REST request to delete fuelType of id : {}", id);
         fuelTypeService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 

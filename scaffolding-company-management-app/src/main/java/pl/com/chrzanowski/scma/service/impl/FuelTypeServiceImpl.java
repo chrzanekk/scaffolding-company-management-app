@@ -2,6 +2,8 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.FuelType;
@@ -65,10 +67,17 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     }
 
     @Override
-    public List<FuelTypeDTO> find(FuelTypeFilter fuelTypeFilter) {
+    public List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("Find all fuel types by filter: {}.", fuelTypeFilter);
         Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
+    }
+
+    @Override
+    public Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable) {
+        log.debug("Find all pageable fuel types by filter: {}.", fuelTypeFilter);
+        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        return fuelTypeRepository.findAll(spec, pageable).map(fuelTypeMapper::toDto);
     }
 
     @Override

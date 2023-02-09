@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.scma.service.dto.VehicleBrandDTO;
 import pl.com.chrzanowski.scma.service.filter.vehiclebrand.VehicleBrandFilter;
 
@@ -11,7 +13,8 @@ public interface VehicleBrandService {
 
     VehicleBrandDTO update(VehicleBrandDTO vehicleBrandDTO);
 
-    List<VehicleBrandDTO> find(VehicleBrandFilter vehicleBrandFilter);
+    List<VehicleBrandDTO> findByFilter(VehicleBrandFilter vehicleBrandFilter);
+    Page<VehicleBrandDTO> findByFilterAndPage(VehicleBrandFilter vehicleBrandFilter, Pageable pageable);
 
     VehicleBrandDTO findById(Long id);
 

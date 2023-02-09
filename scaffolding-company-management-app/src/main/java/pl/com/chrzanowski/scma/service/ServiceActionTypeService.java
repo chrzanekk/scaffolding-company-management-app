@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.serviceactiontype.ServiceActionTypeFilter;
 
@@ -11,7 +13,8 @@ public interface ServiceActionTypeService {
 
     ServiceActionTypeDTO update(ServiceActionTypeDTO serviceActionTypeDTO);
 
-    List<ServiceActionTypeDTO> find(ServiceActionTypeFilter serviceActionTypeFilter);
+    List<ServiceActionTypeDTO> findByFilter(ServiceActionTypeFilter serviceActionTypeFilter);
+    Page<ServiceActionTypeDTO> findByFilterAndPage(ServiceActionTypeFilter serviceActionTypeFilter, Pageable pageable);
 
     ServiceActionTypeDTO findById(Long id);
 

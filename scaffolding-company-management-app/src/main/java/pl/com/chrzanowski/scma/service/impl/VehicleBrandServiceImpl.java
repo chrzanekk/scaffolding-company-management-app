@@ -2,6 +2,8 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.VehicleBrand;
@@ -47,11 +49,20 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     }
 
     @Override
-    public List<VehicleBrandDTO> find(VehicleBrandFilter vehicleBrandFilter) {
+    public List<VehicleBrandDTO> findByFilter(VehicleBrandFilter vehicleBrandFilter) {
         log.debug("Find all vehicle brands by filter: {}", vehicleBrandFilter);
         Specification<VehicleBrand> spec =
                 VehicleBrandSpecification.builder().vehicleBrandFilter(vehicleBrandFilter).build();
         return vehicleBrandMapper.toDto(vehicleBrandRepository.findAll(spec));
+    }
+
+    @Override
+    public Page<VehicleBrandDTO> findByFilterAndPage(VehicleBrandFilter vehicleBrandFilter,
+                                                     Pageable pageable) {
+        log.debug("Find all pageable vehicle brands by filter: {}", vehicleBrandFilter);
+        Specification<VehicleBrand> spec =
+                VehicleBrandSpecification.builder().vehicleBrandFilter(vehicleBrandFilter).build();
+        return vehicleBrandRepository.findAll(spec,pageable).map(vehicleBrandMapper::toDto);
     }
 
     @Override

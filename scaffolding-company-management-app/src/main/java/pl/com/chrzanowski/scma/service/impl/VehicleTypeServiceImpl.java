@@ -2,6 +2,8 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.VehicleType;
@@ -47,11 +49,20 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     }
 
     @Override
-    public List<VehicleTypeDTO> find(VehicleTypeFilter vehicleTypeFilter) {
+    public List<VehicleTypeDTO> findByFilter(VehicleTypeFilter vehicleTypeFilter) {
         log.debug("Find all types by filter: {}", vehicleTypeFilter);
         Specification<VehicleType> spec =
                 VehicleTypeSpecification.builder().vehicleTypeFilter(vehicleTypeFilter).build();
         return vehicleTypeMapper.toDto(vehicleTypeRepository.findAll(spec));
+    }
+
+    @Override
+    public Page<VehicleTypeDTO> findByFilterAndPage(VehicleTypeFilter vehicleTypeFilter,
+                                                    Pageable pageable) {
+        log.debug("Find all pageable types by filter: {}", vehicleTypeFilter);
+        Specification<VehicleType> spec =
+                VehicleTypeSpecification.builder().vehicleTypeFilter(vehicleTypeFilter).build();
+        return vehicleTypeRepository.findAll(spec, pageable).map(vehicleTypeMapper::toDto);
     }
 
     @Override
