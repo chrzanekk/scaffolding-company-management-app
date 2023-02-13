@@ -8,14 +8,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.FuelType;
 import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
-import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.repository.FuelTypeRepository;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
+import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,14 +41,26 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public FuelTypeDTO save(FuelTypeDTO fuelTypeDTO) {
         log.debug("Save fuel type: {}", fuelTypeDTO);
-        FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeDTO));
+        FuelTypeDTO fuelTypeToSave =
+                FuelTypeDTO.Builder.builder()
+                        .name(fuelTypeDTO.getName())
+                        .createDate(setDateTimeIfNotExists(fuelTypeDTO.getCreateDate()))
+                        .build();
+        FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToSave));
         return fuelTypeMapper.toDto(fuelType);
     }
 
     @Override
     public FuelTypeDTO update(FuelTypeDTO fuelTypeDTO) {
         log.debug("Update fuel type: {}", fuelTypeDTO);
-        FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeDTO));
+        FuelTypeDTO fuelTypeInDB = findById(fuelTypeDTO.getId());
+        FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder()
+                .id(fuelTypeDTO.getId())
+                .name(fuelTypeDTO.getName())
+                .createDate(setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
+                .modifyDate(setDateTimeIfNotExists(fuelTypeDTO.getModifyDate()))
+                .build();
+        FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToUpdate));
         return fuelTypeMapper.toDto(fuelType);
     }
 
@@ -69,20 +82,32 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("Find all fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        Specification<FuelType> spec = FuelTypeSpecification.builder()
+                .fuelTypeFilterAdd(fuelTypeFilter)
+                .build();
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }
 
     @Override
     public Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable) {
         log.debug("Find all pageable fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
-        return fuelTypeRepository.findAll(spec, pageable).map(fuelTypeMapper::toDto);
+        Specification<FuelType> spec = FuelTypeSpecification.builder()
+                .fuelTypeFilterAdd(fuelTypeFilter)
+                .build();
+        return fuelTypeRepository.findAll(spec, pageable)
+                .map(fuelTypeMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
         log.debug("Delete fuel typ of id: {}", id);
         fuelTypeRepository.deleteFuelTypeById(id);
+    }
+
+    private LocalDateTime setDateTimeIfNotExists(LocalDateTime localDateTime) {
+        if (localDateTime != null) {
+            return localDateTime;
+        }
+        return LocalDateTime.now();
     }
 }

@@ -43,7 +43,7 @@ public class ServiceActionTypeController {
                 .body(serviceActionTypeDTOList);
     }
 
-    @GetMapping("/")
+    @GetMapping("/page")
     public ResponseEntity<List<ServiceActionTypeDTO>> getAllServiceTypesByFilterAndPage(ServiceActionTypeFilter serviceActionTypeFilter,
                                                                                         Pageable pageable) {
         log.debug("REST request to pageable get all serviceActionTypes by filter: {}", serviceActionTypeFilter);

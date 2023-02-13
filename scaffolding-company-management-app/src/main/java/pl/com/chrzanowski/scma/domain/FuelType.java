@@ -20,14 +20,9 @@ public class FuelType {
     @NotBlank
     private String name;
 
-    @Column(columnDefinition = "default now()")
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
     private LocalDateTime removeDate;
-
-    public FuelType(String name) {
-        this.name = name;
-    }
 
     public FuelType() {
     }
@@ -40,17 +35,6 @@ public class FuelType {
         this.removeDate = removeDate;
     }
 
-    private FuelType(Builder builder) {
-        setId(builder.id);
-        setName(builder.name);
-        setCreateDate(builder.createDate);
-        setModifyDate(builder.modifyDate);
-        setRemoveDate(builder.removeDate);
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
 
     public Long getId() {
         return id;
@@ -92,6 +76,23 @@ public class FuelType {
         this.removeDate = removeDate;
     }
 
+    public FuelType name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public FuelType createDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+    public FuelType modifyDate(LocalDateTime modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }public FuelType removeDate(LocalDateTime removeDate) {
+        this.removeDate = removeDate;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,46 +115,5 @@ public class FuelType {
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
                 '}';
-    }
-
-
-    public static final class Builder {
-        private Long id;
-        private @NotNull @NotBlank String name;
-        private LocalDateTime createDate;
-        private LocalDateTime modifyDate;
-        private LocalDateTime removeDate;
-
-        private Builder() {
-        }
-
-        public Builder id(Long val) {
-            id = val;
-            return this;
-        }
-
-        public Builder name(@NotNull @NotBlank String val) {
-            name = val;
-            return this;
-        }
-
-        public Builder createDate(LocalDateTime val) {
-            createDate = val;
-            return this;
-        }
-
-        public Builder modifyDate(LocalDateTime val) {
-            modifyDate = val;
-            return this;
-        }
-
-        public Builder removeDate(LocalDateTime val) {
-            removeDate = val;
-            return this;
-        }
-
-        public FuelType build() {
-            return new FuelType(this);
-        }
     }
 }
