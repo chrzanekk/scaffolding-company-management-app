@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.domain.User;
-import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.UserService;
+import pl.com.chrzanowski.scma.service.dto.UserDTO;
 
 import java.net.URI;
 import java.util.List;

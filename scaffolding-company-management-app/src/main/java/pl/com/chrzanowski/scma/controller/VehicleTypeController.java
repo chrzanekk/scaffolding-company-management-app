@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,7 +12,6 @@ import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
 import pl.com.chrzanowski.scma.service.VehicleTypeService;
 import pl.com.chrzanowski.scma.service.dto.VehicleTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.vehicletype.VehicleTypeFilter;
-
 
 import java.util.List;
 

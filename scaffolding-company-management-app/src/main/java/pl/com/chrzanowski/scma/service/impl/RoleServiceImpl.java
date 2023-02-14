@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
-import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
+import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.service.mapper.RoleMapper;
 
 import javax.transaction.Transactional;

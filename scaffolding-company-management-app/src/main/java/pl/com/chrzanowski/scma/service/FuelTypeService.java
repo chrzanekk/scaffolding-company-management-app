@@ -13,6 +13,7 @@ public interface FuelTypeService {
     FuelTypeDTO update(FuelTypeDTO fuelTypeDTO);
 
     List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter);
+    
     Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable);
 
     FuelTypeDTO findById(Long id);

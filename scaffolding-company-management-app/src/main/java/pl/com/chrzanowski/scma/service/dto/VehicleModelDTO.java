@@ -1,18 +1,18 @@
 package pl.com.chrzanowski.scma.service.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 
 public class VehicleModelDTO {
     private Long id;
     private String name;
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
-    private LocalDateTime removeDate;
+    private Instant createDate;
+    private Instant modifyDate;
+    private Instant removeDate;
     private Long brandId;
 
-    public VehicleModelDTO(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate, Long brandId) {
+    public VehicleModelDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate, Long brandId) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -38,15 +38,15 @@ public class VehicleModelDTO {
         return name;
     }
 
-    public LocalDateTime getCreateDate() {
+    public Instant getCreateDate() {
         return createDate;
     }
 
-    public LocalDateTime getModifyDate() {
+    public Instant getModifyDate() {
         return modifyDate;
     }
 
-    public LocalDateTime getRemoveDate() {
+    public Instant getRemoveDate() {
         return removeDate;
     }
 
@@ -83,9 +83,9 @@ public class VehicleModelDTO {
     public static final class Builder {
         private Long id;
         private String name;
-        private LocalDateTime createDate;
-        private LocalDateTime modifyDate;
-        private LocalDateTime removeDate;
+        private Instant createDate;
+        private Instant modifyDate;
+        private Instant removeDate;
         private Long brandId;
 
         private Builder() {
@@ -105,17 +105,17 @@ public class VehicleModelDTO {
             return this;
         }
 
-        public Builder createDate(LocalDateTime createDate) {
+        public Builder createDate(Instant createDate) {
             this.createDate = createDate;
             return this;
         }
 
-        public Builder modifyDate(LocalDateTime modifyDate) {
+        public Builder modifyDate(Instant modifyDate) {
             this.modifyDate = modifyDate;
             return this;
         }
 
-        public Builder removeDate(LocalDateTime removeDate) {
+        public Builder removeDate(Instant removeDate) {
             this.removeDate = removeDate;
             return this;
         }

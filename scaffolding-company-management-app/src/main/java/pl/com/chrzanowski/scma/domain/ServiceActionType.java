@@ -4,7 +4,7 @@ package pl.com.chrzanowski.scma.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -20,11 +20,11 @@ public class ServiceActionType {
     @NotBlank
     private String name;
 
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
-    private LocalDateTime removeDate;
+    private Instant createDate;
+    private Instant modifyDate;
+    private Instant removeDate;
 
-    public ServiceActionType(Long id, String name, LocalDateTime createDate, LocalDateTime modifyDate, LocalDateTime removeDate) {
+    public ServiceActionType(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
@@ -51,27 +51,27 @@ public class ServiceActionType {
         this.name = name;
     }
 
-    public LocalDateTime getCreateDate() {
+    public Instant getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(Instant createDate) {
         this.createDate = createDate;
     }
 
-    public LocalDateTime getModifyDate() {
+    public Instant getModifyDate() {
         return modifyDate;
     }
 
-    public void setModifyDate(LocalDateTime modifyDate) {
+    public void setModifyDate(Instant modifyDate) {
         this.modifyDate = modifyDate;
     }
 
-    public LocalDateTime getRemoveDate() {
+    public Instant getRemoveDate() {
         return removeDate;
     }
 
-    public void setRemoveDate(LocalDateTime removeDate) {
+    public void setRemoveDate(Instant removeDate) {
         this.removeDate = removeDate;
     }
 

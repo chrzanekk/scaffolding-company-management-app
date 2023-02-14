@@ -32,16 +32,14 @@ public class FuelTypeController {
     public ResponseEntity<List<FuelTypeDTO>> getAllFuelTypes() {
         log.debug("REST request to get all fuelTypes");
         List<FuelTypeDTO> fuelTypeList = fuelTypeService.findAll();
-        return ResponseEntity.ok()
-                .body(fuelTypeList);
+        return ResponseEntity.ok().body(fuelTypeList);
     }
 
     @GetMapping(path = "/")
     public ResponseEntity<List<FuelTypeDTO>> getFuelTypesByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("REST request to get fuelTypes by filter {}: ", fuelTypeFilter);
         List<FuelTypeDTO> fuelTypeDTOList = fuelTypeService.findByFilter(fuelTypeFilter);
-        return ResponseEntity.ok()
-                .body(fuelTypeDTOList);
+        return ResponseEntity.ok().body(fuelTypeDTOList);
     }
 
     @GetMapping(path = "/page")
@@ -49,43 +47,36 @@ public class FuelTypeController {
                                                                          Pageable pageable) {
         log.debug("REST request to get fuelTypes by filter {}: ", fuelTypeFilter);
         Page<FuelTypeDTO> page = fuelTypeService.findByFilterAndPage(fuelTypeFilter, pageable);
-        HttpHeaders headers =
-                PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), page);
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(page.getContent());
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping(path = "/getById/{id}")
     public ResponseEntity<FuelTypeDTO> getFuelTypeById(@PathVariable Long id) {
         log.debug("REST request to get fuelType by id:  {}", id);
         FuelTypeDTO fuelTypeDTO = fuelTypeService.findById(id);
-        return ResponseEntity.ok()
-                .body(fuelTypeDTO);
+        return ResponseEntity.ok().body(fuelTypeDTO);
     }
 
     @PostMapping(path = "/add")
     public ResponseEntity<FuelTypeDTO> addFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to add new fuelType: {}", fuelTypeDTO);
         FuelTypeDTO newFuelTypeDTO = fuelTypeService.save(fuelTypeDTO);
-        return ResponseEntity.ok()
-                .body(newFuelTypeDTO);
+        return ResponseEntity.ok().body(newFuelTypeDTO);
     }
 
     @PutMapping(path = "/update")
     public ResponseEntity<FuelTypeDTO> updateFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to update fuelType: {}", fuelTypeDTO);
         FuelTypeDTO updatedFuelTypeDTO = fuelTypeService.update(fuelTypeDTO);
-        return ResponseEntity.ok()
-                .body(updatedFuelTypeDTO);
+        return ResponseEntity.ok().body(updatedFuelTypeDTO);
     }
 
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<?> deleteFuelType(@PathVariable Long id) {
         log.debug("REST request to delete fuelType of id : {}", id);
         fuelTypeService.delete(id);
-        return ResponseEntity.ok()
-                .build();
+        return ResponseEntity.ok().build();
     }
 
 

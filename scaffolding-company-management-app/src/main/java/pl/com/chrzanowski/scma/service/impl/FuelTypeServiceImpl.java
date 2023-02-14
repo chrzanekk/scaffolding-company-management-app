@@ -16,7 +16,7 @@ import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +41,8 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public FuelTypeDTO save(FuelTypeDTO fuelTypeDTO) {
         log.debug("Save fuel type: {}", fuelTypeDTO);
-        FuelTypeDTO fuelTypeToSave =
-                FuelTypeDTO.Builder.builder()
-                        .name(fuelTypeDTO.getName())
-                        .createDate(setDateTimeIfNotExists(fuelTypeDTO.getCreateDate()))
-                        .build();
+        FuelTypeDTO fuelTypeToSave = FuelTypeDTO.Builder.builder().name(fuelTypeDTO.getName())
+                .createDate(setDateTimeIfNotExists(fuelTypeDTO.getCreateDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToSave));
         return fuelTypeMapper.toDto(fuelType);
     }
@@ -54,12 +51,9 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public FuelTypeDTO update(FuelTypeDTO fuelTypeDTO) {
         log.debug("Update fuel type: {}", fuelTypeDTO);
         FuelTypeDTO fuelTypeInDB = findById(fuelTypeDTO.getId());
-        FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder()
-                .id(fuelTypeDTO.getId())
-                .name(fuelTypeDTO.getName())
+        FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder().id(fuelTypeDTO.getId()).name(fuelTypeDTO.getName())
                 .createDate(setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
-                .modifyDate(setDateTimeIfNotExists(fuelTypeDTO.getModifyDate()))
-                .build();
+                .modifyDate(setDateTimeIfNotExists(fuelTypeDTO.getModifyDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToUpdate));
         return fuelTypeMapper.toDto(fuelType);
     }
@@ -68,8 +62,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public FuelTypeDTO findById(Long id) {
         log.debug("Find fuel type by id: {}", id);
         Optional<FuelType> fuelTypeOptional = fuelTypeRepository.findById(id);
-        return fuelTypeMapper.toDto(fuelTypeOptional.orElseThrow(() -> new ObjectNotFoundException("Fuel type not " +
-                "found")));
+        return fuelTypeMapper.toDto(fuelTypeOptional.orElseThrow(() -> new ObjectNotFoundException("Fuel type not " + "found")));
     }
 
     @Override
@@ -82,20 +75,15 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("Find all fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder()
-                .fuelTypeFilterAdd(fuelTypeFilter)
-                .build();
+        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }
 
     @Override
     public Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable) {
         log.debug("Find all pageable fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder()
-                .fuelTypeFilterAdd(fuelTypeFilter)
-                .build();
-        return fuelTypeRepository.findAll(spec, pageable)
-                .map(fuelTypeMapper::toDto);
+        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        return fuelTypeRepository.findAll(spec, pageable).map(fuelTypeMapper::toDto);
     }
 
     @Override
@@ -104,10 +92,10 @@ public class FuelTypeServiceImpl implements FuelTypeService {
         fuelTypeRepository.deleteFuelTypeById(id);
     }
 
-    private LocalDateTime setDateTimeIfNotExists(LocalDateTime localDateTime) {
+    private Instant setDateTimeIfNotExists(Instant localDateTime) {
         if (localDateTime != null) {
             return localDateTime;
         }
-        return LocalDateTime.now();
+        return Instant.now();
     }
 }

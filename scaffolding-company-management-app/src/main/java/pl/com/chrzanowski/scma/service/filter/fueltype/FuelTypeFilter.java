@@ -2,7 +2,7 @@ package pl.com.chrzanowski.scma.service.filter.fueltype;
 
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 public class FuelTypeFilter implements Serializable {
@@ -11,12 +11,12 @@ public class FuelTypeFilter implements Serializable {
 
     private Long id;
     private String name;
-    private LocalDateTime createDateStartWith;
-    private LocalDateTime createDateEndWith;
-    private LocalDateTime modifyDateStartWith;
-    private LocalDateTime modifyDateEndWith;
-    private LocalDateTime removeDateStartWith;
-    private LocalDateTime removeDateEndWith;
+    private Instant createDateStartWith;
+    private Instant createDateEndWith;
+    private Instant modifyDateStartWith;
+    private Instant modifyDateEndWith;
+    private Instant removeDateStartWith;
+    private Instant removeDateEndWith;
 
     public FuelTypeFilter() {
     }
@@ -41,27 +41,27 @@ public class FuelTypeFilter implements Serializable {
         return name;
     }
 
-    public LocalDateTime getCreateDateStartWith() {
+    public Instant getCreateDateStartWith() {
         return createDateStartWith;
     }
 
-    public LocalDateTime getCreateDateEndWith() {
+    public Instant getCreateDateEndWith() {
         return createDateEndWith;
     }
 
-    public LocalDateTime getModifyDateStartWith() {
+    public Instant getModifyDateStartWith() {
         return modifyDateStartWith;
     }
 
-    public LocalDateTime getModifyDateEndWith() {
+    public Instant getModifyDateEndWith() {
         return modifyDateEndWith;
     }
 
-    public LocalDateTime getRemoveDateStartWith() {
+    public Instant getRemoveDateStartWith() {
         return removeDateStartWith;
     }
 
-    public LocalDateTime getRemoveDateEndWith() {
+    public Instant getRemoveDateEndWith() {
         return removeDateEndWith;
     }
 
@@ -75,32 +75,32 @@ public class FuelTypeFilter implements Serializable {
         return this;
     }
 
-    public FuelTypeFilter setCreateDateStartWith(LocalDateTime createDateStartWith) {
+    public FuelTypeFilter setCreateDateStartWith(Instant createDateStartWith) {
         this.createDateStartWith = createDateStartWith;
         return this;
     }
 
-    public FuelTypeFilter setCreateDateEndWith(LocalDateTime createDateEndWith) {
+    public FuelTypeFilter setCreateDateEndWith(Instant createDateEndWith) {
         this.createDateEndWith = createDateEndWith;
         return this;
     }
 
-    public FuelTypeFilter setModifyDateStartWith(LocalDateTime modifyDateStartWith) {
+    public FuelTypeFilter setModifyDateStartWith(Instant modifyDateStartWith) {
         this.modifyDateStartWith = modifyDateStartWith;
         return this;
     }
 
-    public FuelTypeFilter setModifyDateEndWith(LocalDateTime modifyDateEndWith) {
+    public FuelTypeFilter setModifyDateEndWith(Instant modifyDateEndWith) {
         this.modifyDateEndWith = modifyDateEndWith;
         return this;
     }
 
-    public FuelTypeFilter setRemoveDateStartWith(LocalDateTime removeDateStartWith) {
+    public FuelTypeFilter setRemoveDateStartWith(Instant removeDateStartWith) {
         this.removeDateStartWith = removeDateStartWith;
         return this;
     }
 
-    public FuelTypeFilter setRemoveDateEndWith(LocalDateTime removeDateEndWith) {
+    public FuelTypeFilter setRemoveDateEndWith(Instant removeDateEndWith) {
         this.removeDateEndWith = removeDateEndWith;
         return this;
     }
@@ -136,12 +136,12 @@ public class FuelTypeFilter implements Serializable {
     public static final class Builder {
         private Long id;
         private String name;
-        private LocalDateTime createDateStartWith;
-        private LocalDateTime createDateEndWith;
-        private LocalDateTime modifyDateStartWith;
-        private LocalDateTime modifyDateEndWith;
-        private LocalDateTime removeDateStartWith;
-        private LocalDateTime removeDateEndWith;
+        private Instant createDateStartWith;
+        private Instant createDateEndWith;
+        private Instant modifyDateStartWith;
+        private Instant modifyDateEndWith;
+        private Instant removeDateStartWith;
+        private Instant removeDateEndWith;
 
         private Builder() {
         }
@@ -160,32 +160,32 @@ public class FuelTypeFilter implements Serializable {
             return this;
         }
 
-        public Builder createDateStartWith(LocalDateTime createDateStartWith) {
+        public Builder createDateStartWith(Instant createDateStartWith) {
             this.createDateStartWith = createDateStartWith;
             return this;
         }
 
-        public Builder createDateEndWith(LocalDateTime createDateEndWith) {
+        public Builder createDateEndWith(Instant createDateEndWith) {
             this.createDateEndWith = createDateEndWith;
             return this;
         }
 
-        public Builder modifyDateStartWith(LocalDateTime modifyDateStartWith) {
+        public Builder modifyDateStartWith(Instant modifyDateStartWith) {
             this.modifyDateStartWith = modifyDateStartWith;
             return this;
         }
 
-        public Builder modifyDateEndWith(LocalDateTime modifyDateEndWith) {
+        public Builder modifyDateEndWith(Instant modifyDateEndWith) {
             this.modifyDateEndWith = modifyDateEndWith;
             return this;
         }
 
-        public Builder removeDateStartWith(LocalDateTime removeDateStartWith) {
+        public Builder removeDateStartWith(Instant removeDateStartWith) {
             this.removeDateStartWith = removeDateStartWith;
             return this;
         }
 
-        public Builder removeDateEndWith(LocalDateTime removeDateEndWith) {
+        public Builder removeDateEndWith(Instant removeDateEndWith) {
             this.removeDateEndWith = removeDateEndWith;
             return this;
         }
