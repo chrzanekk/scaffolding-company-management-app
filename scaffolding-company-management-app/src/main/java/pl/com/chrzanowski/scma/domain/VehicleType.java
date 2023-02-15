@@ -14,7 +14,7 @@ public class VehicleType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 100)
     @NotNull
     @NotBlank
     private String name;
@@ -72,6 +72,26 @@ public class VehicleType {
 
     public void setRemoveDate(Instant removeDate) {
         this.removeDate = removeDate;
+    }
+
+    public VehicleType name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public VehicleType createDate(Instant createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public VehicleType modifyDate(Instant modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }
+
+    public VehicleType removeDate(Instant removeDate) {
+        this.removeDate = removeDate;
+        return this;
     }
 
     @Override

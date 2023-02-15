@@ -64,6 +64,46 @@ public class VehicleTypeFilter {
         return removeDateEndWith;
     }
 
+    public VehicleTypeFilter setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public VehicleTypeFilter setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public VehicleTypeFilter setCreateDateStartWith(LocalDateTime createDateStartWith) {
+        this.createDateStartWith = createDateStartWith;
+        return this;
+    }
+
+    public VehicleTypeFilter setCreateDateEndWith(LocalDateTime createDateEndWith) {
+        this.createDateEndWith = createDateEndWith;
+        return this;
+    }
+
+    public VehicleTypeFilter setModifyDateStartWith(LocalDateTime modifyDateStartWith) {
+        this.modifyDateStartWith = modifyDateStartWith;
+        return this;
+    }
+
+    public VehicleTypeFilter setModifyDateEndWith(LocalDateTime modifyDateEndWith) {
+        this.modifyDateEndWith = modifyDateEndWith;
+        return this;
+    }
+
+    public VehicleTypeFilter setRemoveDateStartWith(LocalDateTime removeDateStartWith) {
+        this.removeDateStartWith = removeDateStartWith;
+        return this;
+    }
+
+    public VehicleTypeFilter setRemoveDateEndWith(LocalDateTime removeDateEndWith) {
+        this.removeDateEndWith = removeDateEndWith;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

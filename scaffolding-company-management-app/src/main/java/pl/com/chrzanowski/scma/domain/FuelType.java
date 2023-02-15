@@ -15,7 +15,7 @@ public class FuelType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
+    @Column(length = 100)
     @NotNull
     @NotBlank
     private String name;

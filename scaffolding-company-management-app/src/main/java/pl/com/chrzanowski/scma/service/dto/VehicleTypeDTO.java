@@ -19,9 +19,6 @@ public class VehicleTypeDTO {
         this.removeDate = removeDate;
     }
 
-    public VehicleTypeDTO() {
-    }
-
     private VehicleTypeDTO(Builder builder) {
         id = builder.id;
         name = builder.name;

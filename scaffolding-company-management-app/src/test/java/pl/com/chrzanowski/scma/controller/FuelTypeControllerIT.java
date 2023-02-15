@@ -79,11 +79,11 @@ public class FuelTypeControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTO))).andExpect(status().isOk());
 
         List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
-        FuelType firstFuelType = allFuelTypes.get(0);
+        FuelType firstFuelTypeFromDB = allFuelTypes.get(0);
         int sizeAfterTest = allFuelTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
-        assertThat(firstFuelType.getName()).isEqualTo(FIRST_DEFAULT_NAME);
-        assertThat(firstFuelType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(firstFuelTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
+        assertThat(firstFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
 
     @Test
@@ -100,13 +100,13 @@ public class FuelTypeControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTOtoUpdate))).andExpect(status().isOk());
 
         List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
-        FuelType firstFuelType = allFuelTypes.get(0);
+        FuelType firstFuelTypeFromDB = allFuelTypes.get(0);
         int sizeAfterTest = allFuelTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
-        assertThat(firstFuelType.getId()).isEqualTo(fuelTypeDTO.getId());
-        assertThat(firstFuelType.getName()).isEqualTo(FIRST_UPDATED_NAME);
-        assertThat(firstFuelType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
-        assertThat(firstFuelType.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+        assertThat(firstFuelTypeFromDB.getId()).isEqualTo(fuelTypeDTO.getId());
+        assertThat(firstFuelTypeFromDB.getName()).isEqualTo(FIRST_UPDATED_NAME);
+        assertThat(firstFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(firstFuelTypeFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
     }
 
     @Test
@@ -121,14 +121,14 @@ public class FuelTypeControllerIT {
         List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
         int sizeAfterTest = allFuelTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
-        FuelType firstFuelType = allFuelTypes.get(0);
-        assertThat(firstFuelType.getId()).isEqualTo(fuelType.getId());
-        assertThat(firstFuelType.getName()).isEqualTo(FIRST_DEFAULT_NAME);
-        assertThat(firstFuelType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
-        FuelType secondFuelType = allFuelTypes.get(1);
-        assertThat(secondFuelType.getId()).isEqualTo(secondFuelType.getId());
-        assertThat(secondFuelType.getName()).isEqualTo(SECOND_DEFAULT_NAME);
-        assertThat(secondFuelType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        FuelType firstFuelTypeFromDB = allFuelTypes.get(0);
+        assertThat(firstFuelTypeFromDB.getId()).isEqualTo(fuelType.getId());
+        assertThat(firstFuelTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
+        assertThat(firstFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        FuelType secondFuelTypeFromDB = allFuelTypes.get(1);
+        assertThat(secondFuelTypeFromDB.getId()).isEqualTo(secondFuelType.getId());
+        assertThat(secondFuelTypeFromDB.getName()).isEqualTo(SECOND_DEFAULT_NAME);
+        assertThat(secondFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
 
     @Test
@@ -161,7 +161,22 @@ public class FuelTypeControllerIT {
                 .andExpect(jsonPath("$.id").value(fuelType.getId().intValue()))
                 .andExpect(jsonPath("$.name").value(fuelType.getName()))
                 .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
 
+    @Test
+    @Transactional
+    public void deleteFuelTypeById() throws Exception {
+        createGlobalTwoFuelTypes();
+
+        List<FuelType> allBeforeTest = fuelTypeRepository.findAll();
+        int sizeBeforeTest = allBeforeTest.size();
+
+        restFuelTypeMockMvc.perform(delete(API_PATH + "/delete/{id}", fuelType.getId()))
+                .andExpect(status().isOk());
+        List<FuelType> allAfterTest = fuelTypeRepository.findAll();
+        int sizeAfterTest = allAfterTest.size();
+
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
 
     }
 

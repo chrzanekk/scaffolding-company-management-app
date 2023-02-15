@@ -11,8 +11,8 @@ public interface VehicleTypeMapper extends EntityMapper<VehicleTypeDTO, VehicleT
         if (id == null) {
             return null;
         }
-        VehicleType fuelType = new VehicleType();
-        fuelType.setId(id);
-        return fuelType;
+        VehicleType vehicleType = new VehicleType();
+        vehicleType.setId(id);
+        return vehicleType;
     }
 }

@@ -80,11 +80,11 @@ public class ServiceActionTypeControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTO))).andExpect(status().isOk());
 
         List<ServiceActionType> allServiceActionTypes = serviceActionTypeRepository.findAll();
-        ServiceActionType firstServiceActionType = allServiceActionTypes.get(0);
+        ServiceActionType firstServiceActionTypeFromDB = allServiceActionTypes.get(0);
         int sizeAfterTest = allServiceActionTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
-        assertThat(firstServiceActionType.getName()).isEqualTo(FIRST_DEFAULT_NAME);
-        assertThat(firstServiceActionType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(firstServiceActionTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
+        assertThat(firstServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
 
     @Test
@@ -102,13 +102,13 @@ public class ServiceActionTypeControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO1))).andExpect(status().isOk());
 
         List<ServiceActionType> serviceActionTypes = serviceActionTypeRepository.findAll();
-        ServiceActionType firstServiceActionType = serviceActionTypes.get(0);
+        ServiceActionType firstServiceActionTypeFromDB = serviceActionTypes.get(0);
         int sizeAfterTest = serviceActionTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
-        assertThat(firstServiceActionType.getId()).isEqualTo(serviceActionTypeDTO.getId());
-        assertThat(firstServiceActionType.getName()).isEqualTo(FIRST_UPDATED_NAME);
-        assertThat(firstServiceActionType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
-        assertThat(firstServiceActionType.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+        assertThat(firstServiceActionTypeFromDB.getId()).isEqualTo(serviceActionTypeDTO.getId());
+        assertThat(firstServiceActionTypeFromDB.getName()).isEqualTo(FIRST_UPDATED_NAME);
+        assertThat(firstServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(firstServiceActionTypeFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
     }
 
     @Test
@@ -123,14 +123,14 @@ public class ServiceActionTypeControllerIT {
         List<ServiceActionType> allServiceActionTypes = serviceActionTypeRepository.findAll();
         int sizeAfterTest = allServiceActionTypes.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
-        ServiceActionType firstServiceActionType = allServiceActionTypes.get(0);
-        assertThat(firstServiceActionType.getId()).isEqualTo(serviceActionType.getId());
-        assertThat(firstServiceActionType.getName()).isEqualTo(FIRST_DEFAULT_NAME);
-        assertThat(firstServiceActionType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
-        ServiceActionType secondServiceActionType = allServiceActionTypes.get(1);
-        assertThat(secondServiceActionType.getId()).isEqualTo(secondServiceActionType.getId());
-        assertThat(secondServiceActionType.getName()).isEqualTo(SECOND_DEFAULT_NAME);
-        assertThat(secondServiceActionType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        ServiceActionType firstServiceActionTypeFromDB = allServiceActionTypes.get(0);
+        assertThat(firstServiceActionTypeFromDB.getId()).isEqualTo(serviceActionType.getId());
+        assertThat(firstServiceActionTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
+        assertThat(firstServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        ServiceActionType secondServiceActionTypeFromDB = allServiceActionTypes.get(1);
+        assertThat(secondServiceActionTypeFromDB.getId()).isEqualTo(secondServiceActionType.getId());
+        assertThat(secondServiceActionTypeFromDB.getName()).isEqualTo(SECOND_DEFAULT_NAME);
+        assertThat(secondServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ServiceActionTypeControllerIT {
 
     @Test
     @Transactional
-    public void findFuelTypeById() throws Exception {
+    public void findServiceActionTypeById() throws Exception {
         createGlobalTwoServiceActionTypes();
 
         restServiceActionTypeMockMvc.perform(get(API_PATH + "/getById/{id}", serviceActionType.getId()))
@@ -161,6 +161,23 @@ public class ServiceActionTypeControllerIT {
                 .andExpect(jsonPath("$.id").value(serviceActionType.getId().intValue()))
                 .andExpect(jsonPath("$.name").value(serviceActionType.getName()))
                 .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void deleteServiceActionTypeById() throws Exception {
+        createGlobalTwoServiceActionTypes();
+
+        List<ServiceActionType> allBeforeTest = serviceActionTypeRepository.findAll();
+        int sizeBeforeTest = allBeforeTest.size();
+
+        restServiceActionTypeMockMvc.perform(delete(API_PATH + "/delete/{id}", serviceActionType.getId()))
+                .andExpect(status().isOk());
+        List<ServiceActionType> allAfterTest = serviceActionTypeRepository.findAll();
+        int sizeAfterTest = allAfterTest.size();
+
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
+
     }
 
 
