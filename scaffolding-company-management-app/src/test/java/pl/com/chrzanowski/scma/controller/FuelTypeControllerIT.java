@@ -89,8 +89,6 @@ public class FuelTypeControllerIT {
     @Test
     @Transactional
     public void updateFuelType() throws Exception {
-//        em.persist(fuelType);
-//        em.flush();
         createGlobalTwoFuelTypes();
         int sizeBeforeTest = fuelTypeRepository.findAll().size();
 
@@ -143,6 +141,14 @@ public class FuelTypeControllerIT {
 
     @Test
     @Transactional
+    public void findAllUpdatedFuelTypesWithFilter() throws Exception {
+        createGlobalTwoUpdatedFuelTypes();
+        defaultUpdatedFuelTypeShouldBeFound("name=" + FIRST_UPDATED_NAME);
+        defaultFuelTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);
+    }
+
+    @Test
+    @Transactional
     public void findFuelTypeById() throws Exception {
         createGlobalTwoFuelTypes();
 
@@ -155,6 +161,7 @@ public class FuelTypeControllerIT {
                 .andExpect(jsonPath("$.id").value(fuelType.getId().intValue()))
                 .andExpect(jsonPath("$.name").value(fuelType.getName()))
                 .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+
 
     }
 
@@ -169,12 +176,33 @@ public class FuelTypeControllerIT {
         em.flush();
     }
 
+    private void createGlobalTwoUpdatedFuelTypes() {
+        fuelType.setModifyDate(DEFAULT_MODIFY_DATE);
+        fuelType.setName(FIRST_UPDATED_NAME);
+        em.persist(fuelType);
+        em.flush();
+
+        secondFuelType = createUpdatedEntity(em);
+        secondFuelType.setName(SECOND_DEFAULT_NAME);
+        em.persist(secondFuelType);
+        em.flush();
+    }
+
     private void defaultFuelTypeShouldBeFound(String filter) throws Exception {
         restFuelTypeMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(fuelType.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(fuelType.getName())))
                 .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
+    }
+
+    private void defaultUpdatedFuelTypeShouldBeFound(String filter) throws Exception {
+        restFuelTypeMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(fuelType.getId().intValue())))
+                .andExpect(jsonPath("$.[*].name").value(hasItem(fuelType.getName())))
+                .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())))
+                .andExpect(jsonPath("$.[*].modifyDate").value(hasItem(DEFAULT_MODIFY_DATE.toString())));
     }
 
     private void defaultFuelTypeShouldNotBeFound(String filter) throws Exception {

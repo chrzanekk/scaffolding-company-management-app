@@ -14,6 +14,7 @@ import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.serviceactiontype.ServiceActionTypeFilter;
 import pl.com.chrzanowski.scma.service.filter.serviceactiontype.ServiceActionTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.ServiceActionTypeMapper;
+import pl.com.chrzanowski.scma.util.DateTimeUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,16 +38,22 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
     @Override
     public ServiceActionTypeDTO save(ServiceActionTypeDTO serviceActionTypeDTO) {
         log.debug("Save service action type: {}", serviceActionTypeDTO);
+        ServiceActionTypeDTO serviceActionTypeDTOtoSave =
+                ServiceActionTypeDTO.Builder.builder().name(serviceActionTypeDTO.getName())
+                        .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getCreateDate())).build();
         ServiceActionType serviceActionType =
-                serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTO));
+                serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTOtoSave));
         return serviceActionTypeMapper.toDto(serviceActionType);
     }
 
     @Override
     public ServiceActionTypeDTO update(ServiceActionTypeDTO serviceActionTypeDTO) {
         log.debug("Update service action type: {}", serviceActionTypeDTO);
+        ServiceActionTypeDTO serviceActionTypeDTOtoUpdate =
+                ServiceActionTypeDTO.Builder.builder().id(serviceActionTypeDTO.getId()).name(serviceActionTypeDTO.getName())
+                        .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getCreateDate())).modifyDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getModifyDate())).build();
         ServiceActionType serviceActionType =
-                serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTO));
+                serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTOtoUpdate));
         return serviceActionTypeMapper.toDto(serviceActionType);
     }
 
@@ -71,7 +78,7 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
     public ServiceActionTypeDTO findById(Long id) {
         log.debug("Find service action type by id: {}", id);
         Optional<ServiceActionType> serviceActionType = serviceActionTypeRepository.findById(id);
-        return serviceActionTypeMapper.toDto(serviceActionType.orElseThrow(()-> new ObjectNotFoundException(" " +
+        return serviceActionTypeMapper.toDto(serviceActionType.orElseThrow(() -> new ObjectNotFoundException(" " +
                 "Service action type not found")));
     }
 
@@ -87,4 +94,5 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
         log.debug("Delete service action type by id: {}", id);
         serviceActionTypeRepository.deleteServiceActionTypeById(id);
     }
+
 }

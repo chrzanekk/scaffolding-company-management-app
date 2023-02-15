@@ -14,9 +14,9 @@ import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
+import pl.com.chrzanowski.scma.util.DateTimeUtil;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public FuelTypeDTO save(FuelTypeDTO fuelTypeDTO) {
         log.debug("Save fuel type: {}", fuelTypeDTO);
         FuelTypeDTO fuelTypeToSave = FuelTypeDTO.Builder.builder().name(fuelTypeDTO.getName())
-                .createDate(setDateTimeIfNotExists(fuelTypeDTO.getCreateDate())).build();
+                .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeDTO.getCreateDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToSave));
         return fuelTypeMapper.toDto(fuelType);
     }
@@ -52,8 +52,8 @@ public class FuelTypeServiceImpl implements FuelTypeService {
         log.debug("Update fuel type: {}", fuelTypeDTO);
         FuelTypeDTO fuelTypeInDB = findById(fuelTypeDTO.getId());
         FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder().id(fuelTypeDTO.getId()).name(fuelTypeDTO.getName())
-                .createDate(setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
-                .modifyDate(setDateTimeIfNotExists(fuelTypeDTO.getModifyDate())).build();
+                .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
+                .modifyDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeDTO.getModifyDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToUpdate));
         return fuelTypeMapper.toDto(fuelType);
     }
@@ -90,12 +90,5 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public void delete(Long id) {
         log.debug("Delete fuel typ of id: {}", id);
         fuelTypeRepository.deleteFuelTypeById(id);
-    }
-
-    private Instant setDateTimeIfNotExists(Instant localDateTime) {
-        if (localDateTime != null) {
-            return localDateTime;
-        }
-        return Instant.now();
     }
 }

@@ -75,6 +75,26 @@ public class ServiceActionType {
         this.removeDate = removeDate;
     }
 
+    public ServiceActionType name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public ServiceActionType createDate(Instant createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public ServiceActionType modifyDate(Instant modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }
+
+    public ServiceActionType removeDate(Instant removeDate) {
+        this.removeDate = removeDate;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

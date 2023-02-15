@@ -64,6 +64,46 @@ public class ServiceActionTypeFilter {
         return removeDateEndWith;
     }
 
+    public ServiceActionTypeFilter setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setCreateDateStartWith(LocalDateTime createDateStartWith) {
+        this.createDateStartWith = createDateStartWith;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setCreateDateEndWith(LocalDateTime createDateEndWith) {
+        this.createDateEndWith = createDateEndWith;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setModifyDateStartWith(LocalDateTime modifyDateStartWith) {
+        this.modifyDateStartWith = modifyDateStartWith;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setModifyDateEndWith(LocalDateTime modifyDateEndWith) {
+        this.modifyDateEndWith = modifyDateEndWith;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setRemoveDateStartWith(LocalDateTime removeDateStartWith) {
+        this.removeDateStartWith = removeDateStartWith;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setRemoveDateEndWith(LocalDateTime removeDateEndWith) {
+        this.removeDateEndWith = removeDateEndWith;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
