@@ -10,15 +10,23 @@ public class VehicleModelDTO {
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
-    private Long brandId;
+    private Long vehicleBrandId;
+    private String vehicleBrandName;
 
-    public VehicleModelDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate, Long brandId) {
+    public VehicleModelDTO(Long id,
+                           String name,
+                           Instant createDate,
+                           Instant modifyDate,
+                           Instant removeDate,
+                           Long vehicleBrandId,
+                           String vehicleBrandName) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
-        this.brandId = brandId;
+        this.vehicleBrandId = vehicleBrandId;
+        this.vehicleBrandName = vehicleBrandName;
     }
 
     private VehicleModelDTO(Builder builder) {
@@ -27,7 +35,8 @@ public class VehicleModelDTO {
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
-        brandId = builder.brandId;
+        vehicleBrandId = builder.vehicleBrandId;
+        vehicleBrandName = builder.vehicleBrandName;
     }
 
     public Long getId() {
@@ -50,21 +59,40 @@ public class VehicleModelDTO {
         return removeDate;
     }
 
-    public Long getBrandId() {
-        return brandId;
+    public Long getVehicleBrandId() {
+        return vehicleBrandId;
+    }
+
+    public String getVehicleBrandName() {
+        return vehicleBrandName;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         VehicleModelDTO that = (VehicleModelDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate) && Objects.equals(brandId, that.brandId);
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(createDate, that.createDate)) return false;
+        if (!Objects.equals(modifyDate, that.modifyDate)) return false;
+        if (!Objects.equals(removeDate, that.removeDate)) return false;
+        if (!Objects.equals(vehicleBrandId, that.vehicleBrandId)) return false;
+        return Objects.equals(vehicleBrandName, that.vehicleBrandName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createDate, modifyDate, removeDate, brandId);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
+        result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
+        result = 31 * result + (vehicleBrandId != null ? vehicleBrandId.hashCode() : 0);
+        result = 31 * result + (vehicleBrandName != null ? vehicleBrandName.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -75,7 +103,8 @@ public class VehicleModelDTO {
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
-                ", brandId=" + brandId +
+                ", brandId=" + vehicleBrandId +
+                ", brandName=" + vehicleBrandName +
                 '}';
     }
 
@@ -86,7 +115,8 @@ public class VehicleModelDTO {
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
-        private Long brandId;
+        private Long vehicleBrandId;
+        private String vehicleBrandName;
 
         private Builder() {
         }
@@ -120,8 +150,13 @@ public class VehicleModelDTO {
             return this;
         }
 
-        public Builder brandId(Long brandId) {
-            this.brandId = brandId;
+        public Builder brandId(Long vehicleBrandId) {
+            this.vehicleBrandId = vehicleBrandId;
+            return this;
+        }
+
+        public Builder brandName(String vehicleBrandName) {
+            this.vehicleBrandName = vehicleBrandName;
             return this;
         }
 

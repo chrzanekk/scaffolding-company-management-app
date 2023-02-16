@@ -14,6 +14,7 @@ import pl.com.chrzanowski.scma.service.dto.VehicleBrandDTO;
 import pl.com.chrzanowski.scma.service.filter.vehiclebrand.VehicleBrandFilter;
 import pl.com.chrzanowski.scma.service.filter.vehiclebrand.VehicleBrandSpecification;
 import pl.com.chrzanowski.scma.service.mapper.VehicleBrandMapper;
+import pl.com.chrzanowski.scma.util.DateTimeUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +38,21 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     @Override
     public VehicleBrandDTO save(VehicleBrandDTO vehicleBrandDTO) {
         log.debug("Save vehicle brand: {}", vehicleBrandDTO);
-        VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTO));
+        VehicleBrandDTO vehicleBrandDTOToSave =
+                VehicleBrandDTO.Builder.builder().name(vehicleBrandDTO.getName())
+                        .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate())).build();
+        VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTOToSave));
         return vehicleBrandMapper.toDto(vehicleBrand);
     }
 
     @Override
     public VehicleBrandDTO update(VehicleBrandDTO vehicleBrandDTO) {
         log.debug("Update vehicle brand: {}", vehicleBrandDTO);
-        VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTO));
+        VehicleBrandDTO vehicleBrandDTOToUpdate =
+                VehicleBrandDTO.Builder.builder().id(vehicleBrandDTO.getId()).name(vehicleBrandDTO.getName())
+                        .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate()))
+                        .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getModifyDate())).build();
+        VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTOToUpdate));
         return vehicleBrandMapper.toDto(vehicleBrand);
     }
 
@@ -62,7 +70,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
         log.debug("Find all pageable vehicle brands by filter: {}", vehicleBrandFilter);
         Specification<VehicleBrand> spec =
                 VehicleBrandSpecification.builder().vehicleBrandFilter(vehicleBrandFilter).build();
-        return vehicleBrandRepository.findAll(spec,pageable).map(vehicleBrandMapper::toDto);
+        return vehicleBrandRepository.findAll(spec, pageable).map(vehicleBrandMapper::toDto);
     }
 
     @Override

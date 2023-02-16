@@ -27,9 +27,15 @@ public class VehicleModel {
     private Instant removeDate;
 
     @ManyToOne
+    @JoinColumn(name = "vehicle_brand")
     private VehicleBrand vehicleBrand;
 
-    public VehicleModel(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate, VehicleBrand vehicleBrand) {
+    public VehicleModel(Long id,
+                        String name,
+                        Instant createDate,
+                        Instant modifyDate,
+                        Instant removeDate,
+                        VehicleBrand vehicleBrand) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;

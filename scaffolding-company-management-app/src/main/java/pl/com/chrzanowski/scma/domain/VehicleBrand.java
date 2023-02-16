@@ -76,6 +76,26 @@ public class VehicleBrand {
         this.removeDate = removeDate;
     }
 
+    public VehicleBrand name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public VehicleBrand createDate(Instant createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public VehicleBrand modifyDate(Instant modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }
+
+    public VehicleBrand removeDate(Instant removeDate) {
+        this.removeDate = removeDate;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

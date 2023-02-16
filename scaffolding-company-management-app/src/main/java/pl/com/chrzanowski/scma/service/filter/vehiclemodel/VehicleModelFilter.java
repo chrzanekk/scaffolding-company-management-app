@@ -1,11 +1,14 @@
-package pl.com.chrzanowski.scma.service.filter.vehiclebrand;
+package pl.com.chrzanowski.scma.service.filter.vehiclemodel;
 
 import java.time.Instant;
 import java.util.Objects;
 
-public class VehicleBrandFilter {
+public class VehicleModelFilter {
+
     private Long id;
     private String name;
+    private Long vehicleBrandId;
+    private String vehicleBrandName;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
@@ -13,23 +16,26 @@ public class VehicleBrandFilter {
     private Instant removeDateStartWith;
     private Instant removeDateEndWith;
 
-    public VehicleBrandFilter() {
+    public VehicleModelFilter() {
     }
 
-    private VehicleBrandFilter(Builder builder) {
-        id = builder.id;
-        name = builder.name;
-        createDateStartWith = builder.createDateStartWith;
-        createDateEndWith = builder.createDateEndWith;
-        modifyDateStartWith = builder.modifyDateStartWith;
-        modifyDateEndWith = builder.modifyDateEndWith;
-        removeDateStartWith = builder.removeDateStartWith;
-        removeDateEndWith = builder.removeDateEndWith;
+    private VehicleModelFilter(Builder builder) {
+        setId(builder.id);
+        setName(builder.name);
+        setVehicleBrandId(builder.vehicleBrandId);
+        setVehicleBrandName(builder.vehicleBrandName);
+        setCreateDateStartWith(builder.createDateStartWith);
+        setCreateDateEndWith(builder.createDateEndWith);
+        setModifyDateStartWith(builder.modifyDateStartWith);
+        setModifyDateEndWith(builder.modifyDateEndWith);
+        setRemoveDateStartWith(builder.removeDateStartWith);
+        setRemoveDateEndWith(builder.removeDateEndWith);
     }
 
     public static Builder builder() {
         return new Builder();
     }
+
 
     public Long getId() {
         return id;
@@ -63,43 +69,61 @@ public class VehicleBrandFilter {
         return removeDateEndWith;
     }
 
-    public VehicleBrandFilter setId(Long id) {
+    public Long getVehicleBrandId() {
+        return vehicleBrandId;
+    }
+
+    public String getVehicleBrandName() {
+        return vehicleBrandName;
+    }
+
+    public VehicleModelFilter setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public VehicleBrandFilter setName(String name) {
+    public VehicleModelFilter setName(String name) {
         this.name = name;
         return this;
     }
 
-    public VehicleBrandFilter setCreateDateStartWith(Instant createDateStartWith) {
+    public VehicleModelFilter setCreateDateStartWith(Instant createDateStartWith) {
         this.createDateStartWith = createDateStartWith;
         return this;
     }
 
-    public VehicleBrandFilter setCreateDateEndWith(Instant createDateEndWith) {
+    public VehicleModelFilter setCreateDateEndWith(Instant createDateEndWith) {
         this.createDateEndWith = createDateEndWith;
         return this;
     }
 
-    public VehicleBrandFilter setModifyDateStartWith(Instant modifyDateStartWith) {
+    public VehicleModelFilter setModifyDateStartWith(Instant modifyDateStartWith) {
         this.modifyDateStartWith = modifyDateStartWith;
         return this;
     }
 
-    public VehicleBrandFilter setModifyDateEndWith(Instant modifyDateEndWith) {
+    public VehicleModelFilter setModifyDateEndWith(Instant modifyDateEndWith) {
         this.modifyDateEndWith = modifyDateEndWith;
         return this;
     }
 
-    public VehicleBrandFilter setRemoveDateStartWith(Instant removeDateStartWith) {
+    public VehicleModelFilter setRemoveDateStartWith(Instant removeDateStartWith) {
         this.removeDateStartWith = removeDateStartWith;
         return this;
     }
 
-    public VehicleBrandFilter setRemoveDateEndWith(Instant removeDateEndWith) {
+    public VehicleModelFilter setRemoveDateEndWith(Instant removeDateEndWith) {
         this.removeDateEndWith = removeDateEndWith;
+        return this;
+    }
+
+    public VehicleModelFilter setVehicleBrandId(Long vehicleBrandId) {
+        this.vehicleBrandId = vehicleBrandId;
+        return this;
+    }
+
+    public VehicleModelFilter setVehicleBrandName(String vehicleBrandName) {
+        this.vehicleBrandName = vehicleBrandName;
         return this;
     }
 
@@ -108,10 +132,14 @@ public class VehicleBrandFilter {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VehicleBrandFilter that = (VehicleBrandFilter) o;
+        VehicleModelFilter that = (VehicleModelFilter) o;
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(vehicleBrandId, that.vehicleBrandId))
+            return false;
+        if (!Objects.equals(vehicleBrandName, that.vehicleBrandName))
+            return false;
         if (!Objects.equals(createDateStartWith, that.createDateStartWith))
             return false;
         if (!Objects.equals(createDateEndWith, that.createDateEndWith))
@@ -129,6 +157,8 @@ public class VehicleBrandFilter {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (vehicleBrandId != null ? vehicleBrandId.hashCode() : 0);
+        result = 31 * result + (vehicleBrandName != null ? vehicleBrandName.hashCode() : 0);
         result = 31 * result + (createDateStartWith != null ? createDateStartWith.hashCode() : 0);
         result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
         result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
@@ -140,9 +170,11 @@ public class VehicleBrandFilter {
 
     @Override
     public String toString() {
-        return "VehicleBrandFilter{" +
+        return "VehicleModelFilter{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", vehicleBrandId=" + vehicleBrandId +
+                ", vehicleBrandName='" + vehicleBrandName + '\'' +
                 ", createDateStartWith=" + createDateStartWith +
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
@@ -156,6 +188,8 @@ public class VehicleBrandFilter {
     public static final class Builder {
         private Long id;
         private String name;
+        private Long vehicleBrandId;
+        private String vehicleBrandName;
         private Instant createDateStartWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
@@ -173,6 +207,16 @@ public class VehicleBrandFilter {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder vehicleBrandId(Long vehicleBrandId) {
+            this.vehicleBrandId = vehicleBrandId;
+            return this;
+        }
+
+        public Builder vehicleBrandName(String vehicleBrandName) {
+            this.vehicleBrandName = vehicleBrandName;
             return this;
         }
 
@@ -206,8 +250,8 @@ public class VehicleBrandFilter {
             return this;
         }
 
-        public VehicleBrandFilter build() {
-            return new VehicleBrandFilter(this);
+        public VehicleModelFilter build() {
+            return new VehicleModelFilter(this);
         }
     }
 }
