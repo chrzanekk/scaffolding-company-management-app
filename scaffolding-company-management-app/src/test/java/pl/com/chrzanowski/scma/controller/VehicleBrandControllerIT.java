@@ -145,7 +145,7 @@ public class VehicleBrandControllerIT {
     @Test
     @Transactional
     public void findAllUpdatedVehicleBrandsWithFilter() throws Exception {
-        createGlobalTwoUpdatedVehicleTypes();
+        createGlobalTwoUpdatedVehicleModels();
         defaultUpdatedVehicleBrandShouldBeFound("name=" + FIRST_UPDATED_NAME);
         defaultVehicleBrandShouldNotBeFound("name=" + FIRST_BAD_NAME);
     }
@@ -192,7 +192,7 @@ public class VehicleBrandControllerIT {
         em.flush();
     }
 
-    private void createGlobalTwoUpdatedVehicleTypes() {
+    private void createGlobalTwoUpdatedVehicleModels() {
         vehicleBrand.setModifyDate(DEFAULT_MODIFY_DATE);
         vehicleBrand.setName(FIRST_UPDATED_NAME);
         em.persist(vehicleBrand);

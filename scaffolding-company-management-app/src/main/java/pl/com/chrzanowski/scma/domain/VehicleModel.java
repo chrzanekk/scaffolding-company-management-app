@@ -51,48 +51,54 @@ public class VehicleModel {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Instant getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Instant createDate) {
-        this.createDate = createDate;
-    }
-
     public Instant getModifyDate() {
         return modifyDate;
-    }
-
-    public void setModifyDate(Instant modifyDate) {
-        this.modifyDate = modifyDate;
     }
 
     public Instant getRemoveDate() {
         return removeDate;
     }
 
-    public void setRemoveDate(Instant removeDate) {
-        this.removeDate = removeDate;
-    }
-
-    public VehicleBrand getVehicleBrand() {
+     public VehicleBrand getVehicleBrand() {
         return vehicleBrand;
     }
 
-    public void setVehicleBrand(VehicleBrand vehicleBrand) {
+    public VehicleModel setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public VehicleModel setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public VehicleModel setCreateDate(Instant createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public VehicleModel setModifyDate(Instant modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }
+
+    public VehicleModel setRemoveDate(Instant removeDate) {
+        this.removeDate = removeDate;
+        return this;
+    }
+
+    public VehicleModel setVehicleBrand(VehicleBrand vehicleBrand) {
         this.vehicleBrand = vehicleBrand;
+        return this;
     }
 
     @Override
