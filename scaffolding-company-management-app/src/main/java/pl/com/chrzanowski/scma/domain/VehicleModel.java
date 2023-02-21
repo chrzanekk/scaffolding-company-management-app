@@ -17,7 +17,7 @@ public class VehicleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200)
+    @Column(name = "name", length = 200)
     @NotNull
     @NotBlank
     private String name;

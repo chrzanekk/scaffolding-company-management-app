@@ -11,9 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.VehicleBrand;
 import pl.com.chrzanowski.scma.domain.VehicleModel;
+import pl.com.chrzanowski.scma.repository.VehicleBrandRepository;
 import pl.com.chrzanowski.scma.repository.VehicleModelRepository;
 import pl.com.chrzanowski.scma.service.VehicleModelService;
-import pl.com.chrzanowski.scma.service.dto.VehicleBrandDTO;
 import pl.com.chrzanowski.scma.service.dto.VehicleModelDTO;
 import pl.com.chrzanowski.scma.service.mapper.VehicleModelMapper;
 
@@ -33,19 +33,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class VehicleModelControllerIT {
 
 
-    private static final String API_PATH = "/api/vehicleBrands";
+    private static final String API_PATH = "/api/vehicleModels";
 
-    private static final String FIRST_DEFAULT_MODEL_NAME = "firstDefaultModelBrand";
-    private static final String FIRST_UPDATED_MODEL_NAME = "firstUpdatedModelBrand";
-    private static final String FIRST_BAD_MODEL_NAME = "firstBadModelBrand";
-    private static final String SECOND_DEFAULT_MODEL_NAME = "secondDefaultModelBrand";
-    private static final String SECOND_UPDATED_MODEL_NAME = "secondUpdatedModelBrand";
+    private static final String FIRST_DEFAULT_MODEL_NAME = "firstDefaultModel";
+    private static final String FIRST_UPDATED_MODEL_NAME = "firstUpdatedModel";
+    private static final String FIRST_BAD_MODEL_NAME = "firstBadModel";
+    private static final String SECOND_DEFAULT_MODEL_NAME = "secondDefaultModel";
+    private static final String SECOND_UPDATED_MODEL_NAME = "secondUpdatedModel";
     private static final Instant DEFAULT_CREATE_DATE = Instant.ofEpochMilli(0L);
     private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
     private static final Instant DEFAULT_REMOVE_DATE = Instant.ofEpochMilli(720000L);
 
     @Autowired
     private VehicleModelRepository vehicleModelRepository;
+    @Autowired
+    private VehicleBrandRepository vehicleBrandRepository;
     @Autowired
     private VehicleModelService vehicleModelService;
     @Autowired
@@ -58,10 +60,15 @@ public class VehicleModelControllerIT {
     private VehicleModel secondVehicleModel;
 
     public static VehicleModel createEntity(EntityManager em) {
-        VehicleModel vehicleModel = new VehicleModel().setName(FIRST_BAD_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE);
-        VehicleBrand vehicleBrand = VehicleBrandControllerIT.createEntity(em);
-        em.persist(vehicleBrand);
-        em.flush();
+        VehicleModel vehicleModel = new VehicleModel().setName(FIRST_DEFAULT_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE);
+        VehicleBrand vehicleBrand;
+        if(TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
+            vehicleBrand = VehicleBrandControllerIT.createEntity(em);
+            em.persist(vehicleBrand);
+            em.flush();
+        } else {
+            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
+        }
         vehicleModel.setVehicleBrand(vehicleBrand);
         return vehicleModel;
     }
@@ -70,9 +77,14 @@ public class VehicleModelControllerIT {
         VehicleModel vehicleModel =
                 new VehicleModel().setName(FIRST_UPDATED_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE)
                         .setModifyDate(DEFAULT_MODIFY_DATE);
-        VehicleBrand vehicleBrand = VehicleBrandControllerIT.createEntity(em);
-        em.persist(vehicleBrand);
-        em.flush();
+        VehicleBrand vehicleBrand;
+        if(TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
+            vehicleBrand = VehicleBrandControllerIT.createEntity(em);
+            em.persist(vehicleBrand);
+            em.flush();
+        } else {
+            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
+        }
         vehicleModel.setVehicleBrand(vehicleBrand);
         return vehicleModel;
     }
@@ -89,6 +101,7 @@ public class VehicleModelControllerIT {
         int sizeBeforeTest = vehicleModelRepository.findAll().size();
 
         VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
 
         restVehicleModelMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(vehicleModelDTO))).andExpect(status().isOk());
@@ -107,13 +120,15 @@ public class VehicleModelControllerIT {
         createGlobalTwoVehicleModels();
         int sizeBeforeTest = vehicleModelRepository.findAll().size();
 
+        List<VehicleModel> allVehicleModelListBeforeTest = vehicleModelRepository.findAll();
+
         VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
-        VehicleBrandDTO vehicleModelDTOtoUpdate =
-                VehicleBrandDTO.Builder.builder().id(vehicleModelDTO.getId()).name(FIRST_UPDATED_MODEL_NAME)
-                        .createDate(vehicleModelDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
+        VehicleModelDTO vehicleModelDToToUpdate =
+                VehicleModelDTO.Builder.builder().id(vehicleModelDTO.getId()).name(FIRST_UPDATED_MODEL_NAME)
+                        .createDate(vehicleModelDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).brandId(vehicleModelDTO.getVehicleBrandId()).build();
 
         restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDTOtoUpdate))).andExpect(status().isOk());
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isOk());
 
         List<VehicleModel> allVehicleModelList = vehicleModelRepository.findAll();
         VehicleModel firstVehicleModelFromDB = allVehicleModelList.get(0);

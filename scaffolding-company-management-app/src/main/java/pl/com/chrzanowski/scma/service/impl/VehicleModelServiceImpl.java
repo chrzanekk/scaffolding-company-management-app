@@ -50,7 +50,8 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         VehicleModelDTO vehicleModelDTOToUpdate =
                 VehicleModelDTO.Builder.builder().id(vehicleModelDTO.getId()).name(vehicleModelDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getCreateDate()))
-                        .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getModifyDate())).build();
+                        .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getModifyDate()))
+                        .brandId(vehicleModelDTO.getVehicleBrandId()).build();
         VehicleModel vehicleModel = vehicleModelRepository.save(vehicleModelMapper.toEntity(vehicleModelDTOToUpdate));
         return vehicleModelMapper.toDto(vehicleModel);
     }

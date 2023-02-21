@@ -14,7 +14,7 @@ public class VehicleType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100)
+    @Column(name = "name", length = 100)
     @NotNull
     @NotBlank
     private String name;
