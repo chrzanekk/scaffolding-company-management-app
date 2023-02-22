@@ -15,8 +15,6 @@ public class FuelTypeFilter implements Serializable {
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
-    private Instant removeDateStartWith;
-    private Instant removeDateEndWith;
 
     public FuelTypeFilter() {
     }
@@ -29,8 +27,6 @@ public class FuelTypeFilter implements Serializable {
         setCreateDateEndWith(builder.createDateEndWith);
         setModifyDateStartWith(builder.modifyDateStartWith);
         setModifyDateEndWith(builder.modifyDateEndWith);
-        setRemoveDateStartWith(builder.removeDateStartWith);
-        setRemoveDateEndWith(builder.removeDateEndWith);
     }
 
     public Long getId() {
@@ -55,14 +51,6 @@ public class FuelTypeFilter implements Serializable {
 
     public Instant getModifyDateEndWith() {
         return modifyDateEndWith;
-    }
-
-    public Instant getRemoveDateStartWith() {
-        return removeDateStartWith;
-    }
-
-    public Instant getRemoveDateEndWith() {
-        return removeDateEndWith;
     }
 
     public FuelTypeFilter setId(Long id) {
@@ -95,27 +83,34 @@ public class FuelTypeFilter implements Serializable {
         return this;
     }
 
-    public FuelTypeFilter setRemoveDateStartWith(Instant removeDateStartWith) {
-        this.removeDateStartWith = removeDateStartWith;
-        return this;
-    }
-
-    public FuelTypeFilter setRemoveDateEndWith(Instant removeDateEndWith) {
-        this.removeDateEndWith = removeDateEndWith;
-        return this;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         FuelTypeFilter that = (FuelTypeFilter) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDateStartWith, that.createDateStartWith) && Objects.equals(createDateEndWith, that.createDateEndWith) && Objects.equals(modifyDateStartWith, that.modifyDateStartWith) && Objects.equals(modifyDateEndWith, that.modifyDateEndWith) && Objects.equals(removeDateStartWith, that.removeDateStartWith) && Objects.equals(removeDateEndWith, that.removeDateEndWith);
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(createDateStartWith, that.createDateStartWith))
+            return false;
+        if (!Objects.equals(createDateEndWith, that.createDateEndWith))
+            return false;
+        if (!Objects.equals(modifyDateStartWith, that.modifyDateStartWith))
+            return false;
+        return Objects.equals(modifyDateEndWith, that.modifyDateEndWith);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createDateStartWith, createDateEndWith, modifyDateStartWith, modifyDateEndWith, removeDateStartWith, removeDateEndWith);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (createDateStartWith != null ? createDateStartWith.hashCode() : 0);
+        result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
+        result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
+        result = 31 * result + (modifyDateEndWith != null ? modifyDateEndWith.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -127,8 +122,6 @@ public class FuelTypeFilter implements Serializable {
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
                 ", modifyDateEndWith=" + modifyDateEndWith +
-                ", removeDateStartWith=" + removeDateStartWith +
-                ", removeDateEndWith=" + removeDateEndWith +
                 '}';
     }
 
@@ -140,8 +133,6 @@ public class FuelTypeFilter implements Serializable {
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
         private Instant modifyDateEndWith;
-        private Instant removeDateStartWith;
-        private Instant removeDateEndWith;
 
         private Builder() {
         }
@@ -179,17 +170,6 @@ public class FuelTypeFilter implements Serializable {
             this.modifyDateEndWith = modifyDateEndWith;
             return this;
         }
-
-        public Builder removeDateStartWith(Instant removeDateStartWith) {
-            this.removeDateStartWith = removeDateStartWith;
-            return this;
-        }
-
-        public Builder removeDateEndWith(Instant removeDateEndWith) {
-            this.removeDateEndWith = removeDateEndWith;
-            return this;
-        }
-
         public FuelTypeFilter build() {
             return new FuelTypeFilter(this);
         }

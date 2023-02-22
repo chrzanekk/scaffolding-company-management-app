@@ -135,15 +135,29 @@ public class VehicleTypeControllerIT {
 
     @Test
     @Transactional
-    public void findAllSVehicleTypesWithFilter() throws Exception {
+    public void findVehicleTypeWithNameFilter() throws Exception {
         createGlobalTwoVehicleTypes();
         defaultVehicleTypeShouldBeFound("name=" + FIRST_DEFAULT_NAME);
         defaultVehicleTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);
     }
+    @Test
+    @Transactional
+    public void findVehicleTypeWithIdFilter() throws Exception {
+        createGlobalTwoVehicleTypes();
+        defaultVehicleTypeShouldBeFound("id=" + vehicleType.getId());
+        defaultVehicleTypeShouldNotBeFound("id=" + 100L);
+    }
+    @Test
+    @Transactional
+    public void findVehicleTypeWithCreateDateFilter() throws Exception {
+        createGlobalTwoVehicleTypes();
+        defaultVehicleTypeShouldBeFound("createDateStartWith=" + DEFAULT_CREATE_DATE.toString());
+        defaultVehicleTypeShouldNotBeFound("createDateStartWith=" + DEFAULT_REMOVE_DATE.toString());
+    }
 
     @Test
     @Transactional
-    public void findAllUpdatedVehicleTypesWithFilter() throws Exception {
+    public void findUpdatedVehicleTypeWithNameFilter() throws Exception {
         createGlobalTwoUpdatedVehicleTypes();
         defaultUpdatedVehicleTypeShouldBeFound("name=" + FIRST_UPDATED_NAME);
         defaultVehicleTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);

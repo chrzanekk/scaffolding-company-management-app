@@ -60,7 +60,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     public List<VehicleBrandDTO> findByFilter(VehicleBrandFilter vehicleBrandFilter) {
         log.debug("Find all vehicle brands by filter: {}", vehicleBrandFilter);
         Specification<VehicleBrand> spec =
-                VehicleBrandSpecification.builder().vehicleBrandFilter(vehicleBrandFilter).build();
+                VehicleBrandSpecification.createSpecification(vehicleBrandFilter);
         return vehicleBrandMapper.toDto(vehicleBrandRepository.findAll(spec));
     }
 
@@ -69,7 +69,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
                                                      Pageable pageable) {
         log.debug("Find all pageable vehicle brands by filter: {}", vehicleBrandFilter);
         Specification<VehicleBrand> spec =
-                VehicleBrandSpecification.builder().vehicleBrandFilter(vehicleBrandFilter).build();
+                VehicleBrandSpecification.createSpecification(vehicleBrandFilter);
         return vehicleBrandRepository.findAll(spec, pageable).map(vehicleBrandMapper::toDto);
     }
 

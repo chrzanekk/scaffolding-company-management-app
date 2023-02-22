@@ -40,6 +40,13 @@ public class VehicleModelControllerIT {
     private static final String FIRST_BAD_MODEL_NAME = "firstBadModel";
     private static final String SECOND_DEFAULT_MODEL_NAME = "secondDefaultModel";
     private static final String SECOND_UPDATED_MODEL_NAME = "secondUpdatedModel";
+
+    private static final String FIRST_DEFAULT_BRAND_NAME = "firstDefaultVehicleBrand";
+    private static final String FIRST_UPDATED_BRAND_NAME = "firstUpdatedVehicleBrand";
+    private static final String FIRST_BAD_BRAND_NAME = "firstBadVehicleBrand";
+    private static final String SECOND_DEFAULT_BRAND_NAME = "secondDefaultVehicleBrand";
+    private static final String SECOND_UPDATED_BRAND_NAME = "secondUpdatedVehicleBrand";
+
     private static final Instant DEFAULT_CREATE_DATE = Instant.ofEpochMilli(0L);
     private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
     private static final Instant DEFAULT_REMOVE_DATE = Instant.ofEpochMilli(720000L);
@@ -164,18 +171,42 @@ public class VehicleModelControllerIT {
 
     @Test
     @Transactional
-    public void findAllSVehicleModelsWithFilter() throws Exception {
+    public void findAllVehicleModelsWithNameFilter() throws Exception {
         createGlobalTwoVehicleModels();
-        defaultVehicleBrandShouldBeFound("name=" + FIRST_DEFAULT_MODEL_NAME);
-        defaultVehicleBrandShouldNotBeFound("name=" + FIRST_BAD_MODEL_NAME);
+        defaultVehicleModelShouldBeFound("name=" + FIRST_DEFAULT_MODEL_NAME);
+        defaultVehicleModelShouldNotBeFound("name=" + FIRST_BAD_MODEL_NAME);
     }
 
     @Test
     @Transactional
-    public void findAllUpdatedVehicleModelsWithFilter() throws Exception {
+    public void findUpdatedVehicleModelsWithNameFilter() throws Exception {
         createGlobalTwoUpdatedVehicleModels();
-        defaultUpdatedVehicleBrandShouldBeFound("name=" + FIRST_UPDATED_MODEL_NAME);
-        defaultVehicleBrandShouldNotBeFound("name=" + FIRST_BAD_MODEL_NAME);
+        defaultVehicleModelShouldBeFound("name=" + FIRST_UPDATED_MODEL_NAME);
+        defaultVehicleModelShouldNotBeFound("name=" + FIRST_BAD_MODEL_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleModelWithIdFilter() throws Exception {
+        createGlobalTwoVehicleModels();
+        defaultVehicleModelShouldBeFound("id=" + vehicleModel.getId());
+        defaultVehicleModelShouldNotBeFound("id=" + 100L);
+    }
+    @Test
+    @Transactional
+    public void findVehicleModelsWithCreateDateFilter() throws Exception {
+        createGlobalTwoVehicleModels();
+        defaultVehicleModelShouldBeFound("createDateStartWith=" + DEFAULT_CREATE_DATE.toString());
+        defaultVehicleModelShouldNotBeFound("createDateStartWith=" + DEFAULT_REMOVE_DATE.toString());
+    }
+
+    @Test
+    @Transactional
+    public void findAllVehicleModelsWithBrandNameFilter() throws Exception {
+        createGlobalTwoUpdatedVehicleModels();
+        List<VehicleModel> allModels = vehicleModelRepository.findAll();
+        defaultVehicleModelShouldBeFound("vehicleBrandName=" + FIRST_DEFAULT_BRAND_NAME );
+        defaultVehicleModelShouldNotBeFound("vehicleBrandName=" + FIRST_BAD_BRAND_NAME);
     }
 
     @Test
@@ -232,15 +263,16 @@ public class VehicleModelControllerIT {
         em.flush();
     }
 
-    private void defaultVehicleBrandShouldBeFound(String filter) throws Exception {
+    private void defaultVehicleModelShouldBeFound(String filter) throws Exception {
         restVehicleModelMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(vehicleModel.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(vehicleModel.getName())))
+                .andExpect(jsonPath("$.[*].vehicleBrandName").value(hasItem(vehicleModel.getVehicleBrand().getName())))
                 .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
     }
 
-    private void defaultUpdatedVehicleBrandShouldBeFound(String filter) throws Exception {
+    private void defaultUpdatedVehicleModelShouldBeFound(String filter) throws Exception {
         restVehicleModelMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(vehicleModel.getId().intValue())))
@@ -249,7 +281,7 @@ public class VehicleModelControllerIT {
                 .andExpect(jsonPath("$.[*].modifyDate").value(hasItem(DEFAULT_MODIFY_DATE.toString())));
     }
 
-    private void defaultVehicleBrandShouldNotBeFound(String filter) throws Exception {
+    private void defaultVehicleModelShouldNotBeFound(String filter) throws Exception {
         restVehicleModelMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());

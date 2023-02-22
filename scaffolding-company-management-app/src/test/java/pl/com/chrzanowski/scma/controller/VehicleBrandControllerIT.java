@@ -136,15 +136,29 @@ public class VehicleBrandControllerIT {
 
     @Test
     @Transactional
-    public void findAllSVehicleBrandsWithFilter() throws Exception {
+    public void findVehicleBrandsWithNameFilter() throws Exception {
         createGlobalTwoVehicleBrands();
         defaultVehicleBrandShouldBeFound("name=" + FIRST_DEFAULT_NAME);
         defaultVehicleBrandShouldNotBeFound("name=" + FIRST_BAD_NAME);
     }
+    @Test
+    @Transactional
+    public void findVehicleBrandsWithIdFilter() throws Exception {
+        createGlobalTwoVehicleBrands();
+        defaultVehicleBrandShouldBeFound("id=" + vehicleBrand.getId());
+        defaultVehicleBrandShouldNotBeFound("id=" + 100L);
+    }
+    @Test
+    @Transactional
+    public void findVehicleBrandsWithCreateDateFilter() throws Exception {
+        createGlobalTwoVehicleBrands();
+        defaultVehicleBrandShouldBeFound("createDateStartWith=" + DEFAULT_CREATE_DATE.toString());
+        defaultVehicleBrandShouldNotBeFound("createDateStartWith=" + DEFAULT_REMOVE_DATE.toString());
+    }
 
     @Test
     @Transactional
-    public void findAllUpdatedVehicleBrandsWithFilter() throws Exception {
+    public void findUpdatedVehicleBrandWithNameFilter() throws Exception {
         createGlobalTwoUpdatedVehicleModels();
         defaultUpdatedVehicleBrandShouldBeFound("name=" + FIRST_UPDATED_NAME);
         defaultVehicleBrandShouldNotBeFound("name=" + FIRST_BAD_NAME);

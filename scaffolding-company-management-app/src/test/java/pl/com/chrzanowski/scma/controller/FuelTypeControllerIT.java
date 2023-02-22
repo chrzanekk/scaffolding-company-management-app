@@ -133,15 +133,29 @@ public class FuelTypeControllerIT {
 
     @Test
     @Transactional
-    public void findAllFuelTypesWithFilter() throws Exception {
+    public void findFuelTypesWithNameFilter() throws Exception {
         createGlobalTwoFuelTypes();
         defaultFuelTypeShouldBeFound("name=" + FIRST_DEFAULT_NAME);
         defaultFuelTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);
     }
+    @Test
+    @Transactional
+    public void findFuelTypesWithIdFilter() throws Exception {
+        createGlobalTwoFuelTypes();
+        defaultFuelTypeShouldBeFound("id=" + fuelType.getId());
+        defaultFuelTypeShouldNotBeFound("id=" + 100L);
+    }
+    @Test
+    @Transactional
+    public void findFuelTypesWithCreateDateFilter() throws Exception {
+        createGlobalTwoFuelTypes();
+        defaultFuelTypeShouldBeFound("createDateStartWith=" + DEFAULT_CREATE_DATE.toString());
+        defaultFuelTypeShouldNotBeFound("createDateStartWith=" + DEFAULT_REMOVE_DATE.toString());
+    }
 
     @Test
     @Transactional
-    public void findAllUpdatedFuelTypesWithFilter() throws Exception {
+    public void findUpdatedFuelTypesWithNameFilter() throws Exception {
         createGlobalTwoUpdatedFuelTypes();
         defaultUpdatedFuelTypeShouldBeFound("name=" + FIRST_UPDATED_NAME);
         defaultFuelTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);

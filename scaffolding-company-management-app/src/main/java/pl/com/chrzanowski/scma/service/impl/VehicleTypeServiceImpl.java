@@ -60,7 +60,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     public List<VehicleTypeDTO> findByFilter(VehicleTypeFilter vehicleTypeFilter) {
         log.debug("Find all types by filter: {}", vehicleTypeFilter);
         Specification<VehicleType> spec =
-                VehicleTypeSpecification.builder().vehicleTypeFilter(vehicleTypeFilter).build();
+                VehicleTypeSpecification.createSpecification(vehicleTypeFilter);
         return vehicleTypeMapper.toDto(vehicleTypeRepository.findAll(spec));
     }
 
@@ -69,7 +69,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
                                                     Pageable pageable) {
         log.debug("Find all pageable types by filter: {}", vehicleTypeFilter);
         Specification<VehicleType> spec =
-                VehicleTypeSpecification.builder().vehicleTypeFilter(vehicleTypeFilter).build();
+                VehicleTypeSpecification.createSpecification(vehicleTypeFilter);
         return vehicleTypeRepository.findAll(spec, pageable).map(vehicleTypeMapper::toDto);
     }
 

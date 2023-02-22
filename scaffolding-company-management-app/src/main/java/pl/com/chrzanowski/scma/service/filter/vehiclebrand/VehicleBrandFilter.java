@@ -10,8 +10,6 @@ public class VehicleBrandFilter {
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
-    private Instant removeDateStartWith;
-    private Instant removeDateEndWith;
 
     public VehicleBrandFilter() {
     }
@@ -23,8 +21,6 @@ public class VehicleBrandFilter {
         createDateEndWith = builder.createDateEndWith;
         modifyDateStartWith = builder.modifyDateStartWith;
         modifyDateEndWith = builder.modifyDateEndWith;
-        removeDateStartWith = builder.removeDateStartWith;
-        removeDateEndWith = builder.removeDateEndWith;
     }
 
     public static Builder builder() {
@@ -55,13 +51,6 @@ public class VehicleBrandFilter {
         return modifyDateEndWith;
     }
 
-    public Instant getRemoveDateStartWith() {
-        return removeDateStartWith;
-    }
-
-    public Instant getRemoveDateEndWith() {
-        return removeDateEndWith;
-    }
 
     public VehicleBrandFilter setId(Long id) {
         this.id = id;
@@ -93,15 +82,6 @@ public class VehicleBrandFilter {
         return this;
     }
 
-    public VehicleBrandFilter setRemoveDateStartWith(Instant removeDateStartWith) {
-        this.removeDateStartWith = removeDateStartWith;
-        return this;
-    }
-
-    public VehicleBrandFilter setRemoveDateEndWith(Instant removeDateEndWith) {
-        this.removeDateEndWith = removeDateEndWith;
-        return this;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -118,11 +98,7 @@ public class VehicleBrandFilter {
             return false;
         if (!Objects.equals(modifyDateStartWith, that.modifyDateStartWith))
             return false;
-        if (!Objects.equals(modifyDateEndWith, that.modifyDateEndWith))
-            return false;
-        if (!Objects.equals(removeDateStartWith, that.removeDateStartWith))
-            return false;
-        return Objects.equals(removeDateEndWith, that.removeDateEndWith);
+        return Objects.equals(modifyDateEndWith, that.modifyDateEndWith);
     }
 
     @Override
@@ -133,8 +109,6 @@ public class VehicleBrandFilter {
         result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
         result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
         result = 31 * result + (modifyDateEndWith != null ? modifyDateEndWith.hashCode() : 0);
-        result = 31 * result + (removeDateStartWith != null ? removeDateStartWith.hashCode() : 0);
-        result = 31 * result + (removeDateEndWith != null ? removeDateEndWith.hashCode() : 0);
         return result;
     }
 
@@ -147,8 +121,6 @@ public class VehicleBrandFilter {
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
                 ", modifyDateEndWith=" + modifyDateEndWith +
-                ", removeDateStartWith=" + removeDateStartWith +
-                ", removeDateEndWith=" + removeDateEndWith +
                 '}';
     }
 
@@ -160,8 +132,6 @@ public class VehicleBrandFilter {
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
         private Instant modifyDateEndWith;
-        private Instant removeDateStartWith;
-        private Instant removeDateEndWith;
 
         private Builder() {
         }
@@ -193,16 +163,6 @@ public class VehicleBrandFilter {
 
         public Builder modifyDateEndWith(Instant modifyDateEndWith) {
             this.modifyDateEndWith = modifyDateEndWith;
-            return this;
-        }
-
-        public Builder removeDateStartWith(Instant removeDateStartWith) {
-            this.removeDateStartWith = removeDateStartWith;
-            return this;
-        }
-
-        public Builder removeDateEndWith(Instant removeDateEndWith) {
-            this.removeDateEndWith = removeDateEndWith;
             return this;
         }
 

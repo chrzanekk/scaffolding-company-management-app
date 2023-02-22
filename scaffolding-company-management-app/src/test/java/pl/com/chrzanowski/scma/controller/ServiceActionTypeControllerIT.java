@@ -135,15 +135,29 @@ public class ServiceActionTypeControllerIT {
 
     @Test
     @Transactional
-    public void findAllServiceActionTypesWithFilter() throws Exception {
+    public void findServiceActionTypeWithNameFilter() throws Exception {
         createGlobalTwoServiceActionTypes();
         defaultServiceActionTypeShouldBeFound("name=" + FIRST_DEFAULT_NAME);
         defaultServiceActionTypeShouldNotBeFound("name=" + FIRST_BAD_NAME);
     }
+    @Test
+    @Transactional
+    public void findServiceActionTypeWithIdFilter() throws Exception {
+        createGlobalTwoServiceActionTypes();
+        defaultServiceActionTypeShouldBeFound("id=" + serviceActionType.getId());
+        defaultServiceActionTypeShouldNotBeFound("id=" + 100L);
+    }
+    @Test
+    @Transactional
+    public void findServiceActionTypeWithCreateDateFilter() throws Exception {
+        createGlobalTwoServiceActionTypes();
+        defaultServiceActionTypeShouldBeFound("createDateStartWith=" + DEFAULT_CREATE_DATE.toString());
+        defaultServiceActionTypeShouldNotBeFound("createDateStartWith=" + DEFAULT_REMOVE_DATE.toString());
+    }
 
     @Test
     @Transactional
-    public void findAllUpdatedServiceActionTypesWithFilter() throws Exception {
+    public void findUpdatedServiceActionTypeWithNameFilter() throws Exception {
         createGlobalTwoUpdatedServiceActionTypes();
         List<ServiceActionType> all = serviceActionTypeRepository.findAll();
         defaultUpdatedServiceActionTypeShouldBeFound("name=" + FIRST_UPDATED_NAME);

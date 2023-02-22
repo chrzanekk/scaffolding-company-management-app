@@ -1,18 +1,16 @@
 package pl.com.chrzanowski.scma.service.filter.serviceactiontype;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 public class ServiceActionTypeFilter {
 
     private Long id;
     private String name;
-    private LocalDateTime createDateStartWith;
-    private LocalDateTime createDateEndWith;
-    private LocalDateTime modifyDateStartWith;
-    private LocalDateTime modifyDateEndWith;
-    private LocalDateTime removeDateStartWith;
-    private LocalDateTime removeDateEndWith;
+    private Instant createDateStartWith;
+    private Instant createDateEndWith;
+    private Instant modifyDateStartWith;
+    private Instant modifyDateEndWith;
 
     public ServiceActionTypeFilter() {
     }
@@ -24,8 +22,6 @@ public class ServiceActionTypeFilter {
         createDateEndWith = builder.createDateEndWith;
         modifyDateStartWith = builder.modifyDateStartWith;
         modifyDateEndWith = builder.modifyDateEndWith;
-        removeDateStartWith = builder.removeDateStartWith;
-        removeDateEndWith = builder.removeDateEndWith;
     }
 
     public static Builder builder() {
@@ -40,28 +36,20 @@ public class ServiceActionTypeFilter {
         return name;
     }
 
-    public LocalDateTime getCreateDateStartWith() {
+    public Instant getCreateDateStartWith() {
         return createDateStartWith;
     }
 
-    public LocalDateTime getCreateDateEndWith() {
+    public Instant getCreateDateEndWith() {
         return createDateEndWith;
     }
 
-    public LocalDateTime getModifyDateStartWith() {
+    public Instant getModifyDateStartWith() {
         return modifyDateStartWith;
     }
 
-    public LocalDateTime getModifyDateEndWith() {
+    public Instant getModifyDateEndWith() {
         return modifyDateEndWith;
-    }
-
-    public LocalDateTime getRemoveDateStartWith() {
-        return removeDateStartWith;
-    }
-
-    public LocalDateTime getRemoveDateEndWith() {
-        return removeDateEndWith;
     }
 
     public ServiceActionTypeFilter setId(Long id) {
@@ -74,33 +62,23 @@ public class ServiceActionTypeFilter {
         return this;
     }
 
-    public ServiceActionTypeFilter setCreateDateStartWith(LocalDateTime createDateStartWith) {
+    public ServiceActionTypeFilter setCreateDateStartWith(Instant createDateStartWith) {
         this.createDateStartWith = createDateStartWith;
         return this;
     }
 
-    public ServiceActionTypeFilter setCreateDateEndWith(LocalDateTime createDateEndWith) {
+    public ServiceActionTypeFilter setCreateDateEndWith(Instant createDateEndWith) {
         this.createDateEndWith = createDateEndWith;
         return this;
     }
 
-    public ServiceActionTypeFilter setModifyDateStartWith(LocalDateTime modifyDateStartWith) {
+    public ServiceActionTypeFilter setModifyDateStartWith(Instant modifyDateStartWith) {
         this.modifyDateStartWith = modifyDateStartWith;
         return this;
     }
 
-    public ServiceActionTypeFilter setModifyDateEndWith(LocalDateTime modifyDateEndWith) {
+    public ServiceActionTypeFilter setModifyDateEndWith(Instant modifyDateEndWith) {
         this.modifyDateEndWith = modifyDateEndWith;
-        return this;
-    }
-
-    public ServiceActionTypeFilter setRemoveDateStartWith(LocalDateTime removeDateStartWith) {
-        this.removeDateStartWith = removeDateStartWith;
-        return this;
-    }
-
-    public ServiceActionTypeFilter setRemoveDateEndWith(LocalDateTime removeDateEndWith) {
-        this.removeDateEndWith = removeDateEndWith;
         return this;
     }
 
@@ -119,11 +97,7 @@ public class ServiceActionTypeFilter {
             return false;
         if (!Objects.equals(modifyDateStartWith, that.modifyDateStartWith))
             return false;
-        if (!Objects.equals(modifyDateEndWith, that.modifyDateEndWith))
-            return false;
-        if (!Objects.equals(removeDateStartWith, that.removeDateStartWith))
-            return false;
-        return Objects.equals(removeDateEndWith, that.removeDateEndWith);
+        return Objects.equals(modifyDateEndWith, that.modifyDateEndWith);
     }
 
     @Override
@@ -134,8 +108,6 @@ public class ServiceActionTypeFilter {
         result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
         result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
         result = 31 * result + (modifyDateEndWith != null ? modifyDateEndWith.hashCode() : 0);
-        result = 31 * result + (removeDateStartWith != null ? removeDateStartWith.hashCode() : 0);
-        result = 31 * result + (removeDateEndWith != null ? removeDateEndWith.hashCode() : 0);
         return result;
     }
 
@@ -148,8 +120,6 @@ public class ServiceActionTypeFilter {
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
                 ", modifyDateEndWith=" + modifyDateEndWith +
-                ", removeDateStartWith=" + removeDateStartWith +
-                ", removeDateEndWith=" + removeDateEndWith +
                 '}';
     }
 
@@ -157,12 +127,10 @@ public class ServiceActionTypeFilter {
     public static final class Builder {
         private Long id;
         private String name;
-        private LocalDateTime createDateStartWith;
-        private LocalDateTime createDateEndWith;
-        private LocalDateTime modifyDateStartWith;
-        private LocalDateTime modifyDateEndWith;
-        private LocalDateTime removeDateStartWith;
-        private LocalDateTime removeDateEndWith;
+        private Instant createDateStartWith;
+        private Instant createDateEndWith;
+        private Instant modifyDateStartWith;
+        private Instant modifyDateEndWith;
 
         private Builder() {
         }
@@ -177,33 +145,23 @@ public class ServiceActionTypeFilter {
             return this;
         }
 
-        public Builder createDateStartWith(LocalDateTime createDateStartWith) {
+        public Builder createDateStartWith(Instant createDateStartWith) {
             this.createDateStartWith = createDateStartWith;
             return this;
         }
 
-        public Builder createDateEndWith(LocalDateTime createDateEndWith) {
+        public Builder createDateEndWith(Instant createDateEndWith) {
             this.createDateEndWith = createDateEndWith;
             return this;
         }
 
-        public Builder modifyDateStartWith(LocalDateTime modifyDateStartWith) {
+        public Builder modifyDateStartWith(Instant modifyDateStartWith) {
             this.modifyDateStartWith = modifyDateStartWith;
             return this;
         }
 
-        public Builder modifyDateEndWith(LocalDateTime modifyDateEndWith) {
+        public Builder modifyDateEndWith(Instant modifyDateEndWith) {
             this.modifyDateEndWith = modifyDateEndWith;
-            return this;
-        }
-
-        public Builder removeDateStartWith(LocalDateTime removeDateStartWith) {
-            this.removeDateStartWith = removeDateStartWith;
-            return this;
-        }
-
-        public Builder removeDateEndWith(LocalDateTime removeDateEndWith) {
-            this.removeDateEndWith = removeDateEndWith;
             return this;
         }
 

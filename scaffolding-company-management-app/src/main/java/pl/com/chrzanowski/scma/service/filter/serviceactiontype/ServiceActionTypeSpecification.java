@@ -3,184 +3,68 @@ package pl.com.chrzanowski.scma.service.filter.serviceactiontype;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.ServiceActionType;
-import pl.com.chrzanowski.scma.service.filter.SearchCriteria;
-import pl.com.chrzanowski.scma.service.filter.SearchOperation;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Instant;
+
 @Component
-public class ServiceActionTypeSpecification implements Specification<ServiceActionType> {
+public class ServiceActionTypeSpecification {
 
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String CREATE_DATE = "createDate";
     public static final String MODIFY_DATE = "modifyDate";
-    public static final String REMOVE_DATE = "removeDate";
 
-    private final ServiceActionTypeFilter serviceActionTypeFilter;
-
-    public ServiceActionTypeSpecification() {
-        this.serviceActionTypeFilter = new ServiceActionTypeFilter();
-    }
-
-    private ServiceActionTypeSpecification(Builder builder) {
-        serviceActionTypeFilter = builder.serviceActionTypeFilter;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    @Override
-    public Predicate toPredicate(Root<ServiceActionType> root,
-                                 CriteriaQuery<?> query,
-                                 CriteriaBuilder criteriaBuilder) {
-        List<SearchCriteria> searchCriteria = createSearchCriteria(serviceActionTypeFilter);
-        List<Predicate> predicates = new ArrayList<>();
-
-        searchCriteria.forEach(criteria -> {
-            if (criteria.getOperation()
-                    .equals(SearchOperation.GREATER_THAN)) {
-                predicates.add(criteriaBuilder.greaterThan(root.get(criteria.getKey()), criteria.getValue()
-                        .toString()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.LESS_THAN)) {
-                predicates.add(criteriaBuilder.lessThan(root.get(criteria.getKey()), criteria.getValue()
-                        .toString()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.GREATER_THAN_EQUAL)) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue()
-                        .toString()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.LESS_THAN_EQUAL)) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(criteria.getKey()), criteria.getValue()
-                        .toString()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.NOT_EQUAL)) {
-                predicates.add(criteriaBuilder.notEqual(root.get(criteria.getKey()), criteria.getValue()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.EQUAL)) {
-                predicates.add(criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.MATCH)) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue()
-                        .toString()
-                        .toLowerCase() + "%"));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.MATCH_END)) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), criteria.getValue()
-                        .toString()
-                        .toLowerCase() + "%"));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.MATCH_START)) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get(criteria.getKey())), "%" + criteria.getValue()
-                        .toString()
-                        .toLowerCase()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.IN)) {
-                predicates.add(criteriaBuilder.in(root.get(criteria.getKey()))
-                        .value(criteria.getValue()));
-            } else if (criteria.getOperation()
-                    .equals(SearchOperation.NOT_IN)) {
-                predicates.add(criteriaBuilder.not(root.get(criteria.getKey()))
-                        .in(criteria.getValue()));
-            }
-        });
-
-        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-    }
-
-    private List<SearchCriteria> createSearchCriteria(ServiceActionTypeFilter serviceActionTypeFilter) {
-        List<SearchCriteria> searchCriteria = new ArrayList<>();
+    public static Specification<ServiceActionType> createSpecification(ServiceActionTypeFilter serviceActionTypeFilter) {
+        Specification<ServiceActionType> specification = Specification.where(null);
         if (serviceActionTypeFilter != null) {
             if (serviceActionTypeFilter.getId() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(ID)
-                        .value(serviceActionTypeFilter.getId())
-                        .operation(SearchOperation.EQUAL)
-                        .build());
+                specification = specification.and(hasId(serviceActionTypeFilter.getId()));
             }
             if (serviceActionTypeFilter.getName() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(NAME)
-                        .value(serviceActionTypeFilter.getName())
-                        .operation(SearchOperation.MATCH_START)
-                        .build());
+                specification = specification.and(hasName(serviceActionTypeFilter.getName()));
             }
             if (serviceActionTypeFilter.getCreateDateStartWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(CREATE_DATE)
-                        .value(serviceActionTypeFilter.getCreateDateStartWith())
-                        .operation(SearchOperation.GREATER_THAN_EQUAL)
-                        .build());
+                specification = specification.and(hasCreateDateStartWith(serviceActionTypeFilter.getCreateDateStartWith()));
             }
             if (serviceActionTypeFilter.getCreateDateEndWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(CREATE_DATE)
-                        .value(serviceActionTypeFilter.getCreateDateEndWith())
-                        .operation(SearchOperation.LESS_THAN_EQUAL)
-                        .build());
+                specification = specification.and(hasCreateDateEndWith(serviceActionTypeFilter.getCreateDateEndWith()));
             }
             if (serviceActionTypeFilter.getModifyDateStartWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(MODIFY_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateStartWith())
-                        .operation(SearchOperation.GREATER_THAN_EQUAL)
-                        .build());
+                specification = specification.and(hasModifyDateStartWith(serviceActionTypeFilter.getModifyDateStartWith()));
             }
             if (serviceActionTypeFilter.getModifyDateEndWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(MODIFY_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateEndWith())
-                        .operation(SearchOperation.LESS_THAN_EQUAL)
-                        .build());
-            }
-            if (serviceActionTypeFilter.getRemoveDateStartWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(REMOVE_DATE)
-                        .value(serviceActionTypeFilter.getRemoveDateStartWith())
-                        .operation(SearchOperation.GREATER_THAN_EQUAL)
-                        .build());
-            }
-            if (serviceActionTypeFilter.getRemoveDateEndWith() != null) {
-                searchCriteria.add(SearchCriteria.builder()
-                        .key(REMOVE_DATE)
-                        .value(serviceActionTypeFilter.getModifyDateEndWith())
-                        .operation(SearchOperation.LESS_THAN_EQUAL)
-                        .build());
+                specification = specification.and(hasModifyDateEndWith(serviceActionTypeFilter.getModifyDateEndWith()));
             }
         }
-        return searchCriteria;
+        return specification;
     }
 
-    @Override
-    public Specification<ServiceActionType> and(Specification<ServiceActionType> other) {
-        return Specification.super.and(other);
+    private static Specification<ServiceActionType> hasId(Long id) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.<Long>get(ID), id);
     }
 
-    @Override
-    public Specification<ServiceActionType> or(Specification<ServiceActionType> other) {
-        return Specification.super.or(other);
+    private static Specification<ServiceActionType> hasName(String name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(NAME), "%" + name + "%");
     }
 
-
-    public static final class Builder {
-        private ServiceActionTypeFilter serviceActionTypeFilter;
-
-        private Builder() {
-        }
-
-        public Builder serviceActionTypeFilter(ServiceActionTypeFilter serviceActionTypeFilter) {
-            this.serviceActionTypeFilter = serviceActionTypeFilter;
-            return this;
-        }
-
-        public ServiceActionTypeSpecification build() {
-            return new ServiceActionTypeSpecification(this);
-        }
+    private static Specification<ServiceActionType> hasCreateDateStartWith(Instant createDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(CREATE_DATE),
+                createDate);
     }
+
+    private static Specification<ServiceActionType> hasCreateDateEndWith(Instant createDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(CREATE_DATE),
+                createDate);
+    }
+
+    private static Specification<ServiceActionType> hasModifyDateStartWith(Instant modifyDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(MODIFY_DATE),
+                modifyDate);
+    }
+
+    private static Specification<ServiceActionType> hasModifyDateEndWith(Instant modifyDate) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(MODIFY_DATE),
+                modifyDate);
+    }
+
 }

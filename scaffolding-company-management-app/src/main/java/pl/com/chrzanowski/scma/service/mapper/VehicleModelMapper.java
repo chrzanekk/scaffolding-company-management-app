@@ -9,9 +9,11 @@ import pl.com.chrzanowski.scma.service.dto.VehicleModelDTO;
 public interface VehicleModelMapper extends EntityMapper<VehicleModelDTO, VehicleModel> {
 
     @Mapping(source = "vehicleBrand.id", target = "vehicleBrandId")
+    @Mapping(source = "vehicleBrand.name", target = "vehicleBrandName")
     VehicleModelDTO toDto(VehicleModel vehicleModel);
 
     @Mapping(source = "vehicleBrandId", target = "vehicleBrand.id")
+    @Mapping(source = "vehicleBrandName", target = "vehicleBrand.name")
     VehicleModel toEntity(VehicleModelDTO vehicleModelDTO);
 
     default VehicleModel fromId(Long id) {

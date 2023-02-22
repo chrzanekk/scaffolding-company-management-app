@@ -61,7 +61,7 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
     public List<ServiceActionTypeDTO> findByFilter(ServiceActionTypeFilter serviceActionTypeFilter) {
         log.debug("Find service action type by filter: {}", serviceActionTypeFilter);
         Specification<ServiceActionType> spec =
-                ServiceActionTypeSpecification.builder().serviceActionTypeFilter(serviceActionTypeFilter).build();
+                ServiceActionTypeSpecification.createSpecification(serviceActionTypeFilter);
         return serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll(spec));
     }
 
@@ -70,7 +70,7 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
                                                           Pageable pageable) {
         log.debug("Find service action type by filter: {}", serviceActionTypeFilter);
         Specification<ServiceActionType> spec =
-                ServiceActionTypeSpecification.builder().serviceActionTypeFilter(serviceActionTypeFilter).build();
+                ServiceActionTypeSpecification.createSpecification(serviceActionTypeFilter);
         return serviceActionTypeRepository.findAll(spec, pageable).map(serviceActionTypeMapper::toDto);
     }
 

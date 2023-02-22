@@ -13,8 +13,6 @@ public class VehicleModelFilter {
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
-    private Instant removeDateStartWith;
-    private Instant removeDateEndWith;
 
     public VehicleModelFilter() {
     }
@@ -28,8 +26,6 @@ public class VehicleModelFilter {
         setCreateDateEndWith(builder.createDateEndWith);
         setModifyDateStartWith(builder.modifyDateStartWith);
         setModifyDateEndWith(builder.modifyDateEndWith);
-        setRemoveDateStartWith(builder.removeDateStartWith);
-        setRemoveDateEndWith(builder.removeDateEndWith);
     }
 
     public static Builder builder() {
@@ -59,14 +55,6 @@ public class VehicleModelFilter {
 
     public Instant getModifyDateEndWith() {
         return modifyDateEndWith;
-    }
-
-    public Instant getRemoveDateStartWith() {
-        return removeDateStartWith;
-    }
-
-    public Instant getRemoveDateEndWith() {
-        return removeDateEndWith;
     }
 
     public Long getVehicleBrandId() {
@@ -107,16 +95,6 @@ public class VehicleModelFilter {
         return this;
     }
 
-    public VehicleModelFilter setRemoveDateStartWith(Instant removeDateStartWith) {
-        this.removeDateStartWith = removeDateStartWith;
-        return this;
-    }
-
-    public VehicleModelFilter setRemoveDateEndWith(Instant removeDateEndWith) {
-        this.removeDateEndWith = removeDateEndWith;
-        return this;
-    }
-
     public VehicleModelFilter setVehicleBrandId(Long vehicleBrandId) {
         this.vehicleBrandId = vehicleBrandId;
         return this;
@@ -146,11 +124,7 @@ public class VehicleModelFilter {
             return false;
         if (!Objects.equals(modifyDateStartWith, that.modifyDateStartWith))
             return false;
-        if (!Objects.equals(modifyDateEndWith, that.modifyDateEndWith))
-            return false;
-        if (!Objects.equals(removeDateStartWith, that.removeDateStartWith))
-            return false;
-        return Objects.equals(removeDateEndWith, that.removeDateEndWith);
+        return Objects.equals(modifyDateEndWith, that.modifyDateEndWith);
     }
 
     @Override
@@ -163,8 +137,6 @@ public class VehicleModelFilter {
         result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
         result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
         result = 31 * result + (modifyDateEndWith != null ? modifyDateEndWith.hashCode() : 0);
-        result = 31 * result + (removeDateStartWith != null ? removeDateStartWith.hashCode() : 0);
-        result = 31 * result + (removeDateEndWith != null ? removeDateEndWith.hashCode() : 0);
         return result;
     }
 
@@ -179,11 +151,8 @@ public class VehicleModelFilter {
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
                 ", modifyDateEndWith=" + modifyDateEndWith +
-                ", removeDateStartWith=" + removeDateStartWith +
-                ", removeDateEndWith=" + removeDateEndWith +
                 '}';
     }
-
 
     public static final class Builder {
         private Long id;
@@ -237,16 +206,6 @@ public class VehicleModelFilter {
 
         public Builder modifyDateEndWith(Instant modifyDateEndWith) {
             this.modifyDateEndWith = modifyDateEndWith;
-            return this;
-        }
-
-        public Builder removeDateStartWith(Instant removeDateStartWith) {
-            this.removeDateStartWith = removeDateStartWith;
-            return this;
-        }
-
-        public Builder removeDateEndWith(Instant removeDateEndWith) {
-            this.removeDateEndWith = removeDateEndWith;
             return this;
         }
 

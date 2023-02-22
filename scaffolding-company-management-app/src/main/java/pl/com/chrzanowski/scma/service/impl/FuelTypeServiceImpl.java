@@ -75,14 +75,14 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public List<FuelTypeDTO> findByFilter(FuelTypeFilter fuelTypeFilter) {
         log.debug("Find all fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        Specification<FuelType> spec = FuelTypeSpecification.createSpecification(fuelTypeFilter);
         return fuelTypeMapper.toDto(fuelTypeRepository.findAll(spec));
     }
 
     @Override
     public Page<FuelTypeDTO> findByFilterAndPage(FuelTypeFilter fuelTypeFilter, Pageable pageable) {
         log.debug("Find all pageable fuel types by filter: {}.", fuelTypeFilter);
-        Specification<FuelType> spec = FuelTypeSpecification.builder().fuelTypeFilterAdd(fuelTypeFilter).build();
+        Specification<FuelType> spec = FuelTypeSpecification.createSpecification(fuelTypeFilter);
         return fuelTypeRepository.findAll(spec, pageable).map(fuelTypeMapper::toDto);
     }
 
