@@ -2,7 +2,7 @@ package pl.com.chrzanowski.scma.service.mapper;
 
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.User;
-import pl.com.chrzanowski.scma.model.UserDTO;
+import pl.com.chrzanowski.scma.service.dto.UserDTO;
 
 @Service
 public class UserMapper {

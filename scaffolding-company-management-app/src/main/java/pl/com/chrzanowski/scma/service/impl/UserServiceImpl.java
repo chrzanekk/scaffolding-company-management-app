@@ -1,18 +1,17 @@
 package pl.com.chrzanowski.scma.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.domain.User;
-import pl.com.chrzanowski.scma.model.UserDTO;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.UserService;
+import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 
 import javax.transaction.Transactional;
@@ -21,10 +20,10 @@ import java.util.Optional;
 
 
 @Service
-@RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
+
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final static String USER_NOT_FOUND = "user with email %s not found";
 
@@ -34,6 +33,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMapper userMapper;
 
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.userMapper = userMapper;
+    }
 
     @Override
     @Transactional

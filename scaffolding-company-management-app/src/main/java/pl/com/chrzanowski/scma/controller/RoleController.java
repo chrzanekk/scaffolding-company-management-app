@@ -1,22 +1,24 @@
 package pl.com.chrzanowski.scma.controller;
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.domain.Role;
-import pl.com.chrzanowski.scma.model.RoleDTO;
 import pl.com.chrzanowski.scma.service.RoleService;
+import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 
 import java.net.URI;
 import java.util.Set;
 
 @RestController
 @RequestMapping(path = "/api")
-@AllArgsConstructor
 public class RoleController {
 
     private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @GetMapping("/roles")
     public ResponseEntity<Set<Role>> getUsers() {
