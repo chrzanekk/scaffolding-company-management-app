@@ -8,7 +8,7 @@ import pl.com.chrzanowski.scma.service.dto.WorkshopDTO;
 public interface WorkshopMapper extends EntityMapper<WorkshopDTO, Workshop> {
 
 //    todo implement set mapping for serviceactiontypes
-    WorkshopDTO toDTO(Workshop workshop);
+
 
     default Workshop fromId(Long id) {
         if (id == null) {

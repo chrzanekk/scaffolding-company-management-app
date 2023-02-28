@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -41,10 +42,10 @@ public class Workshop {
     private Country country;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "workshops",
+            name = "workshop_service_types",
             joinColumns = @JoinColumn(name = "workshop_id"),
             inverseJoinColumns = @JoinColumn(name = "service_action_type_id"))
-    private Set<ServiceActionType> serviceActionTypeSet;
+    private Set<ServiceActionType> serviceActionTypeSet = new HashSet<>();
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;

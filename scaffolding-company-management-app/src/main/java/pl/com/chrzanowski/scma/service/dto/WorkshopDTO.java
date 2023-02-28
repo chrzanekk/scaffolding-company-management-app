@@ -18,7 +18,7 @@ public class WorkshopDTO {
     private String city;
     private Country country;
     private Long[] actionTypes;
-    private Set<ServiceActionTypeDTO> serviceActionTypeDTOSet;
+    private Set<ServiceActionTypeDTO> serviceActionTypeSet;
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -47,7 +47,7 @@ public class WorkshopDTO {
         this.city = city;
         this.country = country;
         this.actionTypes = actionTypes;
-        this.serviceActionTypeDTOSet = serviceActionTypeDTOSet;
+        this.serviceActionTypeSet = serviceActionTypeDTOSet;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
@@ -67,7 +67,7 @@ public class WorkshopDTO {
         city = builder.city;
         country = builder.country;
         actionTypes = builder.actionTypes;
-        serviceActionTypeDTOSet = builder.serviceActionTypeDTOSet;
+        serviceActionTypeSet = builder.serviceActionTypeSet;
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
@@ -117,8 +117,8 @@ public class WorkshopDTO {
         return actionTypes;
     }
 
-    public Set<ServiceActionTypeDTO> getServiceActionTypeDTOSet() {
-        return serviceActionTypeDTOSet;
+    public Set<ServiceActionTypeDTO> getServiceActionTypeSet() {
+        return serviceActionTypeSet;
     }
 
     public Instant getCreateDate() {
@@ -151,7 +151,7 @@ public class WorkshopDTO {
         if (country != that.country) return false;
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(actionTypes, that.actionTypes)) return false;
-        if (!Objects.equals(serviceActionTypeDTOSet, that.serviceActionTypeDTOSet))
+        if (!Objects.equals(serviceActionTypeSet, that.serviceActionTypeSet))
             return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
@@ -170,7 +170,7 @@ public class WorkshopDTO {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(actionTypes);
-        result = 31 * result + (serviceActionTypeDTOSet != null ? serviceActionTypeDTOSet.hashCode() : 0);
+        result = 31 * result + (serviceActionTypeSet != null ? serviceActionTypeSet.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -190,7 +190,7 @@ public class WorkshopDTO {
                 ", city='" + city + '\'' +
                 ", country=" + country +
                 ", actionTypes=" + Arrays.toString(actionTypes) +
-                ", serviceActionTypeDTOSet=" + serviceActionTypeDTOSet +
+                ", serviceActionTypeDTOSet=" + serviceActionTypeSet +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
@@ -209,7 +209,7 @@ public class WorkshopDTO {
         private String city;
         private Country country;
         private Long[] actionTypes;
-        private Set<ServiceActionTypeDTO> serviceActionTypeDTOSet;
+        private Set<ServiceActionTypeDTO> serviceActionTypeSet;
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
@@ -267,8 +267,8 @@ public class WorkshopDTO {
             return this;
         }
 
-        public Builder serviceActionTypeDTOSet(Set<ServiceActionTypeDTO> serviceActionTypeDTOSet) {
-            this.serviceActionTypeDTOSet = serviceActionTypeDTOSet;
+        public Builder serviceActionTypeSet(Set<ServiceActionTypeDTO> serviceActionTypeSet) {
+            this.serviceActionTypeSet = serviceActionTypeSet;
             return this;
         }
 

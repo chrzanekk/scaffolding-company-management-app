@@ -28,7 +28,7 @@ public class VehicleModelController {
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<VehicleModelDTO>> getAllVehicleBrands() {
+    public ResponseEntity<List<VehicleModelDTO>> getAllVehicleModels() {
         log.debug("REST request to get all vehicleModels");
         List<VehicleModelDTO> vehicleModelDTOS = vehicleModelService.findAll();
         return ResponseEntity.ok().body(vehicleModelDTOS);
@@ -42,7 +42,7 @@ public class VehicleModelController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<VehicleModelDTO>> getAllVehicleBrandsByFilterAndPage(VehicleModelFilter vehicleModelFilter,
+    public ResponseEntity<List<VehicleModelDTO>> getAllVehicleModelsByFilterAndPage(VehicleModelFilter vehicleModelFilter,
                                                                                     Pageable pageable) {
         log.debug("REST request to get all vehicleModels by filter: {}", vehicleModelFilter);
         Page<VehicleModelDTO> page = vehicleModelService.findByFilterAndPage(vehicleModelFilter,
@@ -68,14 +68,14 @@ public class VehicleModelController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<VehicleModelDTO> updateVehicleBrand(@RequestBody VehicleModelDTO vehicleModelDTO) {
+    public ResponseEntity<VehicleModelDTO> updateVehicleModel(@RequestBody VehicleModelDTO vehicleModelDTO) {
         log.debug("RST request to update vehicleModel: {}", vehicleModelDTO);
         VehicleModelDTO updatedVehicleModelDTO = vehicleModelService.update(vehicleModelDTO);
         return ResponseEntity.ok().body(updatedVehicleModelDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteVehicleBrand(@PathVariable Long id) {
+    public ResponseEntity<?> deleteVehicleModel(@PathVariable Long id) {
         log.debug("REST request to delete vehicleModel of id: {}", id);
         vehicleModelService.delete(id);
         return ResponseEntity.ok().build();
