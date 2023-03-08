@@ -7,8 +7,6 @@ import pl.com.chrzanowski.scma.service.dto.WorkshopDTO;
 @Mapper(componentModel = "spring", uses = {ServiceActionTypeMapper.class})
 public interface WorkshopMapper extends EntityMapper<WorkshopDTO, Workshop> {
 
-//    todo implement set mapping for serviceactiontypes
-
 
     default Workshop fromId(Long id) {
         if (id == null) {
