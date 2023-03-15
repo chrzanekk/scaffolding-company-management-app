@@ -5,6 +5,7 @@ import pl.com.chrzanowski.scma.domain.embeddable.WorkshopServiceTypePK;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "workshop_service_action_types")
 public class WorkshopServiceActionType {
 
     @EmbeddedId

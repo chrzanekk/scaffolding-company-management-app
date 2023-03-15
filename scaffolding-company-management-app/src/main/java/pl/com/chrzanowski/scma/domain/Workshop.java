@@ -5,6 +5,7 @@ import pl.com.chrzanowski.scma.domain.enumeration.Country;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "workshops")
-public class Workshop {
+public class Workshop implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,12 +41,8 @@ public class Workshop {
     @Column(name = "country")
     @Enumerated(EnumType.ORDINAL)
     private Country country;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "workshop_service_types",
-            joinColumns = @JoinColumn(name = "workshop_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_action_type_id"))
-    private Set<ServiceActionType> serviceActionTypeSet = new HashSet<>();
+    @OneToMany(mappedBy = "serviceActionType")
+    private Set<WorkshopServiceActionType> serviceActionTypeSet = new HashSet<>();
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -62,7 +59,7 @@ public class Workshop {
                     String postalCode,
                     String city,
                     Country country,
-                    Set<ServiceActionType> serviceActionTypeSet,
+                    Set<WorkshopServiceActionType> serviceActionTypeSet,
                     Instant createDate,
                     Instant modifyDate,
                     Instant removeDate) {
@@ -117,7 +114,7 @@ public class Workshop {
         return country;
     }
 
-    public Set<ServiceActionType> getServiceActionTypeSet() {
+    public Set<WorkshopServiceActionType> getServiceActionTypeSet() {
         return serviceActionTypeSet;
     }
 
@@ -169,7 +166,7 @@ public class Workshop {
         this.country = country;
     }
 
-    public void setServiceActionTypeSet(Set<ServiceActionType> serviceActionTypeSet) {
+    public void setServiceActionTypeSet(Set<WorkshopServiceActionType> serviceActionTypeSet) {
         this.serviceActionTypeSet = serviceActionTypeSet;
     }
 
@@ -231,7 +228,7 @@ public class Workshop {
         return this;
     }
 
-    public Workshop actionTypes(Set<ServiceActionType> serviceActionTypeSet) {
+    public Workshop actionTypes(Set<WorkshopServiceActionType> serviceActionTypeSet) {
         this.serviceActionTypeSet = serviceActionTypeSet;
         return this;
     }
