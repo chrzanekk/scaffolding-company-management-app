@@ -41,8 +41,13 @@ public class Workshop implements Serializable {
     @Column(name = "country")
     @Enumerated(EnumType.ORDINAL)
     private Country country;
-    @OneToMany(mappedBy = "serviceActionType")
-    private Set<WorkshopServiceActionType> serviceActionTypeSet = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinTable(
+            name="workshop_service_action_type",
+            joinColumns = @JoinColumn(name = "workshop_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_action_type_id"))
+    private Set<ServiceActionType> serviceActionTypes = new HashSet<>();
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -59,7 +64,7 @@ public class Workshop implements Serializable {
                     String postalCode,
                     String city,
                     Country country,
-                    Set<WorkshopServiceActionType> serviceActionTypeSet,
+                    Set<ServiceActionType> serviceActionTypes,
                     Instant createDate,
                     Instant modifyDate,
                     Instant removeDate) {
@@ -72,7 +77,7 @@ public class Workshop implements Serializable {
         this.postalCode = postalCode;
         this.city = city;
         this.country = country;
-        this.serviceActionTypeSet = serviceActionTypeSet;
+        this.serviceActionTypes = serviceActionTypes;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
@@ -114,8 +119,8 @@ public class Workshop implements Serializable {
         return country;
     }
 
-    public Set<WorkshopServiceActionType> getServiceActionTypeSet() {
-        return serviceActionTypeSet;
+    public Set<ServiceActionType> getServiceActionTypes() {
+        return serviceActionTypes;
     }
 
     public Instant getCreateDate() {
@@ -130,120 +135,67 @@ public class Workshop implements Serializable {
         return removeDate;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTaxNumber(String taxNumber) {
-        this.taxNumber = taxNumber;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public void setBuildingNo(String buildingNo) {
-        this.buildingNo = buildingNo;
-    }
-
-    public void setApartmentNo(String apartmentNo) {
-        this.apartmentNo = apartmentNo;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
-    }
-
-    public void setServiceActionTypeSet(Set<WorkshopServiceActionType> serviceActionTypeSet) {
-        this.serviceActionTypeSet = serviceActionTypeSet;
-    }
-
-    public void setCreateDate(Instant createDate) {
-        this.createDate = createDate;
-    }
-
-    public void setModifyDate(Instant modifyDate) {
-        this.modifyDate = modifyDate;
-    }
-
-    public void setRemoveDate(Instant removeDate) {
-        this.removeDate = removeDate;
-    }
-
-
-    public Workshop id(Long id) {
+    public Workshop setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public Workshop name(String name) {
+    public Workshop setName(String name) {
         this.name = name;
         return this;
     }
 
-    public Workshop taxNumber(String taxNumber) {
+    public Workshop setTaxNumber(String taxNumber) {
         this.taxNumber = taxNumber;
         return this;
     }
 
-    public Workshop street(String street) {
+    public Workshop setStreet(String street) {
         this.street = street;
         return this;
     }
 
-    public Workshop buildingNo(String buildingNo) {
+    public Workshop setBuildingNo(String buildingNo) {
         this.buildingNo = buildingNo;
         return this;
     }
 
-    public Workshop apartmentNo(String apartmentNo) {
+    public Workshop setApartmentNo(String apartmentNo) {
         this.apartmentNo = apartmentNo;
         return this;
     }
 
-    public Workshop postalCode(String postalCode) {
+    public Workshop setPostalCode(String postalCode) {
         this.postalCode = postalCode;
         return this;
     }
 
-    public Workshop city(String city) {
+    public Workshop setCity(String city) {
         this.city = city;
         return this;
     }
 
-    public Workshop country(Country country) {
+    public Workshop setCountry(Country country) {
         this.country = country;
         return this;
     }
 
-    public Workshop actionTypes(Set<WorkshopServiceActionType> serviceActionTypeSet) {
-        this.serviceActionTypeSet = serviceActionTypeSet;
+    public Workshop setServiceActionTypes(Set<ServiceActionType> serviceActionTypes) {
+        this.serviceActionTypes = serviceActionTypes;
         return this;
     }
 
-    public Workshop createDate(Instant createDate) {
+    public Workshop setCreateDate(Instant createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public Workshop modifyDate(Instant modifyDate) {
+    public Workshop setModifyDate(Instant modifyDate) {
         this.modifyDate = modifyDate;
         return this;
     }
 
-    public Workshop removeDate(Instant removeDate) {
+    public Workshop setRemoveDate(Instant removeDate) {
         this.removeDate = removeDate;
         return this;
     }
@@ -265,7 +217,7 @@ public class Workshop implements Serializable {
         if (!Objects.equals(postalCode, workshop.postalCode)) return false;
         if (!Objects.equals(city, workshop.city)) return false;
         if (country != workshop.country) return false;
-        if (!Objects.equals(serviceActionTypeSet, workshop.serviceActionTypeSet))
+        if (!Objects.equals(serviceActionTypes, workshop.serviceActionTypes))
             return false;
         if (!Objects.equals(createDate, workshop.createDate)) return false;
         if (!Objects.equals(modifyDate, workshop.modifyDate)) return false;
@@ -283,7 +235,7 @@ public class Workshop implements Serializable {
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + (serviceActionTypeSet != null ? serviceActionTypeSet.hashCode() : 0);
+        result = 31 * result + (serviceActionTypes != null ? serviceActionTypes.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -302,7 +254,7 @@ public class Workshop implements Serializable {
                 ", postalCode='" + postalCode + '\'' +
                 ", city='" + city + '\'' +
                 ", country=" + country +
-                ", serviceActionTypeSet=" + serviceActionTypeSet +
+                ", serviceActionTypeSet=" + serviceActionTypes +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +

@@ -3,7 +3,7 @@ package pl.com.chrzanowski.scma.service.dto;
 import pl.com.chrzanowski.scma.domain.enumeration.Country;
 
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,41 +17,10 @@ public class WorkshopDTO {
     private String postalCode;
     private String city;
     private Country country;
-    private Long[] actionTypes;
-    private Set<ServiceActionTypeDTO> serviceActionTypeSet;
+    private Set<ServiceActionTypeDTO> serviceActionTypes;
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
-
-    public WorkshopDTO(Long id,
-                       String name,
-                       String taxNumber,
-                       String street,
-                       String buildingNo,
-                       String apartmentNo,
-                       String postalCode,
-                       String city,
-                       Country country,
-                       Long[] actionTypes,
-                       Set<ServiceActionTypeDTO> serviceActionTypeDTOSet,
-                       Instant createDate,
-                       Instant modifyDate,
-                       Instant removeDate) {
-        this.id = id;
-        this.name = name;
-        this.taxNumber = taxNumber;
-        this.street = street;
-        this.buildingNo = buildingNo;
-        this.apartmentNo = apartmentNo;
-        this.postalCode = postalCode;
-        this.city = city;
-        this.country = country;
-        this.actionTypes = actionTypes;
-        this.serviceActionTypeSet = serviceActionTypeDTOSet;
-        this.createDate = createDate;
-        this.modifyDate = modifyDate;
-        this.removeDate = removeDate;
-    }
 
     public WorkshopDTO() {
     }
@@ -66,8 +35,7 @@ public class WorkshopDTO {
         postalCode = builder.postalCode;
         city = builder.city;
         country = builder.country;
-        actionTypes = builder.actionTypes;
-        serviceActionTypeSet = builder.serviceActionTypeSet;
+        serviceActionTypes = builder.serviceActionTypes;
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
@@ -113,12 +81,8 @@ public class WorkshopDTO {
         return country;
     }
 
-    public Long[] getActionTypes() {
-        return actionTypes;
-    }
-
-    public Set<ServiceActionTypeDTO> getServiceActionTypeSet() {
-        return serviceActionTypeSet;
+    public Set<ServiceActionTypeDTO> getServiceActionTypes() {
+        return serviceActionTypes;
     }
 
     public Instant getCreateDate() {
@@ -149,9 +113,7 @@ public class WorkshopDTO {
         if (!Objects.equals(postalCode, that.postalCode)) return false;
         if (!Objects.equals(city, that.city)) return false;
         if (country != that.country) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(actionTypes, that.actionTypes)) return false;
-        if (!Objects.equals(serviceActionTypeSet, that.serviceActionTypeSet))
+        if (!Objects.equals(serviceActionTypes, that.serviceActionTypes))
             return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
@@ -169,8 +131,7 @@ public class WorkshopDTO {
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(actionTypes);
-        result = 31 * result + (serviceActionTypeSet != null ? serviceActionTypeSet.hashCode() : 0);
+        result = 31 * result + (serviceActionTypes != null ? serviceActionTypes.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -189,12 +150,18 @@ public class WorkshopDTO {
                 ", postalCode='" + postalCode + '\'' +
                 ", city='" + city + '\'' +
                 ", country=" + country +
-                ", actionTypes=" + Arrays.toString(actionTypes) +
-                ", serviceActionTypeDTOSet=" + serviceActionTypeSet +
+                ", serviceActionTypes=" + serviceActionTypes +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
                 '}';
+    }
+
+    public void addServiceActionType(ServiceActionTypeDTO serviceActionTypeDTO) {
+        if(serviceActionTypes == null) {
+            serviceActionTypes = new HashSet<>();
+        }
+        serviceActionTypes.add(serviceActionTypeDTO);
     }
 
 
@@ -208,8 +175,7 @@ public class WorkshopDTO {
         private String postalCode;
         private String city;
         private Country country;
-        private Long[] actionTypes;
-        private Set<ServiceActionTypeDTO> serviceActionTypeSet;
+        private Set<ServiceActionTypeDTO> serviceActionTypes;
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
@@ -262,13 +228,8 @@ public class WorkshopDTO {
             return this;
         }
 
-        public Builder actionTypes(Long[] actionTypes) {
-            this.actionTypes = actionTypes;
-            return this;
-        }
-
-        public Builder serviceActionTypeSet(Set<ServiceActionTypeDTO> serviceActionTypeSet) {
-            this.serviceActionTypeSet = serviceActionTypeSet;
+        public Builder serviceActionTypes(Set<ServiceActionTypeDTO> serviceActionTypes) {
+            this.serviceActionTypes = serviceActionTypes;
             return this;
         }
 

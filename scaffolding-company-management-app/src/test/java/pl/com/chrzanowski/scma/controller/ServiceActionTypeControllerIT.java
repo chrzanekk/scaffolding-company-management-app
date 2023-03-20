@@ -38,8 +38,8 @@ public class ServiceActionTypeControllerIT {
     private static final String SECOND_DEFAULT_NAME = "secondDefaultServiceActionType";
     private static final String SECOND_UPDATED_NAME = "secondUpdatedServiceActionType";
     private static final Instant DEFAULT_CREATE_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
-    private static final Instant DEFAULT_REMOVE_DATE = Instant.ofEpochMilli(720000L);
+    private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000000L);
+    private static final Instant DEFAULT_REMOVE_DATE = Instant.ofEpochMilli(720000000L);
 
     @Autowired
     private ServiceActionTypeRepository serviceActionTypeRepository;
@@ -55,12 +55,15 @@ public class ServiceActionTypeControllerIT {
     private ServiceActionType secondServiceActionType;
 
     public static ServiceActionType createEntity(EntityManager em) {
-        return new ServiceActionType().name(FIRST_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
+        return new ServiceActionType().setName(FIRST_DEFAULT_NAME).setCreateDate(DEFAULT_CREATE_DATE);
+    }
+    public static ServiceActionType createSecondEntity(EntityManager em) {
+        return new ServiceActionType().setName(SECOND_DEFAULT_NAME).setCreateDate(DEFAULT_CREATE_DATE);
     }
 
     public static ServiceActionType createUpdatedEntity(EntityManager em) {
-        return new ServiceActionType().name(FIRST_UPDATED_NAME).createDate(DEFAULT_CREATE_DATE)
-                .modifyDate(DEFAULT_MODIFY_DATE);
+        return new ServiceActionType().setName(FIRST_UPDATED_NAME).setCreateDate(DEFAULT_CREATE_DATE)
+                .setModifyDate(DEFAULT_MODIFY_DATE);
     }
 
     @BeforeEach
@@ -95,7 +98,7 @@ public class ServiceActionTypeControllerIT {
 
         ServiceActionTypeDTO serviceActionTypeDTO = serviceActionTypeMapper.toDto(serviceActionType);
         ServiceActionTypeDTO serviceActionTypeDTO1 =
-                ServiceActionTypeDTO.Builder.builder().id(serviceActionTypeDTO.getId()).name(FIRST_UPDATED_NAME)
+                ServiceActionTypeDTO.builder().id(serviceActionTypeDTO.getId()).name(FIRST_UPDATED_NAME)
                         .createDate(serviceActionTypeDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
 
         restServiceActionTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)

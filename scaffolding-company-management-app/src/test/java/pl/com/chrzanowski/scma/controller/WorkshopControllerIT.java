@@ -16,15 +16,15 @@ import pl.com.chrzanowski.scma.domain.enumeration.Country;
 import pl.com.chrzanowski.scma.repository.ServiceActionTypeRepository;
 import pl.com.chrzanowski.scma.repository.WorkshopRepository;
 import pl.com.chrzanowski.scma.service.WorkshopService;
+import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 import pl.com.chrzanowski.scma.service.dto.WorkshopDTO;
+import pl.com.chrzanowski.scma.service.mapper.ServiceActionTypeMapper;
 import pl.com.chrzanowski.scma.service.mapper.WorkshopMapper;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,129 +52,78 @@ public class WorkshopControllerIT {
     @Autowired
     ServiceActionTypeRepository serviceActionTypeRepository;
     @Autowired
+    ServiceActionTypeMapper serviceActionTypeMapper;
+    @Autowired
     WorkshopMapper workshopMapper;
 
     private Workshop workshop;
     private Workshop secondWorkshop;
+    private ServiceActionType firstServiceActionType;
+    private ServiceActionType secondServiceActionType;
 
 
     public static Workshop createEntity(EntityManager em) {
-        Workshop workshop = new Workshop()
-                .name(WorkshopTestConstans.FIRST_NAME.getField())
-                .taxNumber(WorkshopTestConstans.FIRST_TAX_NUMBER.getField())
-                .street(WorkshopTestConstans.FIRST_STREET.getField())
-                .buildingNo(WorkshopTestConstans.FIRST_BUILDING_NO.getField())
-                .apartmentNo(WorkshopTestConstans.FIRST_APARTMENT_NO.getField())
-                .postalCode(WorkshopTestConstans.FIRST_POSTAL_CODE.getField())
-                .city(WorkshopTestConstans.FIRST_CITY.getField())
-                .country(Country.POLAND)
-                .createDate(DEFAULT_CREATE_DATE);
-        ServiceActionType firstServiceActionType;
-        ServiceActionType secondServiceActionType;
-        if (TestUtil.findAll(em, ServiceActionType.class).isEmpty()) {
-            firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-            em.persist(firstServiceActionType);
-            em.flush();
-            secondServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-            secondServiceActionType.setName(SECOND_SERVICE_ACTION_TYPE_NAME);
-            em.persist(secondServiceActionType);
-            em.flush();
-        } else {
-            firstServiceActionType = TestUtil.findAll(em, ServiceActionType.class).get(0);
-            secondServiceActionType = TestUtil.findAll(em, ServiceActionType.class).get(1);
-        }
-        Set<ServiceActionType> actionTypes = new HashSet<>();
-        actionTypes.add(firstServiceActionType);
-        actionTypes.add(secondServiceActionType);
-        workshop.setServiceActionTypeSet(actionTypes);
-        return workshop;
+
+        return new Workshop()
+                .setName(WorkshopTestConstans.FIRST_NAME.getField())
+                .setTaxNumber(WorkshopTestConstans.FIRST_TAX_NUMBER.getField())
+                .setStreet(WorkshopTestConstans.FIRST_STREET.getField())
+                .setBuildingNo(WorkshopTestConstans.FIRST_BUILDING_NO.getField())
+                .setApartmentNo(WorkshopTestConstans.FIRST_APARTMENT_NO.getField())
+                .setPostalCode(WorkshopTestConstans.FIRST_POSTAL_CODE.getField())
+                .setCity(WorkshopTestConstans.FIRST_CITY.getField())
+                .setCountry(Country.POLAND)
+                .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
     public static Workshop createSecondEntity(EntityManager em) {
-        Workshop workshop = new Workshop()
-                .name(WorkshopTestConstans.SECOND_NAME.getField())
-                .taxNumber(WorkshopTestConstans.SECOND_TAX_NUMBER.getField())
-                .street(WorkshopTestConstans.SECOND_STREET.getField())
-                .buildingNo(WorkshopTestConstans.SECOND_BUILDING_NO.getField())
-                .apartmentNo(WorkshopTestConstans.SECOND_APARTMENT_NO.getField())
-                .postalCode(WorkshopTestConstans.SECOND_POSTAL_CODE.getField())
-                .city(WorkshopTestConstans.SECOND_CITY.getField())
-                .country(Country.POLAND)
-                .createDate(DEFAULT_CREATE_DATE);
-        ServiceActionType firstServiceActionType;
-        ServiceActionType secondServiceActionType;
-        if (TestUtil.findAll(em, ServiceActionType.class).isEmpty()) {
-            firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-            em.persist(firstServiceActionType);
-            em.flush();
-            secondServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-            secondServiceActionType.setName(SECOND_SERVICE_ACTION_TYPE_NAME);
-            em.persist(secondServiceActionType);
-            em.flush();
-        } else {
-            firstServiceActionType = TestUtil.findAll(em, ServiceActionType.class).get(0);
-            secondServiceActionType = TestUtil.findAll(em, ServiceActionType.class).get(1);
-        }
-        Set<ServiceActionType> actionTypes = new HashSet<>();
-        actionTypes.add(firstServiceActionType);
-        actionTypes.add(secondServiceActionType);
-        workshop.setServiceActionTypeSet(actionTypes);
-        return workshop;
+
+        return new Workshop()
+                .setName(WorkshopTestConstans.SECOND_NAME.getField())
+                .setTaxNumber(WorkshopTestConstans.SECOND_TAX_NUMBER.getField())
+                .setStreet(WorkshopTestConstans.SECOND_STREET.getField())
+                .setBuildingNo(WorkshopTestConstans.SECOND_BUILDING_NO.getField())
+                .setApartmentNo(WorkshopTestConstans.SECOND_APARTMENT_NO.getField())
+                .setPostalCode(WorkshopTestConstans.SECOND_POSTAL_CODE.getField())
+                .setCity(WorkshopTestConstans.SECOND_CITY.getField())
+                .setCountry(Country.POLAND)
+                .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
     public static Workshop createUpdatedEntity(EntityManager em) {
-        Workshop workshop = new Workshop()
-                .name(WorkshopTestConstans.UPDATED_NAME.getField())
-                .taxNumber(WorkshopTestConstans.UPDATED_TAX_NUMBER.getField())
-                .street(WorkshopTestConstans.UPDATED_STREET.getField())
-                .buildingNo(WorkshopTestConstans.UPDATED_BUILDING_NO.getField())
-                .apartmentNo(WorkshopTestConstans.UPDATED_APARTMENT_NO.getField())
-                .city(WorkshopTestConstans.UPDATED_CITY.getField())
-                .country(Country.POLAND)
-                .createDate(DEFAULT_CREATE_DATE)
-                .modifyDate(DEFAULT_MODIFY_DATE);
-        ServiceActionType firstServiceActionType;
 
-        if (TestUtil.findAll(em, ServiceActionType.class).isEmpty()) {
-            firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-            em.persist(firstServiceActionType);
-            em.flush();
-        } else {
-            firstServiceActionType = TestUtil.findAll(em, ServiceActionType.class).get(0);
-        }
-        Set<ServiceActionType> actionTypes = new HashSet<>();
-        actionTypes.add(firstServiceActionType);
-        workshop.setServiceActionTypeSet(actionTypes);
-        return workshop;
+        return new Workshop()
+                .setName(WorkshopTestConstans.UPDATED_NAME.getField())
+                .setTaxNumber(WorkshopTestConstans.UPDATED_TAX_NUMBER.getField())
+                .setStreet(WorkshopTestConstans.UPDATED_STREET.getField())
+                .setBuildingNo(WorkshopTestConstans.UPDATED_BUILDING_NO.getField())
+                .setApartmentNo(WorkshopTestConstans.UPDATED_APARTMENT_NO.getField())
+                .setCity(WorkshopTestConstans.UPDATED_CITY.getField())
+                .setCountry(Country.POLAND)
+                .setCreateDate(DEFAULT_CREATE_DATE)
+                .setModifyDate(DEFAULT_MODIFY_DATE);
     }
 
     @BeforeEach
     public void initTest() {
         workshop = createEntity(em);
         secondWorkshop = createSecondEntity(em);
+
     }
 
     @Test
     @Transactional
     public void createWorkshop() throws Exception {
-        serviceActionTypeRepository.deleteAll();
+        createGlobalActionTypes();
         List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
-        List<ServiceActionType> serviceActionTypeListBeforeTest = serviceActionTypeRepository.findAll();
-
-        ServiceActionType firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-
-        ServiceActionType secondServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
-        secondServiceActionType.setName(SECOND_SERVICE_ACTION_TYPE_NAME);
-
-
-        Set<ServiceActionType> actionTypes = new HashSet<>();
-        actionTypes.add(firstServiceActionType);
-        actionTypes.add(secondServiceActionType);
-        workshop.setServiceActionTypeSet(actionTypes);
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
 
         int sizeBeforeTest = workshopListBeforeTest.size();
 
         WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+
+        serviceActionTypeListBeforeTest.get(0);
 
         restWorkshopMvc.perform(post(API_PATH + "/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -194,7 +143,16 @@ public class WorkshopControllerIT {
         assertThat(firstWorkshopFromDB.getCity()).isEqualTo(WorkshopTestConstans.FIRST_CITY.getField());
         assertThat(firstWorkshopFromDB.getCountry()).isEqualTo(Country.POLAND);
         assertThat(firstWorkshopFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
-        assertThat(firstWorkshopFromDB.getServiceActionTypeSet().size()).isEqualTo(2);
+        assertThat(firstWorkshopFromDB.getServiceActionTypes().size()).isEqualTo(2);
+    }
+
+    private void createGlobalActionTypes() {
+        firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
+        em.persist(firstServiceActionType);
+        em.flush();
+        secondServiceActionType = ServiceActionTypeControllerIT.createSecondEntity(em);
+        em.persist(secondServiceActionType);
+        em.flush();
     }
 
 }

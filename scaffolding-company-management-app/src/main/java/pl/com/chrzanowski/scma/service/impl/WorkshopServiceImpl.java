@@ -47,7 +47,7 @@ public class WorkshopServiceImpl implements WorkshopService {
                 .postalCode(workshopDTO.getPostalCode())
                 .city(workshopDTO.getCity())
                 .country(workshopDTO.getCountry())
-                .serviceActionTypeSet(workshopDTO.getServiceActionTypeSet())
+                .serviceActionTypes(workshopDTO.getServiceActionTypes())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getCreateDate())).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoSave));
         return workshopMapper.toDto(workshop);
@@ -65,7 +65,7 @@ public class WorkshopServiceImpl implements WorkshopService {
                 .postalCode(workshopDTO.getPostalCode())
                 .city(workshopDTO.getCity())
                 .country(workshopDTO.getCountry())
-                .serviceActionTypeSet(workshopDTO.getServiceActionTypeSet())
+                .serviceActionTypes(workshopDTO.getServiceActionTypes())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getCreateDate()))
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getModifyDate())).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoUpdate));

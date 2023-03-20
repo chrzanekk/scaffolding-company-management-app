@@ -4,12 +4,8 @@ import org.mapstruct.Mapper;
 import pl.com.chrzanowski.scma.domain.ServiceActionType;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 
-import java.util.Set;
-
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {WorkshopMapper.class})
 public interface ServiceActionTypeMapper extends EntityMapper<ServiceActionTypeDTO, ServiceActionType> {
-    Set<ServiceActionTypeDTO> mapDTOSet(Set<ServiceActionType>serviceActionTypes);
-    Set<ServiceActionType> mapEntitySet(Set<ServiceActionTypeDTO>serviceActionTypeDTOS);
 
     default ServiceActionType fromId(Long id) {
         if (id == null) {

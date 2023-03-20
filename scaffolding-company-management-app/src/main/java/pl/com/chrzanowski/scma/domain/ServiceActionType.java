@@ -27,85 +27,80 @@ public class ServiceActionType implements Serializable {
     private Instant modifyDate;
     private Instant removeDate;
 
-    @OneToMany(mappedBy = "workshop")
-    private Set<WorkshopServiceActionType> workshops = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
+            mappedBy = "serviceActionTypes")
+    private Set<Workshop> workshops = new HashSet<>();
 
-    public ServiceActionType(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
+
+    public ServiceActionType() {
+    }
+
+    public ServiceActionType(Long id,
+                             String name,
+                             Instant createDate,
+                             Instant modifyDate,
+                             Instant removeDate,
+                             Set<Workshop> workshops) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
-    }
-
-    public ServiceActionType() {
+        this.workshops = workshops;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Instant getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Instant createDate) {
-        this.createDate = createDate;
-    }
-
     public Instant getModifyDate() {
         return modifyDate;
-    }
-
-    public void setModifyDate(Instant modifyDate) {
-        this.modifyDate = modifyDate;
     }
 
     public Instant getRemoveDate() {
         return removeDate;
     }
 
-    public void setRemoveDate(Instant removeDate) {
-        this.removeDate = removeDate;
-    }
-
-    public Set<WorkshopServiceActionType> getWorkshops() {
+    public Set<Workshop> getWorkshops() {
         return workshops;
     }
 
-    public void setWorkshops(Set<WorkshopServiceActionType> workshops) {
-        this.workshops = workshops;
+    public ServiceActionType setId(Long id) {
+        this.id = id;
+        return this;
     }
 
-    public ServiceActionType name(String name) {
+    public ServiceActionType setName(String name) {
         this.name = name;
         return this;
     }
 
-    public ServiceActionType createDate(Instant createDate) {
+    public ServiceActionType setCreateDate(Instant createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public ServiceActionType modifyDate(Instant modifyDate) {
+    public ServiceActionType setModifyDate(Instant modifyDate) {
         this.modifyDate = modifyDate;
         return this;
     }
 
-    public ServiceActionType removeDate(Instant removeDate) {
+    public ServiceActionType setRemoveDate(Instant removeDate) {
         this.removeDate = removeDate;
+        return this;
+    }
+
+    public ServiceActionType setWorkshops(Set<Workshop> workshops) {
+        this.workshops = workshops;
         return this;
     }
 

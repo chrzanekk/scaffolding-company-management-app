@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.service.dto;
 
 import java.time.Instant;
 import java.util.Objects;
+import java.util.Set;
 
 public class ServiceActionTypeDTO {
 
@@ -11,12 +12,9 @@ public class ServiceActionTypeDTO {
     private Instant modifyDate;
     private Instant removeDate;
 
-    public ServiceActionTypeDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
-        this.id = id;
-        this.name = name;
-        this.createDate = createDate;
-        this.modifyDate = modifyDate;
-        this.removeDate = removeDate;
+    private Set<WorkshopDTO> workshops;
+
+    public ServiceActionTypeDTO() {
     }
 
     private ServiceActionTypeDTO(Builder builder) {
@@ -25,7 +23,13 @@ public class ServiceActionTypeDTO {
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
+        workshops = builder.workshops;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     public Long getId() {
         return id;
@@ -33,6 +37,10 @@ public class ServiceActionTypeDTO {
 
     public String getName() {
         return name;
+    }
+
+    public Set<WorkshopDTO> getWorkshops() {
+        return workshops;
     }
 
     public Instant getCreateDate() {
@@ -51,13 +59,26 @@ public class ServiceActionTypeDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ServiceActionTypeDTO that = (ServiceActionTypeDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate);
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(createDate, that.createDate)) return false;
+        if (!Objects.equals(modifyDate, that.modifyDate)) return false;
+        if (!Objects.equals(removeDate, that.removeDate)) return false;
+        return Objects.equals(workshops, that.workshops);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createDate, modifyDate, removeDate);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
+        result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
+        result = 31 * result + (workshops != null ? workshops.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -68,6 +89,7 @@ public class ServiceActionTypeDTO {
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
+                ", workshops=" + workshops +
                 '}';
     }
 
@@ -78,12 +100,9 @@ public class ServiceActionTypeDTO {
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
+        private Set<WorkshopDTO> workshops;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {
@@ -108,6 +127,11 @@ public class ServiceActionTypeDTO {
 
         public Builder removeDate(Instant removeDate) {
             this.removeDate = removeDate;
+            return this;
+        }
+
+        public Builder workshops(Set<WorkshopDTO> workshops) {
+            this.workshops = workshops;
             return this;
         }
 
