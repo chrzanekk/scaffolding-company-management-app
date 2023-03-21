@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.scma.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ import pl.com.chrzanowski.scma.service.mapper.WorkshopMapper;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = ScaffoldingCompanyManagementAppApplication.class)
 @AutoConfigureMockMvc
@@ -55,9 +58,12 @@ public class WorkshopControllerIT {
     ServiceActionTypeMapper serviceActionTypeMapper;
     @Autowired
     WorkshopMapper workshopMapper;
+    @Autowired
+    ObjectMapper objectMapper;
 
     private Workshop workshop;
     private Workshop secondWorkshop;
+    private Workshop updatedWorkshop;
     private ServiceActionType firstServiceActionType;
     private ServiceActionType secondServiceActionType;
 
@@ -98,6 +104,7 @@ public class WorkshopControllerIT {
                 .setStreet(WorkshopTestConstans.UPDATED_STREET.getField())
                 .setBuildingNo(WorkshopTestConstans.UPDATED_BUILDING_NO.getField())
                 .setApartmentNo(WorkshopTestConstans.UPDATED_APARTMENT_NO.getField())
+                .setPostalCode(WorkshopTestConstans.UPDATED_POSTAL_CODE.getField())
                 .setCity(WorkshopTestConstans.UPDATED_CITY.getField())
                 .setCountry(Country.POLAND)
                 .setCreateDate(DEFAULT_CREATE_DATE)
@@ -108,7 +115,7 @@ public class WorkshopControllerIT {
     public void initTest() {
         workshop = createEntity(em);
         secondWorkshop = createSecondEntity(em);
-
+        updatedWorkshop = createUpdatedEntity(em);
     }
 
     @Test
@@ -122,12 +129,22 @@ public class WorkshopControllerIT {
         int sizeBeforeTest = workshopListBeforeTest.size();
 
         WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
 
-        serviceActionTypeListBeforeTest.get(0);
 
         restWorkshopMvc.perform(post(API_PATH + "/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(workshopDTO))).andExpect(status().isOk());
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isOk());
 
         List<Workshop> workshopList = workshopRepository.findAll();
         List<ServiceActionType> serviceActionTypeList = serviceActionTypeRepository.findAll();
@@ -146,6 +163,168 @@ public class WorkshopControllerIT {
         assertThat(firstWorkshopFromDB.getServiceActionTypes().size()).isEqualTo(2);
     }
 
+    @Test
+    @Transactional
+    public void updateWorkshop() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isOk());
+
+        List<Workshop> workshopList = workshopRepository.findAll();
+        List<ServiceActionType> serviceActionTypeList = serviceActionTypeRepository.findAll();
+        Workshop firstWorkshopFromDB = workshopList.get(0);
+        int sizeAfterTest = workshopList.size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
+        assertThat(firstWorkshopFromDB.getName()).isEqualTo(WorkshopTestConstans.UPDATED_NAME.getField());
+        assertThat(firstWorkshopFromDB.getStreet()).isEqualTo(WorkshopTestConstans.UPDATED_STREET.getField());
+        assertThat(firstWorkshopFromDB.getBuildingNo()).isEqualTo(WorkshopTestConstans.UPDATED_BUILDING_NO.getField());
+        assertThat(firstWorkshopFromDB.getApartmentNo()).isEqualTo(WorkshopTestConstans.UPDATED_APARTMENT_NO.getField());
+        assertThat(firstWorkshopFromDB.getTaxNumber()).isEqualTo(WorkshopTestConstans.UPDATED_TAX_NUMBER.getField());
+        assertThat(firstWorkshopFromDB.getPostalCode()).isEqualTo(WorkshopTestConstans.UPDATED_POSTAL_CODE.getField());
+        assertThat(firstWorkshopFromDB.getCity()).isEqualTo(WorkshopTestConstans.UPDATED_CITY.getField());
+        assertThat(firstWorkshopFromDB.getCountry()).isEqualTo(Country.POLAND);
+        assertThat(firstWorkshopFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
+        assertThat(firstWorkshopFromDB.getServiceActionTypes().size()).isEqualTo(1);
+    }
+
+    @Test
+    @Transactional
+    public void getWorkshopById() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        createSecondGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+
+        restWorkshopMvc.perform(get(API_PATH + "/getById/{id}", workshopId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id").value(workshopFromDB.getId().intValue()))
+                .andExpect(jsonPath("$.name").value(workshopFromDB.getName()))
+                .andExpect(jsonPath("$.street").value(workshopFromDB.getStreet()))
+                .andExpect(jsonPath("$.buildingNo").value(workshopFromDB.getBuildingNo()))
+                .andExpect(jsonPath("$.apartmentNo").value(workshopFromDB.getApartmentNo()))
+                .andExpect(jsonPath("$.taxNumber").value(workshopFromDB.getTaxNumber()))
+                .andExpect(jsonPath("$.postalCode").value(workshopFromDB.getPostalCode()))
+                .andExpect(jsonPath("$.city").value(workshopFromDB.getCity()))
+                .andExpect(jsonPath("$.country").value(workshopFromDB.getCountry().toString()))
+                .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void findAllWorkshops() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        createSecondGlobalWorkshopInDB();
+
+        restWorkshopMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    @Transactional
+    public void findWorkshopWithNameFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("name=" + WorkshopTestConstans.FIRST_NAME.getField());
+        defaultWorkshopShouldNotBeFound("name=" + WorkshopTestConstans.SECOND_NAME.getField());
+    }
+    @Test
+    @Transactional
+    public void findWorkshopWithCityFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("city=" + WorkshopTestConstans.FIRST_CITY.getField());
+        defaultWorkshopShouldNotBeFound("city=" + WorkshopTestConstans.SECOND_CITY.getField());
+    }
+
+    @Test
+    @Transactional
+    public void findWorkshopWithTaxNumberFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("taxNumber=" + WorkshopTestConstans.FIRST_TAX_NUMBER.getField());
+        defaultWorkshopShouldNotBeFound("taxNumber=" + WorkshopTestConstans.SECOND_TAX_NUMBER.getField());
+    }
+    @Test
+    @Transactional
+    public void findWorkshopWithStreetFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("street=" + WorkshopTestConstans.FIRST_STREET.getField());
+        defaultWorkshopShouldNotBeFound("street=" + WorkshopTestConstans.SECOND_STREET.getField());
+    }
+
+    @Test
+    @Transactional
+    public void findWorkshopWithBuildingNoFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("buildingNo=" + WorkshopTestConstans.FIRST_BUILDING_NO.getField());
+        defaultWorkshopShouldNotBeFound("buildingNo=" + WorkshopTestConstans.SECOND_BUILDING_NO.getField());
+    }
+
+    @Test
+    @Transactional
+    public void findWorkshopWithApartmentNoFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("apartmentNo=" + WorkshopTestConstans.FIRST_APARTMENT_NO.getField());
+        defaultWorkshopShouldNotBeFound("apartmentNo=" + WorkshopTestConstans.SECOND_APARTMENT_NO.getField());
+    }
+    @Test
+    @Transactional
+    public void findWorkshopWithPostalCodeFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("postalCode=" + WorkshopTestConstans.FIRST_POSTAL_CODE.getField());
+        defaultWorkshopShouldNotBeFound("postalCode=" + WorkshopTestConstans.SECOND_POSTAL_CODE.getField());
+    }
+
+    @Test
+    @Transactional
+    public void findWorkshopWithCountryFilter() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        defaultWorkshopShouldBeFound("country=" + Country.POLAND);
+        defaultWorkshopShouldNotBeFound("country=" + Country.ENGLAND);
+    }
+
+
+
     private void createGlobalActionTypes() {
         firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
         em.persist(firstServiceActionType);
@@ -154,5 +333,70 @@ public class WorkshopControllerIT {
         em.persist(secondServiceActionType);
         em.flush();
     }
+
+    private void createGlobalWorkshopInDB() {
+        List<ServiceActionType> serviceActionTypes = serviceActionTypeRepository.findAll();
+        Set<ServiceActionType> serviceActionTypeSet = new HashSet<>(serviceActionTypes);
+        workshop.setServiceActionTypes(serviceActionTypeSet);
+        em.persist(workshop);
+        em.flush();
+    }
+
+    private void createSecondGlobalWorkshopInDB() {
+        List<ServiceActionType> serviceActionTypes = serviceActionTypeRepository.findAll();
+        Set<ServiceActionType> serviceActionTypeSet = new HashSet<>();
+        serviceActionTypeSet.add(serviceActionTypes.get(0));
+        secondWorkshop.setServiceActionTypes(serviceActionTypeSet);
+        em.persist(secondWorkshop);
+        em.flush();
+    }
+
+    private void createGlobalUpdatedWorkshopInDB() {
+        List<ServiceActionType> serviceActionTypes = serviceActionTypeRepository.findAll();
+        Set<ServiceActionType> serviceActionTypeSet = new HashSet<>();
+        serviceActionTypeSet.add(serviceActionTypes.get(0));
+        updatedWorkshop.setServiceActionTypes(serviceActionTypeSet);
+        em.persist(updatedWorkshop);
+        em.flush();
+    }
+
+    private void defaultWorkshopShouldBeFound(String filter) throws Exception {
+        restWorkshopMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(workshop.getId().intValue()))
+                .andExpect(jsonPath("$.[*].name").value(workshop.getName()))
+                .andExpect(jsonPath("$.[*].street").value(workshop.getStreet()))
+                .andExpect(jsonPath("$.[*].buildingNo").value(workshop.getBuildingNo()))
+                .andExpect(jsonPath("$.[*].apartmentNo").value(workshop.getApartmentNo()))
+                .andExpect(jsonPath("$.[*].taxNumber").value(workshop.getTaxNumber()))
+                .andExpect(jsonPath("$.[*].postalCode").value(workshop.getPostalCode()))
+                .andExpect(jsonPath("$.[*].city").value(workshop.getCity()))
+                .andExpect(jsonPath("$.[*].country").value(workshop.getCountry().toString()))
+                .andExpect(jsonPath("$.[*].createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
+
+    private void defaultUpdatedWorkshopTypeShouldBeFound(String filter) throws Exception {
+        restWorkshopMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(workshop.getId().intValue()))
+                .andExpect(jsonPath("$.[*].name").value(workshop.getName()))
+                .andExpect(jsonPath("$.[*].street").value(workshop.getStreet()))
+                .andExpect(jsonPath("$.[*].buildingNo").value(workshop.getBuildingNo()))
+                .andExpect(jsonPath("$.[*].apartmentNo").value(workshop.getApartmentNo()))
+                .andExpect(jsonPath("$.[*].taxNumber").value(workshop.getTaxNumber()))
+                .andExpect(jsonPath("$.[*].postalCode").value(workshop.getPostalCode()))
+                .andExpect(jsonPath("$.[*].city").value(workshop.getCity()))
+                .andExpect(jsonPath("$.[*].country").value(workshop.getCountry().toString()))
+                .andExpect(jsonPath("$.[*].createDate").value(DEFAULT_CREATE_DATE.toString()))
+                .andExpect(jsonPath("$.[*].createDate").value(DEFAULT_MODIFY_DATE.toString()));
+    }
+
+    private void defaultWorkshopShouldNotBeFound(String filter) throws Exception {
+        restWorkshopMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
 
 }

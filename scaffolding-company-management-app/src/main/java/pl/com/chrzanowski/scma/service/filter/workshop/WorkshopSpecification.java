@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.filter.workshop;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.Workshop;
+import pl.com.chrzanowski.scma.domain.enumeration.Country;
 
 import java.time.Instant;
 
@@ -46,6 +47,9 @@ public class WorkshopSpecification {
             }
             if (workshopFilter.getCity() != null) {
                 specification = specification.and(hasCity(workshopFilter.getCity()));
+            }
+            if (workshopFilter.getCountry() != null) {
+                specification = specification.and(hasCountry(workshopFilter.getCountry()));
             }
             if (workshopFilter.getCreateDateStartWith() != null) {
                 specification = specification.and(hasCreateDateStartWith(workshopFilter.getCreateDateStartWith()));
@@ -93,6 +97,10 @@ public class WorkshopSpecification {
 
     private static Specification<Workshop> hasCity(String city) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(CITY), "%" + city + "%");
+    }
+
+    private static Specification<Workshop> hasCountry(Country country) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(COUNTRY), "%" + country + "%");
     }
 
     private static Specification<Workshop> hasCreateDateStartWith(Instant createDate) {

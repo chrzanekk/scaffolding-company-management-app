@@ -42,7 +42,7 @@ public class Workshop implements Serializable {
     @Enumerated(EnumType.ORDINAL)
     private Country country;
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+            cascade = {CascadeType.MERGE})
     @JoinTable(
             name="workshop_service_action_type",
             joinColumns = @JoinColumn(name = "workshop_id"),

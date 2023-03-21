@@ -57,6 +57,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public WorkshopDTO update(WorkshopDTO workshopDTO) {
         log.debug("Update workshop: {}", workshopDTO);
         WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopDTO.getId())
                 .name(workshopDTO.getName())
                 .taxNumber(workshopDTO.getTaxNumber())
                 .street(workshopDTO.getStreet())

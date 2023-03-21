@@ -28,7 +28,7 @@ public class ServiceActionType implements Serializable {
     private Instant removeDate;
 
     @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
+            cascade = {CascadeType.MERGE},
             mappedBy = "serviceActionTypes")
     private Set<Workshop> workshops = new HashSet<>();
 

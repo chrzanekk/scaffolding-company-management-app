@@ -14,8 +14,6 @@ public class WorkshopFilter {
     private String postalCode;
     private String city;
     private Country country;
-    private Long vehicleBrandId;
-    private String vehicleBrandName;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
@@ -34,8 +32,6 @@ public class WorkshopFilter {
         setPostalCode(builder.postalCode);
         setCity(builder.city);
         setCountry(builder.country);
-        setVehicleBrandId(builder.vehicleBrandId);
-        setVehicleBrandName(builder.vehicleBrandName);
         setCreateDateStartWith(builder.createDateStartWith);
         setCreateDateEndWith(builder.createDateEndWith);
         setModifyDateStartWith(builder.modifyDateStartWith);
@@ -118,22 +114,6 @@ public class WorkshopFilter {
         this.country = country;
     }
 
-    public Long getVehicleBrandId() {
-        return vehicleBrandId;
-    }
-
-    public void setVehicleBrandId(Long vehicleBrandId) {
-        this.vehicleBrandId = vehicleBrandId;
-    }
-
-    public String getVehicleBrandName() {
-        return vehicleBrandName;
-    }
-
-    public void setVehicleBrandName(String vehicleBrandName) {
-        this.vehicleBrandName = vehicleBrandName;
-    }
-
     public Instant getCreateDateStartWith() {
         return createDateStartWith;
     }
@@ -177,8 +157,6 @@ public class WorkshopFilter {
         private String postalCode;
         private String city;
         private Country country;
-        private Long vehicleBrandId;
-        private String vehicleBrandName;
         private Instant createDateStartWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
@@ -229,16 +207,6 @@ public class WorkshopFilter {
 
         public Builder country(Country country) {
             this.country = country;
-            return this;
-        }
-
-        public Builder vehicleBrandId(Long vehicleBrandId) {
-            this.vehicleBrandId = vehicleBrandId;
-            return this;
-        }
-
-        public Builder vehicleBrandName(String vehicleBrandName) {
-            this.vehicleBrandName = vehicleBrandName;
             return this;
         }
 

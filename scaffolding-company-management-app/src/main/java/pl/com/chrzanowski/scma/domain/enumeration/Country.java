@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Country {
-    POLAND("PL", "Polska");
+    POLAND("PL", "Polska"),
+    ENGLAND("EN-GB", "Anglia");
 
     private String code;
     private String name;
