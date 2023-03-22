@@ -1,0 +1,29 @@
+server:
+  port: 10344
+  address: localhost
+
+spring:
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    username: sa
+    url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1;
+    password: sa
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: false
+      hibernate.jdbc.time_zone: UTC
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+        format_sql: true
+      show-sql: true
+  profiles:
+    active: test
+  sql:
+    init:
+      platform: hsqldb
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
