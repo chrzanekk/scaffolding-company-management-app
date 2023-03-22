@@ -39,7 +39,7 @@ public class Workshop implements Serializable {
     @Column(name = "city")
     private String city;
     @Column(name = "country")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Country country;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})

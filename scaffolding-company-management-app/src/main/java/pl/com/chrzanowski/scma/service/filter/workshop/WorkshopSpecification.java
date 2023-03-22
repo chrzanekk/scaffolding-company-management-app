@@ -100,7 +100,7 @@ public class WorkshopSpecification {
     }
 
     private static Specification<Workshop> hasCountry(Country country) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(COUNTRY), "%" + country + "%");
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(COUNTRY), country);
     }
 
     private static Specification<Workshop> hasCreateDateStartWith(Instant createDate) {

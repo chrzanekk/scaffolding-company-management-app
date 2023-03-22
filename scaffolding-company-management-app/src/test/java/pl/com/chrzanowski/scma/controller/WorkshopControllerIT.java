@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,7 @@ public class WorkshopControllerIT {
 
     @BeforeEach
     public void initTest() {
+        serviceActionTypeRepository.deleteAll();
         workshop = createEntity(em);
         secondWorkshop = createSecondEntity(em);
         updatedWorkshop = createUpdatedEntity(em);
@@ -322,6 +324,22 @@ public class WorkshopControllerIT {
         defaultWorkshopShouldBeFound("country=" + Country.POLAND);
         defaultWorkshopShouldNotBeFound("country=" + Country.ENGLAND);
     }
+
+    @Test
+    @Transactional
+    public void deleteWorkshopById() throws Exception {
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopList = workshopRepository.findAll();
+        int sizeBeforeTest = workshopList.size();
+
+        restWorkshopMvc.perform(delete(API_PATH + "/delete/{id}", workshop.getId()))
+                .andExpect(status().isOk());
+        List<Workshop> allAfterTest = workshopRepository.findAll();
+        int sizeAfterTest = allAfterTest.size();
+
+        Assertions.assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
+    }
+
 
 
 
