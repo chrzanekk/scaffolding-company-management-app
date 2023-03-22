@@ -15,6 +15,7 @@ import pl.com.chrzanowski.scma.service.filter.vehiclebrand.VehicleBrandFilter;
 import pl.com.chrzanowski.scma.service.filter.vehiclebrand.VehicleBrandSpecification;
 import pl.com.chrzanowski.scma.service.mapper.VehicleBrandMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     @Override
     public VehicleBrandDTO save(VehicleBrandDTO vehicleBrandDTO) {
         log.debug("Save vehicle brand: {}", vehicleBrandDTO);
+        validateVehicleBrandDTO(vehicleBrandDTO);
         VehicleBrandDTO vehicleBrandDTOToSave =
                 VehicleBrandDTO.Builder.builder().name(vehicleBrandDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate())).build();
@@ -48,6 +50,8 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     @Override
     public VehicleBrandDTO update(VehicleBrandDTO vehicleBrandDTO) {
         log.debug("Update vehicle brand: {}", vehicleBrandDTO);
+        validateVehicleBrandDTO(vehicleBrandDTO);
+        FieldValidator.validateObject(vehicleBrandDTO.getId(), "vehicleBrandId");
         VehicleBrandDTO vehicleBrandDTOToUpdate =
                 VehicleBrandDTO.Builder.builder().id(vehicleBrandDTO.getId()).name(vehicleBrandDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate()))
@@ -76,6 +80,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     @Override
     public VehicleBrandDTO findById(Long id) {
         log.debug("Find vehicle brand by id: {}", id);
+        FieldValidator.validateObject(id, "vehicleBrandId");
         Optional<VehicleBrand> vehicleBrand = vehicleBrandRepository.findById(id);
         return vehicleBrandMapper.toDto(vehicleBrand.orElseThrow(() -> new ObjectNotFoundException("Vehicle brand " +
                 "not found")));
@@ -91,6 +96,12 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
     @Override
     public void delete(Long id) {
         log.debug("Delete vehicle bran by id: {}", id);
+        FieldValidator.validateObject(id, "vehicleBrandId");
         vehicleBrandRepository.deleteVehicleBrandById(id);
+    }
+
+    private void validateVehicleBrandDTO(VehicleBrandDTO vehicleBrandDTO) {
+        FieldValidator.validateObject(vehicleBrandDTO, "vehicleBranDTO");
+        FieldValidator.validateString(vehicleBrandDTO.getName(), "vehicleBranName");
     }
 }

@@ -15,6 +15,7 @@ import pl.com.chrzanowski.scma.service.filter.workshop.WorkshopFilter;
 import pl.com.chrzanowski.scma.service.filter.workshop.WorkshopSpecification;
 import pl.com.chrzanowski.scma.service.mapper.WorkshopMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public WorkshopDTO save(WorkshopDTO workshopDTO) {
         log.debug("Save workshop: {}", workshopDTO);
+        validateWorkshopDTO(workshopDTO);
         WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
                 .name(workshopDTO.getName())
                 .taxNumber(workshopDTO.getTaxNumber())
@@ -56,6 +58,8 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public WorkshopDTO update(WorkshopDTO workshopDTO) {
         log.debug("Update workshop: {}", workshopDTO);
+        validateWorkshopDTO(workshopDTO);
+        FieldValidator.validateObject(workshopDTO.getId(), "WorkshopID");
         WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
                 .id(workshopDTO.getId())
                 .name(workshopDTO.getName())
@@ -90,6 +94,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public WorkshopDTO findById(Long id) {
         log.debug("Find workshop by id: {}", id);
+        FieldValidator.validateObject(id, "WorkshopId");
         Optional<Workshop> workshopOptional = workshopRepository.findById(id);
         return workshopMapper.toDto(workshopOptional.orElseThrow(() -> new ObjectNotFoundException("Workshop not " +
                 "found")));
@@ -105,6 +110,19 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     public void delete(Long id) {
         log.debug("Delete workshop by id: {}", id);
+        FieldValidator.validateObject(id, "WorkshopId");
         workshopRepository.deleteWorkshopById(id);
+    }
+
+    private void validateWorkshopDTO(WorkshopDTO workshopDTO) {
+        FieldValidator.validateObject(workshopDTO, "workshopDTO");
+        FieldValidator.validateString(workshopDTO.getName(), "workshopName");
+        FieldValidator.validateString(workshopDTO.getTaxNumber(), "workshopTaxNumber");
+        FieldValidator.validateString(workshopDTO.getStreet(), "workshopStreet");
+        FieldValidator.validateString(workshopDTO.getBuildingNo(), "workshopBuildingNo");
+        FieldValidator.validateString(workshopDTO.getApartmentNo(), "workshopApartmentNo");
+        FieldValidator.validateString(workshopDTO.getPostalCode(), "workshopPostalCode");
+        FieldValidator.validateString(workshopDTO.getCity(), "workshopCity");
+        FieldValidator.validateObject(workshopDTO.getCountry(), "workshopCountry");
     }
 }

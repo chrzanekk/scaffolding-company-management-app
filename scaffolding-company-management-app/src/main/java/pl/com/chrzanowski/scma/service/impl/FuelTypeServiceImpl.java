@@ -15,6 +15,7 @@ import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.FuelTypeMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -41,6 +42,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public FuelTypeDTO save(FuelTypeDTO fuelTypeDTO) {
         log.debug("Save fuel type: {}", fuelTypeDTO);
+        validateFuelTypeDTO(fuelTypeDTO);
         FuelTypeDTO fuelTypeToSave = FuelTypeDTO.Builder.builder().name(fuelTypeDTO.getName())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeDTO.getCreateDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToSave));
@@ -50,6 +52,8 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public FuelTypeDTO update(FuelTypeDTO fuelTypeDTO) {
         log.debug("Update fuel type: {}", fuelTypeDTO);
+        validateFuelTypeDTO(fuelTypeDTO);
+        FieldValidator.validateObject(fuelTypeDTO.getId(), "FuelTypeId");
         FuelTypeDTO fuelTypeInDB = findById(fuelTypeDTO.getId());
         FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder().id(fuelTypeDTO.getId()).name(fuelTypeDTO.getName())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
@@ -61,6 +65,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public FuelTypeDTO findById(Long id) {
         log.debug("Find fuel type by id: {}", id);
+        FieldValidator.validateObject(id, "FuelTypeId");
         Optional<FuelType> fuelTypeOptional = fuelTypeRepository.findById(id);
         return fuelTypeMapper.toDto(fuelTypeOptional.orElseThrow(() -> new ObjectNotFoundException("Fuel type not " + "found")));
     }
@@ -89,6 +94,12 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     @Override
     public void delete(Long id) {
         log.debug("Delete fuel typ of id: {}", id);
+        FieldValidator.validateObject(id, "fuelTypeId");
         fuelTypeRepository.deleteFuelTypeById(id);
+    }
+
+    private void validateFuelTypeDTO(FuelTypeDTO fuelTypeDTO) {
+        FieldValidator.validateObject(fuelTypeDTO, "fuelTypeDTO");
+        FieldValidator.validateString(fuelTypeDTO.getName(), "name");
     }
 }
