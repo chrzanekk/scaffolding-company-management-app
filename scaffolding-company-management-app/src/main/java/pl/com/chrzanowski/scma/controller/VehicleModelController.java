@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
+import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
+import pl.com.chrzanowski.scma.exception.EmptyValueException;
+import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.VehicleModelService;
 import pl.com.chrzanowski.scma.service.dto.VehicleModelDTO;
 import pl.com.chrzanowski.scma.service.filter.vehiclemodel.VehicleModelFilter;
@@ -56,22 +59,38 @@ public class VehicleModelController {
     @GetMapping("/getById/{id}")
     public ResponseEntity<VehicleModelDTO> getVehicleModelById(@PathVariable Long id) {
         log.debug("REST request to get vehicleModel by id: {}", id);
-        VehicleModelDTO vehicleBrandDTO = vehicleModelService.findById(id);
-        return ResponseEntity.ok().body(vehicleBrandDTO);
+        try {
+            VehicleModelDTO vehicleBrandDTO = vehicleModelService.findById(id);
+            return ResponseEntity.ok().body(vehicleBrandDTO);
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "wrongVehicleModelId");
+        }
     }
 
     @PostMapping("/add")
     public ResponseEntity<VehicleModelDTO> addVehicleModel(@RequestBody VehicleModelDTO vehicleModelDTO) {
         log.debug("REST request to add new vehicleModel: {}", vehicleModelDTO);
-        VehicleModelDTO newVehicleModelDTO = vehicleModelService.save(vehicleModelDTO);
-        return ResponseEntity.ok().body(newVehicleModelDTO);
+        try {
+            VehicleModelDTO newVehicleModelDTO = vehicleModelService.save(vehicleModelDTO);
+            return ResponseEntity.ok().body(newVehicleModelDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<VehicleModelDTO> updateVehicleModel(@RequestBody VehicleModelDTO vehicleModelDTO) {
         log.debug("RST request to update vehicleModel: {}", vehicleModelDTO);
-        VehicleModelDTO updatedVehicleModelDTO = vehicleModelService.update(vehicleModelDTO);
-        return ResponseEntity.ok().body(updatedVehicleModelDTO);
+        try {
+            VehicleModelDTO updatedVehicleModelDTO = vehicleModelService.update(vehicleModelDTO);
+            return ResponseEntity.ok().body(updatedVehicleModelDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
+        }
     }
 
     @DeleteMapping("/delete/{id}")

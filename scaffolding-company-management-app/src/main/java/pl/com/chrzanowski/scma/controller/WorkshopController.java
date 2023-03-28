@@ -9,10 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
+import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
+import pl.com.chrzanowski.scma.exception.EmptyValueException;
+import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.WorkshopService;
 import pl.com.chrzanowski.scma.service.dto.WorkshopDTO;
 import pl.com.chrzanowski.scma.service.filter.workshop.WorkshopFilter;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -43,7 +47,7 @@ public class WorkshopController {
 
     @GetMapping("/page")
     public ResponseEntity<List<WorkshopDTO>> getAllWorkshopsByFilterAndPage(WorkshopFilter workshopFilter,
-                                                                                Pageable pageable) {
+                                                                            Pageable pageable) {
         log.debug("REST request to get all workshops by filter: {}", workshopFilter);
         Page<WorkshopDTO> page = workshopService.findByFilterAndPage(workshopFilter,
                 pageable);
@@ -54,24 +58,42 @@ public class WorkshopController {
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<WorkshopDTO> getWorkshopById(@PathVariable Long id) {
+    public ResponseEntity<WorkshopDTO> getWorkshopById(@Valid @PathVariable Long id) {
         log.debug("REST request to get workshop by id: {}", id);
-        WorkshopDTO workshopDTO = workshopService.findById(id);
-        return ResponseEntity.ok().body(workshopDTO);
+        try {
+            WorkshopDTO workshopDTO = workshopService.findById(id);
+            return ResponseEntity.ok().body(workshopDTO);
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "workshopNotFound");
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        }
     }
 
     @PostMapping("/add")
     public ResponseEntity<WorkshopDTO> addWorkshop(@RequestBody WorkshopDTO WorkshopDTO) {
         log.debug("REST request to add new workshop: {}", WorkshopDTO);
-        WorkshopDTO newWorkshopDTO = workshopService.save(WorkshopDTO);
-        return ResponseEntity.ok().body(newWorkshopDTO);
+        try {
+            WorkshopDTO newWorkshopDTO = workshopService.save(WorkshopDTO);
+            return ResponseEntity.ok().body(newWorkshopDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "workshopNotFound");
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<WorkshopDTO> updateWorkshop(@RequestBody WorkshopDTO workshopDTO) {
         log.debug("RST request to update workshop: {}", workshopDTO);
-        WorkshopDTO updatedWorkshopDTO = workshopService.update(workshopDTO);
-        return ResponseEntity.ok().body(updatedWorkshopDTO);
+        try {
+            WorkshopDTO updatedWorkshopDTO = workshopService.update(workshopDTO);
+            return ResponseEntity.ok().body(updatedWorkshopDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "workshopNotFound");
+        }
     }
 
     @DeleteMapping("/delete/{id}")

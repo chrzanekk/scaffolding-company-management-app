@@ -40,7 +40,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         log.debug("Save vehicle model: {}", vehicleModelDTO);
         validateVehicleModelDTO(vehicleModelDTO);
         VehicleModelDTO vehicleModelDTOtoSave =
-                VehicleModelDTO.Builder.builder().name(vehicleModelDTO.getName())
+                VehicleModelDTO.builder().name(vehicleModelDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getCreateDate())).build();
         VehicleModel vehicleModel = vehicleModelRepository.save(vehicleModelMapper.toEntity(vehicleModelDTO));
         return vehicleModelMapper.toDto(vehicleModel);
@@ -52,10 +52,10 @@ public class VehicleModelServiceImpl implements VehicleModelService {
         validateVehicleModelDTO(vehicleModelDTO);
         FieldValidator.validateObject(vehicleModelDTO.getId(), "vehicleModelId");
         VehicleModelDTO vehicleModelDTOToUpdate =
-                VehicleModelDTO.Builder.builder().id(vehicleModelDTO.getId()).name(vehicleModelDTO.getName())
+                VehicleModelDTO.builder().id(vehicleModelDTO.getId()).name(vehicleModelDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getCreateDate()))
                         .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getModifyDate()))
-                        .brandId(vehicleModelDTO.getVehicleBrandId()).build();
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId()).build();
         VehicleModel vehicleModel = vehicleModelRepository.save(vehicleModelMapper.toEntity(vehicleModelDTOToUpdate));
         return vehicleModelMapper.toDto(vehicleModel);
     }

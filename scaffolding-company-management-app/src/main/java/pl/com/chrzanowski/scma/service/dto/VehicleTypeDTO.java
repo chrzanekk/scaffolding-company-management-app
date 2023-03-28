@@ -27,6 +27,10 @@ public class VehicleTypeDTO {
         removeDate = builder.removeDate;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public Long getId() {
         return id;
     }
@@ -79,10 +83,6 @@ public class VehicleTypeDTO {
         private Instant removeDate;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {

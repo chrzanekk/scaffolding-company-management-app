@@ -39,6 +39,10 @@ public class VehicleModelDTO {
         vehicleBrandName = builder.vehicleBrandName;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public Long getId() {
         return id;
     }
@@ -121,10 +125,6 @@ public class VehicleModelDTO {
         private Builder() {
         }
 
-        public static Builder builder() {
-            return new Builder();
-        }
-
         public Builder id(Long id) {
             this.id = id;
             return this;
@@ -150,12 +150,12 @@ public class VehicleModelDTO {
             return this;
         }
 
-        public Builder brandId(Long vehicleBrandId) {
+        public Builder vehicleBrandId(Long vehicleBrandId) {
             this.vehicleBrandId = vehicleBrandId;
             return this;
         }
 
-        public Builder brandName(String vehicleBrandName) {
+        public Builder vehicleBrandName(String vehicleBrandName) {
             this.vehicleBrandName = vehicleBrandName;
             return this;
         }

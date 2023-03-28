@@ -120,9 +120,9 @@ public class WorkshopServiceImpl implements WorkshopService {
         FieldValidator.validateString(workshopDTO.getTaxNumber(), "workshopTaxNumber");
         FieldValidator.validateString(workshopDTO.getStreet(), "workshopStreet");
         FieldValidator.validateString(workshopDTO.getBuildingNo(), "workshopBuildingNo");
-        FieldValidator.validateString(workshopDTO.getApartmentNo(), "workshopApartmentNo");
         FieldValidator.validateString(workshopDTO.getPostalCode(), "workshopPostalCode");
         FieldValidator.validateString(workshopDTO.getCity(), "workshopCity");
         FieldValidator.validateObject(workshopDTO.getCountry(), "workshopCountry");
+        FieldValidator.validateSet(workshopDTO.getServiceActionTypes(), "serviceActionTypes");
     }
 }

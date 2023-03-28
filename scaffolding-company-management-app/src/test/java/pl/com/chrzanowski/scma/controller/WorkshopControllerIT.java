@@ -167,6 +167,242 @@ public class WorkshopControllerIT {
 
     @Test
     @Transactional
+    public void createWorkshopShouldThrowBadRequestForNull() throws Exception {
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(null))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingName() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingTaxNumber() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingStreet() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingBuildingNo() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingPostalCode() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingCity() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingCountry() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .createDate(workshopDTO.getCreateDate())
+                .serviceActionTypes(new HashSet<>(serviceActionTypeListBeforeTest)).build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowExceptionForMissingServiceActionTypes() throws Exception {
+        createGlobalActionTypes();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(workshop);
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .build();
+
+
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoSave))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createWorkshopShouldThrowBadRequestForEmptyObject() throws Exception {
+        restWorkshopMvc.perform(post(API_PATH + "/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(WorkshopDTO.builder().build())))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
     public void updateWorkshop() throws Exception {
         createGlobalActionTypes();
         createGlobalWorkshopInDB();
@@ -220,6 +456,340 @@ public class WorkshopControllerIT {
 
     @Test
     @Transactional
+    public void updateWorkshopShouldThrowBadRequest() throws Exception {
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(null))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingId() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingName() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingTaxNumber() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingStreet() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingBuildingNo() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingPostalCode() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingCity() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingCountry() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .serviceActionTypes(updatedServiceActionTypes).build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateWorkshopShouldThrowBadRequestForMissingServiceActionTypes() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+        Workshop workshopFromDB = workshopListBeforeTest.get(0);
+        Long workshopId = workshopFromDB.getId();
+        List<ServiceActionTypeDTO> serviceActionTypeListBeforeTest =
+                serviceActionTypeMapper.toDto(serviceActionTypeRepository.findAll());
+        Set<ServiceActionTypeDTO> updatedServiceActionTypes = new HashSet<>();
+        updatedServiceActionTypes.add(serviceActionTypeListBeforeTest.get(0));
+
+        int sizeBeforeTest = workshopListBeforeTest.size();
+        Workshop updatedWorkshop = createUpdatedEntity(em);
+
+        WorkshopDTO workshopDTO = workshopMapper.toDto(updatedWorkshop);
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
+                .id(workshopId)
+                .name(workshopDTO.getName())
+                .taxNumber(workshopDTO.getTaxNumber())
+                .street(workshopDTO.getStreet())
+                .buildingNo(workshopDTO.getBuildingNo())
+                .apartmentNo(workshopDTO.getApartmentNo())
+                .postalCode(workshopDTO.getPostalCode())
+                .city(workshopDTO.getCity())
+                .country(workshopDTO.getCountry())
+                .createDate(workshopDTO.getCreateDate())
+                .modifyDate(workshopDTO.getModifyDate())
+                .build();
+
+
+        restWorkshopMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(workshopDTOtoUpdate))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
     public void getWorkshopById() throws Exception {
         createGlobalActionTypes();
         createGlobalWorkshopInDB();
@@ -245,6 +815,20 @@ public class WorkshopControllerIT {
 
     @Test
     @Transactional
+    public void getWorkshopByIdAndShouldNotBeFound() throws Exception {
+        createGlobalActionTypes();
+        createGlobalWorkshopInDB();
+        createSecondGlobalWorkshopInDB();
+        List<Workshop> workshopListBeforeTest = workshopRepository.findAll();
+
+
+        restWorkshopMvc.perform(get(API_PATH + "/getById/{id}", 123L))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
     public void findAllWorkshops() throws Exception {
         createGlobalActionTypes();
         createGlobalWorkshopInDB();
@@ -264,6 +848,7 @@ public class WorkshopControllerIT {
         defaultWorkshopShouldBeFound("name=" + WorkshopTestConstans.FIRST_NAME.getField());
         defaultWorkshopShouldNotBeFound("name=" + WorkshopTestConstans.SECOND_NAME.getField());
     }
+
     @Test
     @Transactional
     public void findWorkshopWithCityFilter() throws Exception {
@@ -281,6 +866,7 @@ public class WorkshopControllerIT {
         defaultWorkshopShouldBeFound("taxNumber=" + WorkshopTestConstans.FIRST_TAX_NUMBER.getField());
         defaultWorkshopShouldNotBeFound("taxNumber=" + WorkshopTestConstans.SECOND_TAX_NUMBER.getField());
     }
+
     @Test
     @Transactional
     public void findWorkshopWithStreetFilter() throws Exception {
@@ -307,6 +893,7 @@ public class WorkshopControllerIT {
         defaultWorkshopShouldBeFound("apartmentNo=" + WorkshopTestConstans.FIRST_APARTMENT_NO.getField());
         defaultWorkshopShouldNotBeFound("apartmentNo=" + WorkshopTestConstans.SECOND_APARTMENT_NO.getField());
     }
+
     @Test
     @Transactional
     public void findWorkshopWithPostalCodeFilter() throws Exception {
@@ -339,9 +926,6 @@ public class WorkshopControllerIT {
 
         Assertions.assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
     }
-
-
-
 
     private void createGlobalActionTypes() {
         firstServiceActionType = ServiceActionTypeControllerIT.createEntity(em);
