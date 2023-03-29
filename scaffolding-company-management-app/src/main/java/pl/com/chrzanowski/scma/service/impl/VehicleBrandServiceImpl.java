@@ -41,7 +41,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
         log.debug("Save vehicle brand: {}", vehicleBrandDTO);
         validateVehicleBrandDTO(vehicleBrandDTO);
         VehicleBrandDTO vehicleBrandDTOToSave =
-                VehicleBrandDTO.Builder.builder().name(vehicleBrandDTO.getName())
+                VehicleBrandDTO.builder().name(vehicleBrandDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate())).build();
         VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTOToSave));
         return vehicleBrandMapper.toDto(vehicleBrand);
@@ -53,7 +53,7 @@ public class VehicleBrandServiceImpl implements VehicleBrandService {
         validateVehicleBrandDTO(vehicleBrandDTO);
         FieldValidator.validateObject(vehicleBrandDTO.getId(), "vehicleBrandId");
         VehicleBrandDTO vehicleBrandDTOToUpdate =
-                VehicleBrandDTO.Builder.builder().id(vehicleBrandDTO.getId()).name(vehicleBrandDTO.getName())
+                VehicleBrandDTO.builder().id(vehicleBrandDTO.getId()).name(vehicleBrandDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getCreateDate()))
                         .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleBrandDTO.getModifyDate())).build();
         VehicleBrand vehicleBrand = vehicleBrandRepository.save(vehicleBrandMapper.toEntity(vehicleBrandDTOToUpdate));

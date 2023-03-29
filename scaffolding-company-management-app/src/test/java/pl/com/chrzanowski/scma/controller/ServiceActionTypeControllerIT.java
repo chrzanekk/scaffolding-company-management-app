@@ -89,6 +89,31 @@ public class ServiceActionTypeControllerIT {
         assertThat(firstServiceActionTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
         assertThat(firstServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
+    @Test
+    @Transactional
+    public void createServiceActionTypeShouldThrowBadRequestForEmptyObject() throws Exception {
+        int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
+
+        ServiceActionTypeDTO serviceActionTypeDTO = ServiceActionTypeDTO.builder().build();
+
+        restServiceActionTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void createServiceActionTypeShouldThrowBadRequestForMissingName() throws Exception {
+        int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
+
+        ServiceActionTypeDTO serviceActionTypeDTO = ServiceActionTypeDTO.builder()
+                .createDate(DEFAULT_CREATE_DATE)
+                .build();
+
+        restServiceActionTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO))).andExpect(status().isBadRequest());
+
+    }
 
     @Test
     @Transactional
@@ -112,6 +137,40 @@ public class ServiceActionTypeControllerIT {
         assertThat(firstServiceActionTypeFromDB.getName()).isEqualTo(FIRST_UPDATED_NAME);
         assertThat(firstServiceActionTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(firstServiceActionTypeFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+    }
+    @Test
+    @Transactional
+    public void updateServiceActionTypeShouldThrowBadRequestForMissingId() throws Exception {
+        createGlobalTwoServiceActionTypes();
+        int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
+
+        ServiceActionTypeDTO serviceActionTypeDTO = serviceActionTypeMapper.toDto(serviceActionType);
+        ServiceActionTypeDTO serviceActionTypeDTO1 =
+                ServiceActionTypeDTO.builder()
+                        .name(FIRST_UPDATED_NAME)
+                        .createDate(serviceActionTypeDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restServiceActionTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO1))).andExpect(status().isBadRequest());
+
+    }
+    @Test
+    @Transactional
+    public void updateServiceActionTypeShouldThrowBadRequestForMissingName() throws Exception {
+        createGlobalTwoServiceActionTypes();
+        int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
+
+        ServiceActionTypeDTO serviceActionTypeDTO = serviceActionTypeMapper.toDto(serviceActionType);
+        ServiceActionTypeDTO serviceActionTypeDTO1 =
+                ServiceActionTypeDTO.builder()
+                        .id(serviceActionTypeDTO.getId())
+                        .createDate(serviceActionTypeDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restServiceActionTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO1))).andExpect(status().isBadRequest());
+
     }
 
     @Test

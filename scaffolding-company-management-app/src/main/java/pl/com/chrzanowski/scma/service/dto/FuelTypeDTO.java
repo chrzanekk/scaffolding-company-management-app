@@ -6,11 +6,11 @@ import java.util.Objects;
 
 public class FuelTypeDTO {
 
-    private Long id;
-    private String name;
-    private Instant createDate;
-    private Instant modifyDate;
-    private Instant removeDate;
+    private final Long id;
+    private final String name;
+    private final Instant createDate;
+    private final Instant modifyDate;
+    private final Instant removeDate;
 
     public FuelTypeDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
         this.id = id;
@@ -26,6 +26,10 @@ public class FuelTypeDTO {
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -81,10 +85,6 @@ public class FuelTypeDTO {
         private Instant removeDate;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {

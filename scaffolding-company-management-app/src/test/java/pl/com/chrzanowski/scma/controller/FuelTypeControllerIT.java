@@ -85,6 +85,29 @@ public class FuelTypeControllerIT {
         assertThat(firstFuelTypeFromDB.getName()).isEqualTo(FIRST_DEFAULT_NAME);
         assertThat(firstFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
     }
+    @Test
+    @Transactional
+    public void createFuelTypeShouldThrowBadRequestForEmptyObject() throws Exception {
+        int sizeBeforeTest = fuelTypeRepository.findAll().size();
+
+        FuelTypeDTO fuelTypeDTO = FuelTypeDTO.builder().build();
+
+        restFuelTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTO))).andExpect(status().isBadRequest());
+
+    }
+    @Test
+    @Transactional
+    public void createFuelTypeShouldThrowBadRequestForMissingName() throws Exception {
+        int sizeBeforeTest = fuelTypeRepository.findAll().size();
+
+        FuelTypeDTO fuelTypeDTO = FuelTypeDTO.builder()
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restFuelTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTO))).andExpect(status().isBadRequest());
+
+    }
 
     @Test
     @Transactional
@@ -93,7 +116,7 @@ public class FuelTypeControllerIT {
         int sizeBeforeTest = fuelTypeRepository.findAll().size();
 
         FuelTypeDTO fuelTypeDTO = fuelTypeMapper.toDto(fuelType);
-        FuelTypeDTO fuelTypeDTOtoUpdate = FuelTypeDTO.Builder.builder().id(fuelTypeDTO.getId()).name(FIRST_UPDATED_NAME)
+        FuelTypeDTO fuelTypeDTOtoUpdate = FuelTypeDTO.builder().id(fuelTypeDTO.getId()).name(FIRST_UPDATED_NAME)
                 .createDate(fuelTypeDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
 
         restFuelTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
@@ -107,6 +130,38 @@ public class FuelTypeControllerIT {
         assertThat(firstFuelTypeFromDB.getName()).isEqualTo(FIRST_UPDATED_NAME);
         assertThat(firstFuelTypeFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(firstFuelTypeFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+    }
+    @Test
+    @Transactional
+    public void updateFuelTypeShouldThrowBadRequestForMissingId() throws Exception {
+        createGlobalTwoFuelTypes();
+        int sizeBeforeTest = fuelTypeRepository.findAll().size();
+
+        FuelTypeDTO fuelTypeDTO = fuelTypeMapper.toDto(fuelType);
+        FuelTypeDTO fuelTypeDTOtoUpdate = FuelTypeDTO.builder()
+                .name(FIRST_UPDATED_NAME)
+                .createDate(fuelTypeDTO.getCreateDate())
+                .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restFuelTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTOtoUpdate))).andExpect(status().isBadRequest());
+
+    }
+    @Test
+    @Transactional
+    public void updateFuelTypeShouldThrowBadRequestForMissingName() throws Exception {
+        createGlobalTwoFuelTypes();
+        int sizeBeforeTest = fuelTypeRepository.findAll().size();
+
+        FuelTypeDTO fuelTypeDTO = fuelTypeMapper.toDto(fuelType);
+        FuelTypeDTO fuelTypeDTOtoUpdate = FuelTypeDTO.builder()
+                .id(fuelTypeDTO.getId())
+                .createDate(fuelTypeDTO.getCreateDate())
+                .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restFuelTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(fuelTypeDTOtoUpdate))).andExpect(status().isBadRequest());
+
     }
 
     @Test

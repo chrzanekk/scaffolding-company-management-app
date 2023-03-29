@@ -90,13 +90,38 @@ public class VehicleBrandControllerIT {
 
     @Test
     @Transactional
+    public void createVehicleBrandShouldThrowBadRequestForEmptyObject() throws Exception {
+        int sizeBeforeTest = vehicleBrandRepository.findAll().size();
+
+        VehicleBrandDTO vehicleBrandDTO = VehicleBrandDTO.builder().build();
+
+        restVehicleBrandMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleBrandDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createVehicleBrandShouldThrowExceptionWhenNameIsMissing() throws Exception {
+        int sizeBeforeTest = vehicleBrandRepository.findAll().size();
+
+        VehicleBrandDTO vehicleBrandDTO = VehicleBrandDTO.builder()
+                        .createDate(DEFAULT_CREATE_DATE).build();
+
+
+        restVehicleBrandMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleBrandDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
     public void updateVehicleBrand() throws Exception {
         createGlobalTwoVehicleBrands();
         int sizeBeforeTest = vehicleBrandRepository.findAll().size();
 
         VehicleBrandDTO vehicleBrandDTO = vehicleBrandMapper.toDto(vehicleBrand);
         VehicleBrandDTO vehicleBrandDTOtoUpdate =
-                VehicleBrandDTO.Builder.builder().id(vehicleBrandDTO.getId()).name(FIRST_UPDATED_NAME)
+                VehicleBrandDTO.builder().id(vehicleBrandDTO.getId()).name(FIRST_UPDATED_NAME)
                         .createDate(vehicleBrandDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
 
         restVehicleBrandMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
@@ -110,6 +135,40 @@ public class VehicleBrandControllerIT {
         assertThat(firstVehicleBrandFromDB.getName()).isEqualTo(FIRST_UPDATED_NAME);
         assertThat(firstVehicleBrandFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(firstVehicleBrandFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+    }
+    @Test
+    @Transactional
+    public void updateVehicleBrandShouldThrowBadRequestWhenIdIsMissing() throws Exception {
+        createGlobalTwoVehicleBrands();
+        int sizeBeforeTest = vehicleBrandRepository.findAll().size();
+
+        VehicleBrandDTO vehicleBrandDTO = vehicleBrandMapper.toDto(vehicleBrand);
+        VehicleBrandDTO vehicleBrandDTOtoUpdate =
+                VehicleBrandDTO.builder()
+                        .name(FIRST_UPDATED_NAME)
+                        .createDate(vehicleBrandDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restVehicleBrandMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleBrandDTOtoUpdate))).andExpect(status().isBadRequest());
+
+    }
+    @Test
+    @Transactional
+    public void updateVehicleBrandShouldThrowBadRequestWhenNameIsMissing() throws Exception {
+        createGlobalTwoVehicleBrands();
+        int sizeBeforeTest = vehicleBrandRepository.findAll().size();
+
+        VehicleBrandDTO vehicleBrandDTO = vehicleBrandMapper.toDto(vehicleBrand);
+        VehicleBrandDTO vehicleBrandDTOtoUpdate =
+                VehicleBrandDTO.builder()
+                        .id(vehicleBrandDTO.getId())
+                        .createDate(vehicleBrandDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restVehicleBrandMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleBrandDTOtoUpdate))).andExpect(status().isBadRequest());
+
     }
 
     @Test

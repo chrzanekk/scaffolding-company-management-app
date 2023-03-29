@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
+import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
+import pl.com.chrzanowski.scma.exception.EmptyValueException;
+import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.ServiceActionTypeService;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.serviceactiontype.ServiceActionTypeFilter;
@@ -65,15 +68,27 @@ public class ServiceActionTypeController {
     @PostMapping("/add")
     public ResponseEntity<ServiceActionTypeDTO> addServiceActionType(@RequestBody ServiceActionTypeDTO serviceActionTypeDTO) {
         log.debug("REST request to add new serviceActionType: {}", serviceActionTypeDTO);
-        ServiceActionTypeDTO newServiceActionTypeDTO = serviceActionTypeService.save(serviceActionTypeDTO);
-        return ResponseEntity.ok().body(newServiceActionTypeDTO);
+        try {
+            ServiceActionTypeDTO newServiceActionTypeDTO = serviceActionTypeService.save(serviceActionTypeDTO);
+            return ResponseEntity.ok().body(newServiceActionTypeDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<ServiceActionTypeDTO> updateServiceActionType(@RequestBody ServiceActionTypeDTO serviceActionTypeDTO) {
         log.debug("REST request to update new serviceActionType: {}", serviceActionTypeDTO);
-        ServiceActionTypeDTO updatedServiceActionTypeDTO = serviceActionTypeService.update(serviceActionTypeDTO);
-        return ResponseEntity.ok().body(updatedServiceActionTypeDTO);
+        try {
+            ServiceActionTypeDTO updatedServiceActionTypeDTO = serviceActionTypeService.update(serviceActionTypeDTO);
+            return ResponseEntity.ok().body(updatedServiceActionTypeDTO);
+        } catch (EmptyValueException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
+        } catch (ObjectNotFoundException e) {
+            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
+        }
     }
 
     @DeleteMapping("/delete/{id}")

@@ -43,7 +43,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
     public FuelTypeDTO save(FuelTypeDTO fuelTypeDTO) {
         log.debug("Save fuel type: {}", fuelTypeDTO);
         validateFuelTypeDTO(fuelTypeDTO);
-        FuelTypeDTO fuelTypeToSave = FuelTypeDTO.Builder.builder().name(fuelTypeDTO.getName())
+        FuelTypeDTO fuelTypeToSave = FuelTypeDTO.builder().name(fuelTypeDTO.getName())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeDTO.getCreateDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToSave));
         return fuelTypeMapper.toDto(fuelType);
@@ -55,7 +55,7 @@ public class FuelTypeServiceImpl implements FuelTypeService {
         validateFuelTypeDTO(fuelTypeDTO);
         FieldValidator.validateObject(fuelTypeDTO.getId(), "FuelTypeId");
         FuelTypeDTO fuelTypeInDB = findById(fuelTypeDTO.getId());
-        FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.Builder.builder().id(fuelTypeDTO.getId()).name(fuelTypeDTO.getName())
+        FuelTypeDTO fuelTypeToUpdate = FuelTypeDTO.builder().id(fuelTypeDTO.getId()).name(fuelTypeDTO.getName())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeInDB.getCreateDate()))
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(fuelTypeDTO.getModifyDate())).build();
         FuelType fuelType = fuelTypeRepository.save(fuelTypeMapper.toEntity(fuelTypeToUpdate));
