@@ -89,13 +89,22 @@ public class VehicleTypeControllerIT {
 
     @Test
     @Transactional
+    public void createVehicleTypeShouldThrowBadExceptionIfEmptyObject() throws Exception {
+
+        restVehicleTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(VehicleTypeDTO.builder().build())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
     public void updateVehicleType() throws Exception {
         createGlobalTwoVehicleTypes();
         int sizeBeforeTest = vehicleTypeRepository.findAll().size();
 
         VehicleTypeDTO vehicleTypeDTO = vehicleTypeMapper.toDto(vehicleType);
         VehicleTypeDTO vehicleTypeDTOtoUpdate =
-                VehicleTypeDTO.Builder.builder().id(vehicleTypeDTO.getId()).name(FIRST_UPDATED_NAME)
+                VehicleTypeDTO.builder().id(vehicleTypeDTO.getId()).name(FIRST_UPDATED_NAME)
                         .createDate(vehicleTypeDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
 
         restVehicleTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
@@ -109,6 +118,42 @@ public class VehicleTypeControllerIT {
         assertThat(firstVehicleType.getName()).isEqualTo(FIRST_UPDATED_NAME);
         assertThat(firstVehicleType.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(firstVehicleType.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleTypeShouldThrowBadRequestIfIdIsMissing() throws Exception {
+        createGlobalTwoVehicleTypes();
+        int sizeBeforeTest = vehicleTypeRepository.findAll().size();
+
+        VehicleTypeDTO vehicleTypeDTO = vehicleTypeMapper.toDto(vehicleType);
+        VehicleTypeDTO vehicleTypeDTOtoUpdate =
+                VehicleTypeDTO.builder()
+                        .name(FIRST_UPDATED_NAME)
+                        .createDate(vehicleTypeDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restVehicleTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleTypeDTOtoUpdate))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleTypeShouldThrowBadRequestIfNameIsMissing() throws Exception {
+        createGlobalTwoVehicleTypes();
+        int sizeBeforeTest = vehicleTypeRepository.findAll().size();
+
+        VehicleTypeDTO vehicleTypeDTO = vehicleTypeMapper.toDto(vehicleType);
+        VehicleTypeDTO vehicleTypeDTOtoUpdate =
+                VehicleTypeDTO.builder()
+                        .id(vehicleTypeDTO.getId())
+                        .createDate(vehicleTypeDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE).build();
+
+        restVehicleTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleTypeDTOtoUpdate))).andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -174,6 +219,15 @@ public class VehicleTypeControllerIT {
                 .andExpect(jsonPath("$.id").value(vehicleType.getId().intValue()))
                 .andExpect(jsonPath("$.name").value(vehicleType.getName()))
                 .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleTypeByWrongIdShouldThrowBadRequestException() throws Exception {
+        createGlobalTwoVehicleTypes();
+
+        restVehicleTypeMockMvc.perform(get(API_PATH + "/getById/{id}", 1000L))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

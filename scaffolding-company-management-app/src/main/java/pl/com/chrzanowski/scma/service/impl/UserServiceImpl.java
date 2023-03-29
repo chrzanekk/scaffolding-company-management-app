@@ -13,6 +13,7 @@ import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        FieldValidator.validateString(email, "email");
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND,
                 email)));
     }
@@ -50,12 +52,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User saveUser(UserDTO userDTO) {
         log.info("Saving new user {} to database", userDTO.getEmail());
+        FieldValidator.validateObject(userDTO, "userDTO");
+        validateUserDTO(userDTO);
         return userRepository.save(userMapper.userDTOtoUser(userDTO));
     }
 
     @Override
     public void addRoleToUser(String email, String roleName) {
         log.info("Assigning new role {} to user {}", roleName, email);
+        FieldValidator.validateString(email, "email");
+        FieldValidator.validateString(roleName, "role name");
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Role> role = roleRepository.findByName(roleName);
         if (user.isPresent() && role.isPresent()) {
@@ -67,6 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUser(String email) {
         log.info("Fetching user {} ", email);
+        FieldValidator.validateString(email, "email");
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
     }
 
@@ -74,5 +81,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> findAll() {
         log.info("Fetching all users. ");
         return userRepository.findAll();
+    }
+
+    private void validateUserDTO(UserDTO userDTO) {
+        FieldValidator.validateString(userDTO.getUsername(), "Username");
+        FieldValidator.validateString(userDTO.getPassword(), "Password");
+        FieldValidator.validateString(userDTO.getEmail(), "E-mail");
     }
 }

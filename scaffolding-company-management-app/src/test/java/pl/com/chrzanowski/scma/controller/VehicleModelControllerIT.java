@@ -67,9 +67,10 @@ public class VehicleModelControllerIT {
     private VehicleModel secondVehicleModel;
 
     public static VehicleModel createEntity(EntityManager em) {
-        VehicleModel vehicleModel = new VehicleModel().setName(FIRST_DEFAULT_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE);
+        VehicleModel vehicleModel = new VehicleModel().setName(FIRST_DEFAULT_MODEL_NAME)
+                .setCreateDate(DEFAULT_CREATE_DATE);
         VehicleBrand vehicleBrand;
-        if(TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
+        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
             vehicleBrand = VehicleBrandControllerIT.createEntity(em);
             em.persist(vehicleBrand);
             em.flush();
@@ -85,7 +86,7 @@ public class VehicleModelControllerIT {
                 new VehicleModel().setName(FIRST_UPDATED_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE)
                         .setModifyDate(DEFAULT_MODIFY_DATE);
         VehicleBrand vehicleBrand;
-        if(TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
+        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
             vehicleBrand = VehicleBrandControllerIT.createEntity(em);
             em.persist(vehicleBrand);
             em.flush();
@@ -123,6 +124,57 @@ public class VehicleModelControllerIT {
 
     @Test
     @Transactional
+    public void createVehicleModelShouldThrowBadRequestIfNameIsMissing() throws Exception {
+
+        VehicleModelDTO vehicleModelDTO = VehicleModelDTO.builder()
+                .vehicleBrandName(FIRST_DEFAULT_BRAND_NAME)
+                .createDate(DEFAULT_CREATE_DATE)
+                .build();
+
+        restVehicleModelMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createVehicleModelShouldThrowBadRequestIfBrandNameIsMissing() throws Exception {
+
+        VehicleModelDTO vehicleModelDTO = VehicleModelDTO.builder()
+                .name(FIRST_DEFAULT_MODEL_NAME)
+                .vehicleBrandId(vehicleModel.getVehicleBrand().getId())
+                .createDate(DEFAULT_CREATE_DATE)
+                .build();
+
+        restVehicleModelMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createVehicleModelShouldThrowBadRequestIfBrandIdIsMissing() throws Exception {
+
+        VehicleModelDTO vehicleModelDTO = VehicleModelDTO.builder()
+                .name(FIRST_DEFAULT_MODEL_NAME)
+                .vehicleBrandName(vehicleModel.getVehicleBrand().getName())
+                .createDate(DEFAULT_CREATE_DATE)
+                .build();
+
+        restVehicleModelMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createVehicleModelShouldThrowBadRequestForEmptyObject() throws Exception {
+
+        restVehicleModelMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(VehicleModelDTO.builder().build())))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
     public void updateVehicleModel() throws Exception {
         createGlobalTwoVehicleModels();
         int sizeBeforeTest = vehicleModelRepository.findAll().size();
@@ -131,8 +183,14 @@ public class VehicleModelControllerIT {
 
         VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
         VehicleModelDTO vehicleModelDToToUpdate =
-                VehicleModelDTO.Builder.builder().id(vehicleModelDTO.getId()).name(FIRST_UPDATED_MODEL_NAME)
-                        .createDate(vehicleModelDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).brandId(vehicleModelDTO.getVehicleBrandId()).build();
+                VehicleModelDTO.builder()
+                        .id(vehicleModelDTO.getId())
+                        .name(FIRST_UPDATED_MODEL_NAME)
+                        .createDate(vehicleModelDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE)
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId())
+                        .vehicleBrandName(vehicleModelDTO.getVehicleBrandName())
+                        .build();
 
         restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isOk());
@@ -145,6 +203,98 @@ public class VehicleModelControllerIT {
         assertThat(firstVehicleModelFromDB.getName()).isEqualTo(FIRST_UPDATED_MODEL_NAME);
         assertThat(firstVehicleModelFromDB.getCreateDate()).isEqualTo(DEFAULT_CREATE_DATE);
         assertThat(firstVehicleModelFromDB.getModifyDate()).isEqualTo(DEFAULT_MODIFY_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleModelShouldThrowBadRequestIfIdIsMissing() throws Exception {
+        createGlobalTwoVehicleModels();
+        int sizeBeforeTest = vehicleModelRepository.findAll().size();
+
+        List<VehicleModel> allVehicleModelListBeforeTest = vehicleModelRepository.findAll();
+
+        VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
+        VehicleModelDTO vehicleModelDToToUpdate =
+                VehicleModelDTO.builder()
+                        .name(FIRST_UPDATED_MODEL_NAME)
+                        .createDate(vehicleModelDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE)
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId())
+                        .vehicleBrandName(vehicleModelDTO.getVehicleBrandName())
+                        .build();
+
+        restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleModelShouldThrowBadRequestIfNameIsMissing() throws Exception {
+        createGlobalTwoVehicleModels();
+        int sizeBeforeTest = vehicleModelRepository.findAll().size();
+
+        List<VehicleModel> allVehicleModelListBeforeTest = vehicleModelRepository.findAll();
+
+        VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
+        VehicleModelDTO vehicleModelDToToUpdate =
+                VehicleModelDTO.builder()
+                        .id(vehicleModelDTO.getId())
+                        .createDate(vehicleModelDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE)
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId())
+                        .vehicleBrandName(vehicleModelDTO.getVehicleBrandName())
+                        .build();
+
+        restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleModelShouldThrowBadRequestIfBrandIdIsMissing() throws Exception {
+        createGlobalTwoVehicleModels();
+        int sizeBeforeTest = vehicleModelRepository.findAll().size();
+
+        List<VehicleModel> allVehicleModelListBeforeTest = vehicleModelRepository.findAll();
+
+        VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
+        VehicleModelDTO vehicleModelDToToUpdate =
+                VehicleModelDTO.builder()
+                        .id(vehicleModelDTO.getId())
+                        .name(FIRST_UPDATED_MODEL_NAME)
+                        .createDate(vehicleModelDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE)
+                        .vehicleBrandName(vehicleModelDTO.getVehicleBrandName())
+                        .build();
+
+        restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleModelShouldThrowBadRequestIfBrandNameIsMissing() throws Exception {
+        createGlobalTwoVehicleModels();
+        int sizeBeforeTest = vehicleModelRepository.findAll().size();
+
+        List<VehicleModel> allVehicleModelListBeforeTest = vehicleModelRepository.findAll();
+
+        VehicleModelDTO vehicleModelDTO = vehicleModelMapper.toDto(vehicleModel);
+        VehicleModelDTO vehicleModelDToToUpdate =
+                VehicleModelDTO.builder()
+                        .id(vehicleModelDTO.getId())
+                        .name(FIRST_UPDATED_MODEL_NAME)
+                        .createDate(vehicleModelDTO.getCreateDate())
+                        .modifyDate(DEFAULT_MODIFY_DATE)
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId())
+                        .build();
+
+        restVehicleModelMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(vehicleModelDToToUpdate))).andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -192,6 +342,7 @@ public class VehicleModelControllerIT {
         defaultVehicleModelShouldBeFound("id=" + vehicleModel.getId());
         defaultVehicleModelShouldNotBeFound("id=" + 100L);
     }
+
     @Test
     @Transactional
     public void findVehicleModelsWithCreateDateFilter() throws Exception {
@@ -205,7 +356,7 @@ public class VehicleModelControllerIT {
     public void findAllVehicleModelsWithBrandNameFilter() throws Exception {
         createGlobalTwoUpdatedVehicleModels();
         List<VehicleModel> allModels = vehicleModelRepository.findAll();
-        defaultVehicleModelShouldBeFound("vehicleBrandName=" + FIRST_DEFAULT_BRAND_NAME );
+        defaultVehicleModelShouldBeFound("vehicleBrandName=" + FIRST_DEFAULT_BRAND_NAME);
         defaultVehicleModelShouldNotBeFound("vehicleBrandName=" + FIRST_BAD_BRAND_NAME);
     }
 

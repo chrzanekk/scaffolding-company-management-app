@@ -22,9 +22,6 @@
         <module name="scaffolding-company-management-app" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="scaffolding-company-management-app" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

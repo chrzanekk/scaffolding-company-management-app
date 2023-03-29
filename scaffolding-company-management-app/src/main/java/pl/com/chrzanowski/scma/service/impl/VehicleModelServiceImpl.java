@@ -15,6 +15,7 @@ import pl.com.chrzanowski.scma.service.filter.vehiclemodel.VehicleModelFilter;
 import pl.com.chrzanowski.scma.service.filter.vehiclemodel.VehicleModelSpecification;
 import pl.com.chrzanowski.scma.service.mapper.VehicleModelMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +38,9 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     @Override
     public VehicleModelDTO save(VehicleModelDTO vehicleModelDTO) {
         log.debug("Save vehicle model: {}", vehicleModelDTO);
+        validateVehicleModelDTO(vehicleModelDTO);
         VehicleModelDTO vehicleModelDTOtoSave =
-                VehicleModelDTO.Builder.builder().name(vehicleModelDTO.getName())
+                VehicleModelDTO.builder().name(vehicleModelDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getCreateDate())).build();
         VehicleModel vehicleModel = vehicleModelRepository.save(vehicleModelMapper.toEntity(vehicleModelDTO));
         return vehicleModelMapper.toDto(vehicleModel);
@@ -47,11 +49,13 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     @Override
     public VehicleModelDTO update(VehicleModelDTO vehicleModelDTO) {
         log.debug("Update vehicle model: {}", vehicleModelDTO);
+        validateVehicleModelDTO(vehicleModelDTO);
+        FieldValidator.validateObject(vehicleModelDTO.getId(), "vehicleModelId");
         VehicleModelDTO vehicleModelDTOToUpdate =
-                VehicleModelDTO.Builder.builder().id(vehicleModelDTO.getId()).name(vehicleModelDTO.getName())
+                VehicleModelDTO.builder().id(vehicleModelDTO.getId()).name(vehicleModelDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getCreateDate()))
                         .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleModelDTO.getModifyDate()))
-                        .brandId(vehicleModelDTO.getVehicleBrandId()).build();
+                        .vehicleBrandId(vehicleModelDTO.getVehicleBrandId()).build();
         VehicleModel vehicleModel = vehicleModelRepository.save(vehicleModelMapper.toEntity(vehicleModelDTOToUpdate));
         return vehicleModelMapper.toDto(vehicleModel);
     }
@@ -75,6 +79,7 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     @Override
     public VehicleModelDTO findById(Long id) {
         log.debug("Find vehicle model by id: {}", id);
+        FieldValidator.validateObject(id, "vehicleModelId");
         Optional<VehicleModel> vehicleBrand = vehicleModelRepository.findById(id);
         return vehicleModelMapper.toDto(vehicleBrand.orElseThrow(() -> new ObjectNotFoundException("Vehicle model " +
                 "not found")));
@@ -90,6 +95,14 @@ public class VehicleModelServiceImpl implements VehicleModelService {
     @Override
     public void delete(Long id) {
         log.debug("Delete vehicle model by id: {}", id);
+        FieldValidator.validateObject(id, "vehicleModelId");
         vehicleModelRepository.deleteVehicleModelById(id);
+    }
+
+    private void validateVehicleModelDTO(VehicleModelDTO vehicleModelDTO) {
+        FieldValidator.validateObject(vehicleModelDTO, "vehicleModelDTO");
+        FieldValidator.validateString(vehicleModelDTO.getName(), "VehicleModelName");
+        FieldValidator.validateString(vehicleModelDTO.getVehicleBrandName(), "VehicleBrandName");
+        FieldValidator.validateObject(vehicleModelDTO.getVehicleBrandId(), "VehicleBrandId");
     }
 }

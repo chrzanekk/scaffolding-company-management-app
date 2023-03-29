@@ -15,6 +15,7 @@ import pl.com.chrzanowski.scma.service.filter.vehicletype.VehicleTypeFilter;
 import pl.com.chrzanowski.scma.service.filter.vehicletype.VehicleTypeSpecification;
 import pl.com.chrzanowski.scma.service.mapper.VehicleTypeMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +39,9 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public VehicleTypeDTO save(VehicleTypeDTO vehicleTypeDTO) {
         log.debug("Save vehicle type: {}", vehicleTypeDTO);
+        validateVehicleTypeDTO(vehicleTypeDTO);
         VehicleTypeDTO vehicleTypeDTOToSave =
-                VehicleTypeDTO.Builder.builder().name(vehicleTypeDTO.getName())
+                VehicleTypeDTO.builder().name(vehicleTypeDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getCreateDate())).build();
         VehicleType vehicleType = vehicleTypeRepository.save(vehicleTypeMapper.toEntity(vehicleTypeDTOToSave));
         return vehicleTypeMapper.toDto(vehicleType);
@@ -48,8 +50,10 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public VehicleTypeDTO update(VehicleTypeDTO vehicleTypeDTO) {
         log.debug("Update vehicle type: {}", vehicleTypeDTO);
+        validateVehicleTypeDTO(vehicleTypeDTO);
+        FieldValidator.validateObject(vehicleTypeDTO.getId(), "vehicleTypeId");
         VehicleTypeDTO vehicleTypeDTOToUpdate =
-                VehicleTypeDTO.Builder.builder().id(vehicleTypeDTO.getId()).name(vehicleTypeDTO.getName())
+                VehicleTypeDTO.builder().id(vehicleTypeDTO.getId()).name(vehicleTypeDTO.getName())
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getCreateDate()))
                         .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getModifyDate())).build();
         VehicleType vehicleType = vehicleTypeRepository.save(vehicleTypeMapper.toEntity(vehicleTypeDTOToUpdate));
@@ -76,6 +80,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public VehicleTypeDTO findById(Long id) {
         log.debug("Find vehicle type by id: {}", id);
+        FieldValidator.validateObject(id, "vehicleTypeId");
         Optional<VehicleType> vehicleType = vehicleTypeRepository.findById(id);
         return vehicleTypeMapper.toDto(vehicleType.orElseThrow(() -> new ObjectNotFoundException(" Vehicle type " +
                 "not found")));
@@ -91,6 +96,12 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
     @Override
     public void delete(Long id) {
         log.debug("Delete vehicle type of id: {}", id);
+        FieldValidator.validateObject(id, "vehicleTypeId");
         vehicleTypeRepository.deleteVehicleTypeById(id);
+    }
+
+    private void validateVehicleTypeDTO(VehicleTypeDTO vehicleTypeDTO) {
+        FieldValidator.validateObject(vehicleTypeDTO, "vehicleTypeDTO");
+        FieldValidator.validateString(vehicleTypeDTO.getName(), "vehicleTypeName");
     }
 }
