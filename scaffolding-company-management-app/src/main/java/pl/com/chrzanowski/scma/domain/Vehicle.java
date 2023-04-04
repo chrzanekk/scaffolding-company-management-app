@@ -106,6 +106,10 @@ public class Vehicle implements Serializable {
         return firstRegistrationDate;
     }
 
+    public Short getFreePlacesForTechInspection() {
+        return freePlacesForTechInspection;
+    }
+
     public Float getLength() {
         return length;
     }

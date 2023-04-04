@@ -15,13 +15,13 @@ public class FieldValidator {
 
     public static void validateObject(Object object, String objectType) {
         if(object == null) {
-            throw new ObjectNotFoundException("Parameter is null" + objectType);
+            throw new ObjectNotFoundException("Parameter is null: " + objectType);
         }
     }
 
     public static void validateSet(Set<?> object, String objectType) {
         if(object == null) {
-            throw new ObjectNotFoundException("Parameter is null" + objectType);
+            throw new ObjectNotFoundException("Parameter is null: " + objectType);
         }
     }
 
