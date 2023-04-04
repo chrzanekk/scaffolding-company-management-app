@@ -44,10 +44,6 @@ public class Vehicle implements Serializable {
     private Instant modifyDate;
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_brand")
-    private VehicleBrand vehicleBrand;
-
-    @ManyToOne
     @JoinColumn(name = "vehicle_model")
     private VehicleModel vehicleModel;
 
@@ -69,7 +65,6 @@ public class Vehicle implements Serializable {
                    Float height,
                    Instant createDate,
                    Instant modifyDate,
-                   VehicleBrand vehicleBrand,
                    VehicleModel vehicleModel,
                    VehicleType vehicleType,
                    FuelType fuelType) {
@@ -83,7 +78,6 @@ public class Vehicle implements Serializable {
         this.height = height;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
-        this.vehicleBrand = vehicleBrand;
         this.vehicleModel = vehicleModel;
         this.vehicleType = vehicleType;
         this.fuelType = fuelType;
@@ -132,10 +126,6 @@ public class Vehicle implements Serializable {
         return modifyDate;
     }
 
-    public VehicleBrand getVehicleBrand() {
-        return vehicleBrand;
-    }
-
     public VehicleModel getVehicleModel() {
         return vehicleModel;
     }
@@ -173,6 +163,11 @@ public class Vehicle implements Serializable {
         return this;
     }
 
+    public Vehicle setFreePlacesForTechInspection(Short freePlacesForTechInspection) {
+        this.freePlacesForTechInspection = freePlacesForTechInspection;
+        return this;
+    }
+
     public Vehicle setLength(Float length) {
         this.length = length;
         return this;
@@ -198,10 +193,6 @@ public class Vehicle implements Serializable {
         return this;
     }
 
-    public Vehicle setVehicleBrand(VehicleBrand vehicleBrand) {
-        this.vehicleBrand = vehicleBrand;
-        return this;
-    }
 
     public Vehicle setVehicleModel(VehicleModel vehicleModel) {
         this.vehicleModel = vehicleModel;
@@ -238,8 +229,6 @@ public class Vehicle implements Serializable {
         if (!Objects.equals(height, vehicle.height)) return false;
         if (!Objects.equals(createDate, vehicle.createDate)) return false;
         if (!Objects.equals(modifyDate, vehicle.modifyDate)) return false;
-        if (!Objects.equals(vehicleBrand, vehicle.vehicleBrand))
-            return false;
         if (!Objects.equals(vehicleModel, vehicle.vehicleModel))
             return false;
         if (!Objects.equals(vehicleType, vehicle.vehicleType)) return false;
@@ -258,7 +247,6 @@ public class Vehicle implements Serializable {
         result = 31 * result + (height != null ? height.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
-        result = 31 * result + (vehicleBrand != null ? vehicleBrand.hashCode() : 0);
         result = 31 * result + (vehicleModel != null ? vehicleModel.hashCode() : 0);
         result = 31 * result + (vehicleType != null ? vehicleType.hashCode() : 0);
         result = 31 * result + (fuelType != null ? fuelType.hashCode() : 0);
@@ -278,7 +266,6 @@ public class Vehicle implements Serializable {
                 ", height=" + height +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
-                ", vehicleBrand=" + vehicleBrand +
                 ", vehicleModel=" + vehicleModel +
                 ", vehicleType=" + vehicleType +
                 ", fuelType=" + fuelType +

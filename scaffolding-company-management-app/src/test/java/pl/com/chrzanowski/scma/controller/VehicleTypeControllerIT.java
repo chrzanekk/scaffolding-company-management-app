@@ -57,6 +57,9 @@ public class VehicleTypeControllerIT {
     public static VehicleType createEntity(EntityManager em) {
         return new VehicleType().name(FIRST_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
     }
+    public static VehicleType createSecondEntity(EntityManager em) {
+        return new VehicleType().name(SECOND_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
+    }
 
     public static VehicleType createUpdatedEntity(EntityManager em) {
         return new VehicleType().name(FIRST_UPDATED_NAME).createDate(DEFAULT_CREATE_DATE)

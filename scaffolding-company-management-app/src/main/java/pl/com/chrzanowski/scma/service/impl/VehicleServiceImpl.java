@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Vehicle;
 import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.repository.VehicleRepository;
@@ -19,6 +20,7 @@ import pl.com.chrzanowski.scma.util.FieldValidator;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class VehicleServiceImpl implements VehicleService {
 
     private final Logger log = LoggerFactory.getLogger(VehicleServiceImpl.class);

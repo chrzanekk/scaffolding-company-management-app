@@ -40,8 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class WorkshopControllerIT {
     private static final String API_PATH = "/api/workshops";
 
-    private static final String FIRST_SERVICE_ACTION_TYPE_NAME = "firstServiceActionType";
-    private static final String SECOND_SERVICE_ACTION_TYPE_NAME = "secondServiceActionType";
     private static final Instant DEFAULT_CREATE_DATE = Instant.ofEpochMilli(0L);
     private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
 

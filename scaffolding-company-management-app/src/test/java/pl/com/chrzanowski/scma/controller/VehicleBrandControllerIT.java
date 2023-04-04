@@ -58,6 +58,9 @@ public class VehicleBrandControllerIT {
     public static VehicleBrand createEntity(EntityManager em) {
         return new VehicleBrand().name(FIRST_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
     }
+    public static VehicleBrand createSecondEntity(EntityManager em) {
+        return new VehicleBrand().name(SECOND_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
+    }
 
     public static VehicleBrand createUpdatedEntity(EntityManager em) {
         return new VehicleBrand().name(FIRST_UPDATED_NAME).createDate(DEFAULT_CREATE_DATE)

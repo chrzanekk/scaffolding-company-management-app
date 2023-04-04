@@ -80,6 +80,20 @@ public class VehicleModelControllerIT {
         vehicleModel.setVehicleBrand(vehicleBrand);
         return vehicleModel;
     }
+    public static VehicleModel createSecondEntity(EntityManager em) {
+        VehicleModel vehicleModel = new VehicleModel().setName(SECOND_DEFAULT_MODEL_NAME)
+                .setCreateDate(DEFAULT_CREATE_DATE);
+        VehicleBrand vehicleBrand;
+        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
+            vehicleBrand = VehicleBrandControllerIT.createSecondEntity(em);
+            em.persist(vehicleBrand);
+            em.flush();
+        } else {
+            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
+        }
+        vehicleModel.setVehicleBrand(vehicleBrand);
+        return vehicleModel;
+    }
 
     public static VehicleModel createUpdatedEntity(EntityManager em) {
         VehicleModel vehicleModel =
