@@ -65,55 +65,29 @@ public class VehicleModelControllerIT {
     private EntityManager em;
     private VehicleModel vehicleModel;
     private VehicleModel secondVehicleModel;
+    private VehicleModel updatedVehicleModel;
+    private VehicleBrand firstVehicleBrand;
+    private VehicleBrand secondVehicleBrand;
+    private VehicleBrand updatedVehicleBrand;
 
     public static VehicleModel createEntity(EntityManager em) {
-        VehicleModel vehicleModel = new VehicleModel().setName(FIRST_DEFAULT_MODEL_NAME)
+        return new VehicleModel().setName(FIRST_DEFAULT_MODEL_NAME)
                 .setCreateDate(DEFAULT_CREATE_DATE);
-        VehicleBrand vehicleBrand;
-        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
-            vehicleBrand = VehicleBrandControllerIT.createEntity(em);
-            em.persist(vehicleBrand);
-            em.flush();
-        } else {
-            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
-        }
-        vehicleModel.setVehicleBrand(vehicleBrand);
-        return vehicleModel;
     }
     public static VehicleModel createSecondEntity(EntityManager em) {
-        VehicleModel vehicleModel = new VehicleModel().setName(SECOND_DEFAULT_MODEL_NAME)
+        return new VehicleModel().setName(SECOND_DEFAULT_MODEL_NAME)
                 .setCreateDate(DEFAULT_CREATE_DATE);
-        VehicleBrand vehicleBrand;
-        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
-            vehicleBrand = VehicleBrandControllerIT.createSecondEntity(em);
-            em.persist(vehicleBrand);
-            em.flush();
-        } else {
-            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
-        }
-        vehicleModel.setVehicleBrand(vehicleBrand);
-        return vehicleModel;
     }
 
     public static VehicleModel createUpdatedEntity(EntityManager em) {
-        VehicleModel vehicleModel =
-                new VehicleModel().setName(FIRST_UPDATED_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE)
+        return new VehicleModel().setName(FIRST_UPDATED_MODEL_NAME).setCreateDate(DEFAULT_CREATE_DATE)
                         .setModifyDate(DEFAULT_MODIFY_DATE);
-        VehicleBrand vehicleBrand;
-        if (TestUtil.findAll(em, VehicleBrand.class).isEmpty()) {
-            vehicleBrand = VehicleBrandControllerIT.createEntity(em);
-            em.persist(vehicleBrand);
-            em.flush();
-        } else {
-            vehicleBrand = TestUtil.findAll(em, VehicleBrand.class).get(0);
-        }
-        vehicleModel.setVehicleBrand(vehicleBrand);
-        return vehicleModel;
     }
 
     @BeforeEach
     public void initTest() {
-        vehicleModel = createEntity(em);
+        createGlobalVehicleBrands();
+        createGlobalVehicleModels();
     }
 
 
@@ -344,8 +318,9 @@ public class VehicleModelControllerIT {
     @Test
     @Transactional
     public void findUpdatedVehicleModelsWithNameFilter() throws Exception {
-        createGlobalTwoUpdatedVehicleModels();
-        defaultVehicleModelShouldBeFound("name=" + FIRST_UPDATED_MODEL_NAME);
+        createGlobalUpdatedVehicleModel();
+        List<VehicleModel> allModels = vehicleModelRepository.findAll();
+        defaultUpdatedVehicleModelShouldBeFound("name=" + FIRST_UPDATED_MODEL_NAME);
         defaultVehicleModelShouldNotBeFound("name=" + FIRST_BAD_MODEL_NAME);
     }
 
@@ -368,7 +343,7 @@ public class VehicleModelControllerIT {
     @Test
     @Transactional
     public void findAllVehicleModelsWithBrandNameFilter() throws Exception {
-        createGlobalTwoUpdatedVehicleModels();
+        createGlobalTwoVehicleModels();
         List<VehicleModel> allModels = vehicleModelRepository.findAll();
         defaultVehicleModelShouldBeFound("vehicleBrandName=" + FIRST_DEFAULT_BRAND_NAME);
         defaultVehicleModelShouldNotBeFound("vehicleBrandName=" + FIRST_BAD_BRAND_NAME);
@@ -409,22 +384,14 @@ public class VehicleModelControllerIT {
         em.persist(vehicleModel);
         em.flush();
 
-        secondVehicleModel = createEntity(em);
         secondVehicleModel.setName(SECOND_DEFAULT_MODEL_NAME);
         secondVehicleModel.setCreateDate(DEFAULT_CREATE_DATE);
         em.persist(secondVehicleModel);
         em.flush();
     }
 
-    private void createGlobalTwoUpdatedVehicleModels() {
-        vehicleModel.setModifyDate(DEFAULT_MODIFY_DATE);
-        vehicleModel.setName(FIRST_UPDATED_MODEL_NAME);
-        em.persist(vehicleModel);
-        em.flush();
-
-        secondVehicleModel = createUpdatedEntity(em);
-        secondVehicleModel.setName(SECOND_UPDATED_MODEL_NAME);
-        em.persist(secondVehicleModel);
+    private void createGlobalUpdatedVehicleModel() {
+        em.persist(updatedVehicleModel);
         em.flush();
     }
 
@@ -440,8 +407,8 @@ public class VehicleModelControllerIT {
     private void defaultUpdatedVehicleModelShouldBeFound(String filter) throws Exception {
         restVehicleModelMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(vehicleModel.getId().intValue())))
-                .andExpect(jsonPath("$.[*].name").value(hasItem(vehicleModel.getName())))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(updatedVehicleModel.getId().intValue())))
+                .andExpect(jsonPath("$.[*].name").value(hasItem(updatedVehicleModel.getName())))
                 .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())))
                 .andExpect(jsonPath("$.[*].modifyDate").value(hasItem(DEFAULT_MODIFY_DATE.toString())));
     }
@@ -450,6 +417,26 @@ public class VehicleModelControllerIT {
         restVehicleModelMockMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+    private void createGlobalVehicleBrands() {
+        firstVehicleBrand = VehicleBrandControllerIT.createEntity(em);
+        em.persist(firstVehicleBrand);
+        em.flush();
+        secondVehicleBrand = VehicleBrandControllerIT.createSecondEntity(em);
+        em.persist(secondVehicleBrand);
+        em.flush();
+        updatedVehicleBrand = VehicleBrandControllerIT.createUpdatedEntity(em);
+        em.persist(updatedVehicleBrand);
+        em.flush();
+    }
+
+    private void createGlobalVehicleModels() {
+        vehicleModel = createEntity(em);
+        vehicleModel.setVehicleBrand(firstVehicleBrand);
+        secondVehicleModel = createSecondEntity(em);
+        secondVehicleModel.setVehicleBrand(secondVehicleBrand);
+        updatedVehicleModel = createUpdatedEntity(em);
+        updatedVehicleModel.setVehicleBrand(updatedVehicleBrand);
     }
 
 }

@@ -12,9 +12,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.*;
 import pl.com.chrzanowski.scma.repository.*;
+import pl.com.chrzanowski.scma.service.VehicleBrandService;
+import pl.com.chrzanowski.scma.service.VehicleModelService;
 import pl.com.chrzanowski.scma.service.VehicleService;
 import pl.com.chrzanowski.scma.service.dto.VehicleDTO;
+import pl.com.chrzanowski.scma.service.mapper.VehicleBrandMapper;
 import pl.com.chrzanowski.scma.service.mapper.VehicleMapper;
+import pl.com.chrzanowski.scma.service.mapper.VehicleModelMapper;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -23,8 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = ScaffoldingCompanyManagementAppApplication.class)
@@ -66,25 +69,33 @@ public class VehicleControllerIT {
     private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
 
     @Autowired
-    MockMvc restVehicleMvc;
+    private MockMvc restVehicleMvc;
     @Autowired
-    EntityManager em;
+    private EntityManager em;
     @Autowired
-    VehicleRepository vehicleRepository;
+    private VehicleRepository vehicleRepository;
     @Autowired
-    VehicleService vehicleService;
+    private VehicleService vehicleService;
     @Autowired
-    VehicleMapper vehicleMapper;
+    private VehicleMapper vehicleMapper;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Autowired
-    FuelTypeRepository fuelTypeRepository;
+    private FuelTypeRepository fuelTypeRepository;
     @Autowired
-    VehicleTypeRepository vehicleTypeRepository;
+    private VehicleTypeRepository vehicleTypeRepository;
     @Autowired
-    VehicleModelRepository vehicleModelRepository;
+    private VehicleModelRepository vehicleModelRepository;
     @Autowired
-    VehicleBrandRepository vehicleBrandRepository;
+    private VehicleBrandRepository vehicleBrandRepository;
+    @Autowired
+    private VehicleModelService vehicleModelService;
+    @Autowired
+    private VehicleModelMapper vehicleModelMapper;
+    @Autowired
+    private VehicleBrandService vehicleBrandService;
+    @Autowired
+    private VehicleBrandMapper vehicleBrandMapper;
 
 
     private VehicleBrand firstVehicleBrand;
@@ -98,110 +109,22 @@ public class VehicleControllerIT {
     private VehicleType updatedVehicleType;
     private FuelType firstFuelType;
     private FuelType secondFuelType;
-    private FuelType thirdFuelType;
+    private FuelType updatedFuelType;
 
     private Vehicle firstVehicle;
     private Vehicle secondVehicle;
     private Vehicle updatedVehicle;
 
     public static Vehicle createEntity(EntityManager em) {
-        Vehicle vehicle = createFirstBasicVehicle();
-        VehicleModel vehicleModel;
-        if (TestUtil.findAll(em, VehicleModel.class).isEmpty()) {
-            vehicleModel = VehicleModelControllerIT.createEntity(em);
-            em.persist(vehicleModel);
-            em.flush();
-        } else {
-            vehicleModel = TestUtil.findAll(em, VehicleModel.class).get(0);
-        }
-        vehicle.setVehicleModel(vehicleModel);
-
-        VehicleType vehicleType;
-        if (TestUtil.findAll(em, VehicleType.class).isEmpty()) {
-            vehicleType = VehicleTypeControllerIT.createEntity(em);
-            em.persist(vehicleType);
-            em.flush();
-        } else {
-            vehicleType = TestUtil.findAll(em, VehicleType.class).get(0);
-        }
-        vehicle.setVehicleType(vehicleType);
-
-        FuelType fuelType;
-        if (TestUtil.findAll(em, FuelType.class).isEmpty()) {
-            fuelType = FuelTypeControllerIT.createEntity(em);
-            em.persist(fuelType);
-            em.flush();
-        } else {
-            fuelType = TestUtil.findAll(em, FuelType.class).get(0);
-        }
-        vehicle.setFuelType(fuelType);
-        return vehicle;
+        return createFirstBasicVehicle();
     }
 
     public static Vehicle createSecondEntity(EntityManager em) {
-        Vehicle vehicle = createSecondBasicVehicle();
-        VehicleModel vehicleModel;
-        if (TestUtil.findAll(em, VehicleModel.class).isEmpty()) {
-            vehicleModel = VehicleModelControllerIT.createSecondEntity(em);
-            em.persist(vehicleModel);
-            em.flush();
-        } else {
-            vehicleModel = TestUtil.findAll(em, VehicleModel.class).get(0);
-        }
-        vehicle.setVehicleModel(vehicleModel);
-
-        VehicleType vehicleType;
-        if (TestUtil.findAll(em, VehicleType.class).isEmpty()) {
-            vehicleType = VehicleTypeControllerIT.createSecondEntity(em);
-            em.persist(vehicleType);
-            em.flush();
-        } else {
-            vehicleType = TestUtil.findAll(em, VehicleType.class).get(0);
-        }
-        vehicle.setVehicleType(vehicleType);
-
-        FuelType fuelType;
-        if (TestUtil.findAll(em, FuelType.class).isEmpty()) {
-            fuelType = FuelTypeControllerIT.createSecondEntity(em);
-            em.persist(fuelType);
-            em.flush();
-        } else {
-            fuelType = TestUtil.findAll(em, FuelType.class).get(0);
-        }
-        return vehicle;
+        return createSecondBasicVehicle();
     }
 
     public static Vehicle createUpdatedEntity(EntityManager em) {
-        Vehicle vehicle = createUpdatedBasicVehicle();
-        VehicleModel vehicleModel;
-        if (TestUtil.findAll(em, VehicleModel.class).isEmpty()) {
-            vehicleModel = VehicleModelControllerIT.createUpdatedEntity(em);
-            em.persist(vehicleModel);
-            em.flush();
-        } else {
-            vehicleModel = TestUtil.findAll(em, VehicleModel.class).get(0);
-        }
-        vehicle.setVehicleModel(vehicleModel);
-
-        VehicleType vehicleType;
-        if (TestUtil.findAll(em, VehicleType.class).isEmpty()) {
-            vehicleType = VehicleTypeControllerIT.createUpdatedEntity(em);
-            em.persist(vehicleType);
-            em.flush();
-        } else {
-            vehicleType = TestUtil.findAll(em, VehicleType.class).get(0);
-        }
-        vehicle.setVehicleType(vehicleType);
-
-        FuelType fuelType;
-        if (TestUtil.findAll(em, FuelType.class).isEmpty()) {
-            fuelType = FuelTypeControllerIT.createUpdatedEntity(em);
-            em.persist(fuelType);
-            em.flush();
-        } else {
-            fuelType = TestUtil.findAll(em, FuelType.class).get(0);
-        }
-        return vehicle;
+        return createUpdatedBasicVehicle();
     }
 
 
@@ -251,10 +174,12 @@ public class VehicleControllerIT {
         vehicleBrandRepository.deleteAll();
         fuelTypeRepository.deleteAll();
         vehicleTypeRepository.deleteAll();
-        firstVehicle = createEntity(em);
-        secondVehicle = createSecondEntity(em);
-        updatedVehicle = createUpdatedEntity(em);
+        createAllDefaultData();
+        createGlobalVehicles();
+
     }
+
+
 
 
     @Test
@@ -379,6 +304,7 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingModelId() throws Exception {
@@ -461,7 +387,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingFuelTypeId() throws Exception {
@@ -502,7 +427,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
 
     @Test
     @Transactional
@@ -545,7 +469,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingVehicleTypeId() throws Exception {
@@ -586,8 +509,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
-
 
     @Test
     @Transactional
@@ -630,8 +551,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingRegistrationNumber() throws Exception {
@@ -672,7 +591,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
 
     @Test
     @Transactional
@@ -715,8 +633,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingProductionYear() throws Exception {
@@ -757,7 +673,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
 
     @Test
     @Transactional
@@ -800,7 +715,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingFreePlacecForTechInspection() throws Exception {
@@ -841,7 +755,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
 
     @Test
     @Transactional
@@ -884,7 +797,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void createVehicleShouldThrowExceptionForMissingHeight() throws Exception {
@@ -925,7 +837,6 @@ public class VehicleControllerIT {
                         .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoSave)))
                 .andExpect(status().isBadRequest());
     }
-
 
     @Test
     @Transactional
@@ -968,7 +879,6 @@ public class VehicleControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void createVehicleShouldThrowBadRequestForNull() throws Exception {
@@ -976,6 +886,91 @@ public class VehicleControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(null))).andExpect(status().isBadRequest());
     }
+
+
+    @Test
+    @Transactional
+    public void updateVehicle() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isOk());
+
+        List<Vehicle> listAfterTest = vehicleRepository.findAll();
+        int sizeAfterTest = listAfterTest.size();
+        Vehicle savedVehicleInDB = listAfterTest.get(0);
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
+        assertThat(savedVehicleInDB.getVehicleModel().getName()).isEqualTo(updatedVehicleModel.getName());
+        assertThat(savedVehicleInDB.getVehicleModel().getVehicleBrand().getName()).isEqualTo(updatedVehicleModel.getVehicleBrand()
+                .getName());
+        assertThat(savedVehicleInDB.getFuelType().getName()).isEqualTo(updatedFuelType.getName());
+        assertThat(savedVehicleInDB.getVehicleType().getName()).isEqualTo(updatedVehicleType.getName());
+        assertThat(savedVehicleInDB.getFirstRegistrationDate()).isEqualTo(UPDATED_FIRST_REGISTRATION_DATE);
+        assertThat(savedVehicleInDB.getFreePlacesForTechInspection()).isEqualTo(UPDATED_FREE_PLACES_FOR_TECH_INSPECTION);
+        assertThat(savedVehicleInDB.getRegistrationNumber()).isEqualTo(UPDATED_REGISTRATION_NUMBER);
+        assertThat(savedVehicleInDB.getProductionYear()).isEqualTo(UPDATED_PRODUCTION_YEAR);
+        assertThat(savedVehicleInDB.getHeight()).isEqualTo(UPDATED_HEIGHT);
+        assertThat(savedVehicleInDB.getVin()).isEqualTo(UPDATED_VIN);
+        assertThat(savedVehicleInDB.getWidth()).isEqualTo(UPDATED_WIDTH);
+        assertThat(savedVehicleInDB.getLength()).isEqualTo(UPDATED_LENGTH);
+    }
+
 
     private void defaultWorkshopShouldBeFound(String filter) throws Exception {
         restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
@@ -1004,6 +999,7 @@ public class VehicleControllerIT {
                 .andExpect(jsonPath("$.[*].createDate").value(DEFAULT_CREATE_DATE.toString()));
     }
 
+
     private void defaultWorkshopShouldNotBeFound(String filter) throws Exception {
         restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
@@ -1012,39 +1008,69 @@ public class VehicleControllerIT {
 
     private void createGlobalFuelTypes() {
         firstFuelType = FuelTypeControllerIT.createEntity(em);
-        em.persist(firstFuelType);
-        em.flush();
+        fuelTypeRepository.saveAndFlush(firstFuelType);
 
         secondFuelType = FuelTypeControllerIT.createSecondEntity(em);
-        em.persist(secondFuelType);
-        em.flush();
+        fuelTypeRepository.saveAndFlush(secondFuelType);
+
+        updatedFuelType = FuelTypeControllerIT.createUpdatedEntity(em);
+        fuelTypeRepository.saveAndFlush(updatedFuelType);
     }
 
     private void createGlobalVehicleTypes() {
         firstVehicleType = VehicleTypeControllerIT.createEntity(em);
-        em.persist(firstVehicleType);
-        em.flush();
+        vehicleTypeRepository.saveAndFlush(firstVehicleType);
         secondVehicleType = VehicleTypeControllerIT.createSecondEntity(em);
-        em.persist(secondVehicleType);
-        em.flush();
+        vehicleTypeRepository.saveAndFlush(secondVehicleType);
+        updatedVehicleType = VehicleTypeControllerIT.createUpdatedEntity(em);
+        vehicleTypeRepository.saveAndFlush(updatedVehicleType);
     }
 
     private void createGlobalVehicleModels() {
         firstVehicleModel = VehicleModelControllerIT.createEntity(em);
-        firstVehicleModel.setId(null);
+        firstVehicleModel.setVehicleBrand(firstVehicleBrand);
         em.persist(firstVehicleModel);
         em.flush();
         secondVehicleModel = VehicleModelControllerIT.createSecondEntity(em);
-        secondVehicleModel.setId(null);
+        secondVehicleModel.setVehicleBrand(secondVehicleBrand);
         em.persist(secondVehicleModel);
+        em.flush();
+        updatedVehicleModel = VehicleModelControllerIT.createUpdatedEntity(em);
+        updatedVehicleModel.setVehicleBrand(updatedVehicleBrand);
+        em.persist(updatedVehicleModel);
+        em.flush();
+    }
+    private void createGlobalVehicleBrands() {
+        firstVehicleBrand = VehicleBrandControllerIT.createEntity(em);
+        em.persist(firstVehicleBrand);
+        em.flush();
+        secondVehicleBrand = VehicleBrandControllerIT.createSecondEntity(em);
+        em.persist(secondVehicleBrand);
+        em.flush();
+        updatedVehicleBrand = VehicleBrandControllerIT.createUpdatedEntity(em);
+        em.persist(updatedVehicleBrand);
         em.flush();
     }
 
     private void createAllDefaultData() {
-        createGlobalVehicleModels();
+        createGlobalVehicleBrands();
         createGlobalVehicleTypes();
         createGlobalFuelTypes();
+        createGlobalVehicleModels();
     }
-
+    private void createGlobalVehicles() {
+        firstVehicle = createEntity(em);
+        firstVehicle.setFuelType(firstFuelType);
+        firstVehicle.setVehicleType(firstVehicleType);
+        firstVehicle.setVehicleModel(firstVehicleModel);
+        secondVehicle = createSecondEntity(em);
+        secondVehicle.setFuelType(secondFuelType);
+        secondVehicle.setVehicleType(secondVehicleType);
+        secondVehicle.setVehicleModel(secondVehicleModel);
+        updatedVehicle = createUpdatedEntity(em);
+        updatedVehicle.setFuelType(updatedFuelType);
+        updatedVehicle.setVehicleType(updatedVehicleType);
+        updatedVehicle.setVehicleModel(updatedVehicleModel);
+    }
 
 }
