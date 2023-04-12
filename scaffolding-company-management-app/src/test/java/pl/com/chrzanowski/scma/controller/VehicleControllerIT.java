@@ -22,11 +22,13 @@ import pl.com.chrzanowski.scma.service.mapper.VehicleModelMapper;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -55,15 +57,15 @@ public class VehicleControllerIT {
     private static final Short SECOND_FREE_PLACES_FOR_TECH_INSPECTION = 2;
     private static final Short UPDATED_FREE_PLACES_FOR_TECH_INSPECTION = 1;
 
-    private static final Float FIRST_LENGTH = 2.2f;
-    private static final Float SECOND_LENGTH = 2.3f;
-    private static final Float UPDATED_LENGTH = 2.4f;
-    private static final Float FIRST_WIDTH = 2.0f;
-    private static final Float SECOND_WIDTH = 2.1f;
-    private static final Float UPDATED_WIDTH = 2.2f;
-    private static final Float FIRST_HEIGHT = 1.8f;
-    private static final Float SECOND_HEIGHT = 1.9f;
-    private static final Float UPDATED_HEIGHT = 2.0f;
+    private static final BigDecimal FIRST_LENGTH = new BigDecimal("2.2");
+    private static final BigDecimal SECOND_LENGTH = new BigDecimal("2.3");
+    private static final BigDecimal UPDATED_LENGTH = new BigDecimal("2.4");
+    private static final BigDecimal FIRST_WIDTH = new BigDecimal("2.0");
+    private static final BigDecimal SECOND_WIDTH = new BigDecimal("2.1");
+    private static final BigDecimal UPDATED_WIDTH = new BigDecimal("2.2");
+    private static final BigDecimal FIRST_HEIGHT = new BigDecimal("1.8");
+    private static final BigDecimal SECOND_HEIGHT = new BigDecimal("1.9");
+    private static final BigDecimal UPDATED_HEIGHT = new BigDecimal("2.0");
 
     private static final Instant DEFAULT_CREATE_DATE = Instant.ofEpochMilli(0L);
     private static final Instant DEFAULT_MODIFY_DATE = Instant.ofEpochMilli(36000L);
@@ -178,9 +180,6 @@ public class VehicleControllerIT {
         createGlobalVehicles();
 
     }
-
-
-
 
     @Test
     @Transactional
@@ -887,7 +886,6 @@ public class VehicleControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(null))).andExpect(status().isBadRequest());
     }
 
-
     @Test
     @Transactional
     public void updateVehicle() throws Exception {
@@ -971,36 +969,1341 @@ public class VehicleControllerIT {
         assertThat(savedVehicleInDB.getLength()).isEqualTo(UPDATED_LENGTH);
     }
 
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingId() throws Exception {
 
-    private void defaultWorkshopShouldBeFound(String filter) throws Exception {
-        restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+//                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingBrandId() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+//                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingBrandName() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+//                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingModelId() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+//                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingModelName() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+//                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingFuelTypeId() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+//                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingFuelTypeName() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+//                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingVehicleTypeId() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+//                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingVehicleTypeName() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+//                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingRegistrationNumber() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+//                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingVin() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+//                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingProductionYear() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+//                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingFirstRegistrationDate() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+//                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingFreePlacesForTechInspection() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+//                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingLength() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+//                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingWidth() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+//                .width(updatedVehicle.getWidth())
+                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void updateVehicleShouldThrowBadRequestForMissingHeight() throws Exception {
+
+        List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
+        List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
+        List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
+        List<VehicleBrand> allBrands = vehicleBrandRepository.findAll();
+
+        FuelType fuelType = allFuelTypes.get(0);
+        VehicleModel vehicleModel = allVehicleModels.get(0);
+        VehicleType vehicleType = allVehicleTypes.get(0);
+
+
+        VehicleDTO vehicleDTO = vehicleMapper.toDto(firstVehicle);
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
+                .brandId(vehicleModel.getVehicleBrand().getId())
+                .brandName(vehicleModel.getVehicleBrand().getName())
+                .modelId(vehicleModel.getId())
+                .modelName(vehicleModel.getName())
+                .fuelTypeId(fuelType.getId())
+                .fuelTypeName(fuelType.getName())
+                .vehicleTypeId(vehicleType.getId())
+                .vehicleTypeName(vehicleType.getName())
+                .registrationNumber(FIST_REGISTRATION_NUMBER)
+                .vin(FIRST_VIN)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .firstRegistrationDate(FIRST_FIRST_REGISTRATION_DATE)
+                .freePlacesForTechInspection(FIRST_FREE_PLACES_FOR_TECH_INSPECTION)
+                .length(FIRST_LENGTH)
+                .width(FIRST_WIDTH)
+                .height(FIRST_HEIGHT)
+                .createDate(DEFAULT_CREATE_DATE).build();
+        VehicleDTO savedVehicle = vehicleService.save(vehicleDTOtoSave);
+
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        int sizeBeforeTest = allVehicles.size();
+        VehicleDTO vehicleDTOtoUpdate = VehicleDTO.builder()
+                .id(savedVehicle.getId())
+                .brandId(updatedVehicle.getVehicleModel().getVehicleBrand().getId())
+                .brandName(updatedVehicle.getVehicleModel().getVehicleBrand().getName())
+                .modelId(updatedVehicle.getVehicleModel().getId())
+                .modelName(updatedVehicle.getVehicleModel().getName())
+                .fuelTypeId(updatedVehicle.getFuelType().getId())
+                .fuelTypeName(updatedVehicle.getFuelType().getName())
+                .vehicleTypeId(updatedVehicle.getVehicleType().getId())
+                .vehicleTypeName(updatedVehicle.getVehicleType().getName())
+                .registrationNumber(updatedVehicle.getRegistrationNumber())
+                .vin(updatedVehicle.getVin())
+                .productionYear(updatedVehicle.getProductionYear())
+                .firstRegistrationDate(updatedVehicle.getFirstRegistrationDate())
+                .freePlacesForTechInspection(updatedVehicle.getFreePlacesForTechInspection())
+                .length(updatedVehicle.getLength())
+                .width(updatedVehicle.getWidth())
+//                .height(updatedVehicle.getHeight())
+                .createDate(updatedVehicle.getCreateDate())
+                .modifyDate(updatedVehicle.getModifyDate()).build();
+
+
+        restVehicleMvc.perform(put(API_PATH + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(vehicleDTOtoUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void getVehicleById() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        Vehicle firstVehicleFromDB = vehicleList.get(0);
+        Long firstVehicleId = firstVehicleFromDB.getId();
+
+        restVehicleMvc.perform(get(API_PATH + "/getById/{id}", firstVehicleId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(firstVehicle.getId().intValue()))
-                .andExpect(jsonPath("$.[*].registrationNumber").value(firstVehicle.getRegistrationNumber()))
-                .andExpect(jsonPath("$.[*].vin").value(firstVehicle.getVin()))
-                .andExpect(jsonPath("$.[*].productionYear").value(firstVehicle.getProductionYear().toString()))
-                .andExpect(jsonPath("$.[*].firstRegistrationDate").value(firstVehicle.getFirstRegistrationDate()
+                .andExpect(jsonPath("$.id").value(this.firstVehicle.getId().intValue()))
+                .andExpect(jsonPath("$.registrationNumber").value(this.firstVehicle.getRegistrationNumber()))
+                .andExpect(jsonPath("$.vin").value(this.firstVehicle.getVin()))
+                .andExpect(jsonPath("$.productionYear").value(this.firstVehicle.getProductionYear().toString()))
+                .andExpect(jsonPath("$.firstRegistrationDate").value(this.firstVehicle.getFirstRegistrationDate()
                         .toString()))
-                .andExpect(jsonPath("$.[*].freePlacesForTechInspection").value(firstVehicle.getFreePlacesForTechInspection()
+                .andExpect(jsonPath("$.freePlacesForTechInspection").value(this.firstVehicle.getFreePlacesForTechInspection()
                         .toString()))
-                .andExpect(jsonPath("$.[*].length").value(firstVehicle.getLength().toString()))
-                .andExpect(jsonPath("$.[*].width").value(firstVehicle.getWidth().toString()))
-                .andExpect(jsonPath("$.[*].height").value(firstVehicle.getHeight().toString()))
-                .andExpect(jsonPath("$.[*].brandId").value(firstVehicle.getVehicleModel().getVehicleBrand().getId()))
-                .andExpect(jsonPath("$.[*].brandName").value(firstVehicle.getVehicleModel().getVehicleBrand()
+                .andExpect(jsonPath("$.length").value(this.firstVehicle.getLength().toString()))
+                .andExpect(jsonPath("$.width").value(this.firstVehicle.getWidth().toString()))
+                .andExpect(jsonPath("$.height").value(this.firstVehicle.getHeight().toString()))
+                .andExpect(jsonPath("$.brandId").value(this.firstVehicle.getVehicleModel().getVehicleBrand().getId()))
+                .andExpect(jsonPath("$.brandName").value(this.firstVehicle.getVehicleModel().getVehicleBrand()
                         .getName()))
-                .andExpect(jsonPath("$.[*].modelId").value(firstVehicle.getVehicleModel().getId()))
-                .andExpect(jsonPath("$.[*].modelName").value(firstVehicle.getVehicleModel().getName()))
-                .andExpect(jsonPath("$.[*].fuelTypeId").value(firstVehicle.getFuelType().getId()))
-                .andExpect(jsonPath("$.[*].fuelTypeName").value(firstVehicle.getFuelType().getName()))
-                .andExpect(jsonPath("$.[*].vehicleTypeId").value(firstVehicle.getVehicleType().getId()))
-                .andExpect(jsonPath("$.[*].vehicleTypeName").value(firstVehicle.getVehicleType().getName()))
-                .andExpect(jsonPath("$.[*].createDate").value(DEFAULT_CREATE_DATE.toString()));
+                .andExpect(jsonPath("$.modelId").value(this.firstVehicle.getVehicleModel().getId()))
+                .andExpect(jsonPath("$.modelName").value(this.firstVehicle.getVehicleModel().getName()))
+                .andExpect(jsonPath("$.fuelTypeId").value(this.firstVehicle.getFuelType().getId()))
+                .andExpect(jsonPath("$.fuelTypeName").value(this.firstVehicle.getFuelType().getName()))
+                .andExpect(jsonPath("$.vehicleTypeId").value(this.firstVehicle.getVehicleType().getId()))
+                .andExpect(jsonPath("$.vehicleTypeName").value(this.firstVehicle.getVehicleType().getName()))
+                .andExpect(jsonPath("$.createDate").value(DEFAULT_CREATE_DATE.toString()));
+    }
+
+    @Test
+    @Transactional
+    public void getVehicleByIdAndShouldNotBeFound() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        Vehicle firstVehicleFromDB = vehicleList.get(0);
+        Long firstVehicleId = firstVehicleFromDB.getId();
+
+        restVehicleMvc.perform(get(API_PATH + "/getById/{id}", firstVehicleId + 10L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void getAllVehicles() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        Vehicle firstVehicleFromDB = vehicleList.get(0);
+        Long firstVehicleId = firstVehicleFromDB.getId();
+
+        restVehicleMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterBrandId() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("brandId=" + firstVehicle.getVehicleModel().getVehicleBrand().getId());
+        defaultVehicleShouldNotBeFound("brandId=" + 123L);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterBrandName() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("brandName=" + firstVehicle.getVehicleModel().getVehicleBrand().getName());
+        defaultVehicleShouldNotBeFound("brandName=" + "badBand");
+    }
+    @Test
+    @Transactional
+    public void findVehicleWithFilterModelId() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("modelId=" + firstVehicle.getVehicleModel().getId());
+        defaultVehicleShouldNotBeFound("modelId=" + 123L);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterModelName() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("modelName=" + firstVehicle.getVehicleModel().getName());
+        defaultVehicleShouldNotBeFound("modelName=" + "badModel");
+    }
+    @Test
+    @Transactional
+    public void findVehicleWithFilterVehicleTypeId() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("vehicleTypeId=" + firstVehicle.getVehicleType().getId());
+        defaultVehicleShouldNotBeFound("vehicleTypeId=" + 123L);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterVehicleTypeName() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("vehicleTypeName=" + firstVehicle.getVehicleType().getName());
+        defaultVehicleShouldNotBeFound("vehicleTypeName=" + "badVehicleType");
+    }
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFuelTypeId() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("fuelTypeId=" + firstVehicle.getFuelType().getId());
+        defaultVehicleShouldNotBeFound("fuelTypeId=" + 123L);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFuelTypeName() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("fuelTypeName=" + firstVehicle.getFuelType().getName());
+        defaultVehicleShouldNotBeFound("fuelTypeName=" + "badFuelType");
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterRegistrationNumber() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("registrationNumber=" + firstVehicle.getRegistrationNumber());
+        defaultVehicleShouldNotBeFound("registrationNumber=" + "bad");
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterVin() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("vin=" + firstVehicle.getVin());
+        defaultVehicleShouldNotBeFound("vin=" + "badVin");
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterProductionYear() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("productionYearStartWith=" + firstVehicle.getProductionYear());
+        defaultVehicleShouldNotBeFound("productionYearStartWith=" + UPDATED_PRODUCTION_YEAR);
+    }
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFreePlacesForTechInspection() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("freePlacesForTechInspectionStartWith=" + firstVehicle.getFreePlacesForTechInspection());
+        defaultVehicleShouldNotBeFound("freePlacesForTechInspectionStartWith=" + 22);
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFirstRegistrationDate() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("firstRegistrationDateStartWith=" + firstVehicle.getFirstRegistrationDate());
+        defaultVehicleShouldNotBeFound("firstRegistrationDateStartWith=" + UPDATED_FIRST_REGISTRATION_DATE);
     }
 
 
-    private void defaultWorkshopShouldNotBeFound(String filter) throws Exception {
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFirstLength() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("lengthStartWith=" + firstVehicle.getLength());
+        defaultVehicleShouldNotBeFound("lengthStartWith=" + new BigDecimal("22.3"));
+    }
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFirstWidth() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("widthStartWith=" + firstVehicle.getWidth());
+        defaultVehicleShouldNotBeFound("widthStartWith=" + new BigDecimal("22.3"));
+    }
+
+    @Test
+    @Transactional
+    public void findVehicleWithFilterFirstHeight() throws Exception {
+        createGlobalVehiclesInDB();
+        List<Vehicle> vehicleList = vehicleRepository.findAll();
+        defaultVehicleShouldBeFound("heightStartWith=" + firstVehicle.getHeight());
+        defaultVehicleShouldNotBeFound("heightStartWith=" + new BigDecimal("22.3"));
+    }
+
+
+
+    private void defaultVehicleShouldBeFound(String filter) throws Exception {
+        restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(firstVehicle.getId().intValue())))
+                .andExpect(jsonPath("$.[*].registrationNumber").value(hasItem(firstVehicle.getRegistrationNumber())))
+                .andExpect(jsonPath("$.[*].vin").value(hasItem(firstVehicle.getVin())))
+                .andExpect(jsonPath("$.[*].productionYear").value(hasItem(firstVehicle.getProductionYear().intValue())))
+                .andExpect(jsonPath("$.[*].firstRegistrationDate").value(hasItem(firstVehicle.getFirstRegistrationDate().toString())))
+                .andExpect(jsonPath("$.[*].freePlacesForTechInspection").value(hasItem(firstVehicle.getFreePlacesForTechInspection()
+                        .intValue())))
+                .andExpect(jsonPath("$.[*].length").value(hasItem(firstVehicle.getLength().doubleValue())))
+                .andExpect(jsonPath("$.[*].width").value(hasItem(firstVehicle.getWidth().doubleValue())))
+                .andExpect(jsonPath("$.[*].height").value(hasItem(firstVehicle.getHeight().doubleValue())))
+                .andExpect(jsonPath("$.[*].brandId").value(hasItem(firstVehicle.getVehicleModel().getVehicleBrand().getId().intValue())))
+                .andExpect(jsonPath("$.[*].brandName").value(hasItem(firstVehicle.getVehicleModel().getVehicleBrand()
+                        .getName())))
+                .andExpect(jsonPath("$.[*].modelId").value(hasItem(firstVehicle.getVehicleModel().getId().intValue())))
+                .andExpect(jsonPath("$.[*].modelName").value(hasItem(firstVehicle.getVehicleModel().getName())))
+                .andExpect(jsonPath("$.[*].fuelTypeId").value(hasItem(firstVehicle.getFuelType().getId().intValue())))
+                .andExpect(jsonPath("$.[*].fuelTypeName").value(hasItem(firstVehicle.getFuelType().getName())))
+                .andExpect(jsonPath("$.[*].vehicleTypeId").value(hasItem(firstVehicle.getVehicleType().getId().intValue())))
+                .andExpect(jsonPath("$.[*].vehicleTypeName").value(hasItem(firstVehicle.getVehicleType().getName())))
+                .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
+    }
+
+
+    private void defaultVehicleShouldNotBeFound(String filter) throws Exception {
         restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
@@ -1071,6 +2374,11 @@ public class VehicleControllerIT {
         updatedVehicle.setFuelType(updatedFuelType);
         updatedVehicle.setVehicleType(updatedVehicleType);
         updatedVehicle.setVehicleModel(updatedVehicleModel);
+    }
+
+    private void createGlobalVehiclesInDB() {
+        vehicleRepository.saveAndFlush(firstVehicle);
+        vehicleRepository.saveAndFlush(secondVehicle);
     }
 
 }

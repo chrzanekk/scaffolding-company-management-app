@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.scma.service.filter.vehicle;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 
@@ -22,12 +23,12 @@ public class VehicleFilter {
     private String fuelTypeName;
     private Long vehicleTypeId;
     private String vehicleTypeName;
-    private Float lengthStartWith;
-    private Float lengthEndWith;
-    private Float widthStartWith;
-    private Float widthEndWith;
-    private Float heightStartWith;
-    private Float heightEndWith;
+    private BigDecimal lengthStartWith;
+    private BigDecimal lengthEndWith;
+    private BigDecimal widthStartWith;
+    private BigDecimal widthEndWith;
+    private BigDecimal heightStartWith;
+    private BigDecimal heightEndWith;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
@@ -206,51 +207,51 @@ public class VehicleFilter {
         this.vehicleTypeName = vehicleTypeName;
     }
 
-    public Float getLengthStartWith() {
+    public BigDecimal getLengthStartWith() {
         return lengthStartWith;
     }
 
-    public void setLengthStartWith(Float lengthStartWith) {
+    public void setLengthStartWith(BigDecimal lengthStartWith) {
         this.lengthStartWith = lengthStartWith;
     }
 
-    public Float getLengthEndWith() {
+    public BigDecimal getLengthEndWith() {
         return lengthEndWith;
     }
 
-    public void setLengthEndWith(Float lengthEndWith) {
+    public void setLengthEndWith(BigDecimal lengthEndWith) {
         this.lengthEndWith = lengthEndWith;
     }
 
-    public Float getWidthStartWith() {
+    public BigDecimal getWidthStartWith() {
         return widthStartWith;
     }
 
-    public void setWidthStartWith(Float widthStartWith) {
+    public void setWidthStartWith(BigDecimal widthStartWith) {
         this.widthStartWith = widthStartWith;
     }
 
-    public Float getWidthEndWith() {
+    public BigDecimal getWidthEndWith() {
         return widthEndWith;
     }
 
-    public void setWidthEndWith(Float widthEndWith) {
+    public void setWidthEndWith(BigDecimal widthEndWith) {
         this.widthEndWith = widthEndWith;
     }
 
-    public Float getHeightStartWith() {
+    public BigDecimal getHeightStartWith() {
         return heightStartWith;
     }
 
-    public void setHeightStartWith(Float heightStartWith) {
+    public void setHeightStartWith(BigDecimal heightStartWith) {
         this.heightStartWith = heightStartWith;
     }
 
-    public Float getHeightEndWith() {
+    public BigDecimal getHeightEndWith() {
         return heightEndWith;
     }
 
-    public void setHeightEndWith(Float heightEndWith) {
+    public void setHeightEndWith(BigDecimal heightEndWith) {
         this.heightEndWith = heightEndWith;
     }
 
@@ -297,7 +298,9 @@ public class VehicleFilter {
         private String vin;
         private Short productionYearStartWith;
         private Short productionYearEndWith;
+
         private LocalDate firstRegistrationDateStartWith;
+
         private LocalDate firstRegistrationDateEndWith;
         private Short freePlacesForTechInspectionStartWith;
         private Short freePlacesForTechInspectionEndWith;
@@ -305,12 +308,12 @@ public class VehicleFilter {
         private String fuelTypeName;
         private Long vehicleTypeId;
         private String vehicleTypeName;
-        private Float lengthStartWith;
-        private Float lengthEndWith;
-        private Float widthStartWith;
-        private Float widthEndWith;
-        private Float heightStartWith;
-        private Float heightEndWith;
+        private BigDecimal lengthStartWith;
+        private BigDecimal lengthEndWith;
+        private BigDecimal widthStartWith;
+        private BigDecimal widthEndWith;
+        private BigDecimal heightStartWith;
+        private BigDecimal heightEndWith;
         private Instant createDateStartWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
@@ -404,32 +407,32 @@ public class VehicleFilter {
             return this;
         }
 
-        public Builder lengthStartWith(Float lengthStartWith) {
+        public Builder lengthStartWith(BigDecimal lengthStartWith) {
             this.lengthStartWith = lengthStartWith;
             return this;
         }
 
-        public Builder lengthEndWith(Float lengthEndWith) {
+        public Builder lengthEndWith(BigDecimal lengthEndWith) {
             this.lengthEndWith = lengthEndWith;
             return this;
         }
 
-        public Builder widthStartWith(Float widthStartWith) {
+        public Builder widthStartWith(BigDecimal widthStartWith) {
             this.widthStartWith = widthStartWith;
             return this;
         }
 
-        public Builder widthEndWith(Float widthEndWith) {
+        public Builder widthEndWith(BigDecimal widthEndWith) {
             this.widthEndWith = widthEndWith;
             return this;
         }
 
-        public Builder heightStartWith(Float heightStartWith) {
+        public Builder heightStartWith(BigDecimal heightStartWith) {
             this.heightStartWith = heightStartWith;
             return this;
         }
 
-        public Builder heightEndWith(Float heightEndWith) {
+        public Builder heightEndWith(BigDecimal heightEndWith) {
             this.heightEndWith = heightEndWith;
             return this;
         }

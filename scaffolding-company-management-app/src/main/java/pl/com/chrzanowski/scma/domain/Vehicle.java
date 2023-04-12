@@ -1,7 +1,10 @@
 package pl.com.chrzanowski.scma.domain;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -24,19 +27,20 @@ public class Vehicle implements Serializable {
     private Short productionYear;
 
     @Column(name = "first_registration_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate firstRegistrationDate;
 
     @Column(name = "free_places_for_tech_inspection")
     private Short freePlacesForTechInspection;
 
     @Column(name = "length")
-    private Float length;
+    private BigDecimal length;
 
     @Column(name = "width")
-    private Float width;
+    private BigDecimal width;
 
     @Column(name = "height")
-    private Float height;
+    private BigDecimal height;
 
     @Column(name = "create_date")
     private Instant createDate;
@@ -60,9 +64,9 @@ public class Vehicle implements Serializable {
                    String vin,
                    Short productionYear,
                    LocalDate firstRegistrationDate,
-                   Float length,
-                   Float width,
-                   Float height,
+                   BigDecimal length,
+                   BigDecimal width,
+                   BigDecimal height,
                    Instant createDate,
                    Instant modifyDate,
                    VehicleModel vehicleModel,
@@ -110,15 +114,15 @@ public class Vehicle implements Serializable {
         return freePlacesForTechInspection;
     }
 
-    public Float getLength() {
+    public BigDecimal getLength() {
         return length;
     }
 
-    public Float getWidth() {
+    public BigDecimal getWidth() {
         return width;
     }
 
-    public Float getHeight() {
+    public BigDecimal getHeight() {
         return height;
     }
 
@@ -172,17 +176,17 @@ public class Vehicle implements Serializable {
         return this;
     }
 
-    public Vehicle setLength(Float length) {
+    public Vehicle setLength(BigDecimal length) {
         this.length = length;
         return this;
     }
 
-    public Vehicle setWidth(Float width) {
+    public Vehicle setWidth(BigDecimal width) {
         this.width = width;
         return this;
     }
 
-    public Vehicle setHeight(Float height) {
+    public Vehicle setHeight(BigDecimal height) {
         this.height = height;
         return this;
     }

@@ -2,27 +2,26 @@ package pl.com.chrzanowski.scma.service.filter.vehicle;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.scma.domain.Vehicle;
+import pl.com.chrzanowski.scma.domain.*;
 
+import javax.persistence.criteria.Join;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 
 @Component
 public class VehicleSpecification {
     private static final String ID = "id";
-    private static final String BRAND_ID = "brandId";
-    private static final String BRAND_NAME = "brandName";
-    private static final String MODEL_ID = "modelId";
-    private static final String MODEL_NAME = "modelName";
+    private static final String NAME = "name";
+    private static final String VEHICLE_BRAND = "vehicleBrand";
+    private static final String VEHICLE_MODEL = "vehicleModel";
     private static final String REGISTRATION_NUMBER = "registrationNumber";
     private static final String VIN = "vin";
     private static final String PRODUCTION_YEAR = "productionYear";
     private static final String FIRST_REGISTRATION_DATE = "firstRegistrationDate";
     private static final String FREE_PLACES_FOR_TECH_INSPECTION = "freePlacesForTechInspection";
-    private static final String FUEL_TYPE_ID = "fuelTypeId";
-    private static final String FUEL_TYPE_NAME = "fuelTypeName";
-    private static final String VEHICLE_TYPE_ID = "vehicleTypeId";
-    private static final String VEHICLE_TYPE_NAME = "vehicleTypeName";
+    private static final String FUEL_TYPE = "fuelType";
+    private static final String VEHICLE_TYPE = "vehicleType";
     private static final String LENGTH = "length";
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
@@ -36,28 +35,28 @@ public class VehicleSpecification {
                 specification = specification.and(hasId(filter.getId(), ID));
             }
             if (filter.getBrandId() != null) {
-                specification = specification.and(hasId(filter.getId(), BRAND_ID));
+                specification = specification.and(hasBrandId(filter.getBrandId()));
             }
             if (filter.getModelId() != null) {
-                specification = specification.and(hasId(filter.getId(), MODEL_ID));
+                specification = specification.and(hasModelId(filter.getModelId()));
             }
             if (filter.getFuelTypeId() != null) {
-                specification = specification.and(hasId(filter.getId(), FUEL_TYPE_ID));
+                specification = specification.and(hasFuelTypeId(filter.getFuelTypeId()));
             }
             if (filter.getVehicleTypeId() != null) {
-                specification = specification.and(hasId(filter.getId(), VEHICLE_TYPE_ID));
+                specification = specification.and(hasVehicleTypeId(filter.getVehicleTypeId()));
             }
             if (filter.getBrandName() != null) {
-                specification = specification.and(hasString(filter.getBrandName(), BRAND_NAME));
+                specification = specification.and(hasBrandName(filter.getBrandName()));
             }
             if (filter.getModelName() != null) {
-                specification = specification.and(hasString(filter.getModelName(), MODEL_NAME));
+                specification = specification.and(hasModelName(filter.getModelName()));
             }
             if (filter.getFuelTypeName() != null) {
-                specification = specification.and(hasString(filter.getFuelTypeName(), FUEL_TYPE_NAME));
+                specification = specification.and(hasFuelTypeName(filter.getFuelTypeName()));
             }
             if (filter.getVehicleTypeName() != null) {
-                specification = specification.and(hasString(filter.getVehicleTypeName(), VEHICLE_TYPE_NAME));
+                specification = specification.and(hasVehicleTypeName(filter.getVehicleTypeName()));
             }
             if (filter.getRegistrationNumber() != null) {
                 specification = specification.and(hasString(filter.getRegistrationNumber(), REGISTRATION_NUMBER));
@@ -151,11 +150,11 @@ public class VehicleSpecification {
                 date);
     }
 
-    private static Specification<Vehicle> hasDimensionStartWith(Float dimension, String fieldType) {
+    private static Specification<Vehicle> hasDimensionStartWith(BigDecimal dimension, String fieldType) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(fieldType), dimension);
     }
 
-    private static Specification<Vehicle> hasDimensionEndWith(Float dimension, String fieldType) {
+    private static Specification<Vehicle> hasDimensionEndWith(BigDecimal dimension, String fieldType) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldType), dimension);
     }
 
@@ -165,5 +164,62 @@ public class VehicleSpecification {
 
     private static Specification<Vehicle> hasShortTypeLesserOrEqual(Short aShort, String fieldType) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldType), aShort);
+    }
+
+    private static Specification<Vehicle> hasBrandId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleModel, Vehicle> vehicleModelJoin = root.join(VEHICLE_MODEL);
+            Join<VehicleBrand, VehicleModel> vehicleBrandVehicleModelJoin = vehicleModelJoin.join(VEHICLE_BRAND);
+            return criteriaBuilder.equal(vehicleBrandVehicleModelJoin.get(ID), id);
+        };
+    }
+
+    private static Specification<Vehicle> hasBrandName(String name) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleModel, Vehicle> vehicleModelJoin = root.join(VEHICLE_MODEL);
+            Join<VehicleBrand, VehicleModel> vehicleBrandVehicleModelJoin = vehicleModelJoin.join(VEHICLE_BRAND);
+            return criteriaBuilder.like(vehicleBrandVehicleModelJoin.get(NAME), "%" + name + "%");
+        };
+    }
+
+    private static Specification<Vehicle> hasModelId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleModel, Vehicle> vehicleModelJoin = root.join(VEHICLE_MODEL);
+            return criteriaBuilder.equal(vehicleModelJoin.get(ID), id);
+        };
+    }
+
+    private static Specification<Vehicle> hasModelName(String name) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleModel, Vehicle> vehicleModelJoin = root.join(VEHICLE_MODEL);
+            return criteriaBuilder.like(vehicleModelJoin.get(NAME), "%" + name + "%");
+        };
+    }
+
+    private static Specification<Vehicle> hasVehicleTypeId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleType, Vehicle> vehicleTypeVehicleJoin = root.join(VEHICLE_TYPE);
+            return criteriaBuilder.equal(vehicleTypeVehicleJoin.get(ID), id);
+        };
+    }
+
+    private static Specification<Vehicle> hasVehicleTypeName(String name) {
+        return (root, query, criteriaBuilder) -> {
+            Join<VehicleType, Vehicle> vehicleTypeVehicleJoin = root.join(VEHICLE_TYPE);
+            return criteriaBuilder.like(vehicleTypeVehicleJoin.get(NAME), "%" + name + "%");
+        };
+    }
+    private static Specification<Vehicle> hasFuelTypeId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<FuelType, Vehicle> fuelTypeVehicleJoin = root.join(FUEL_TYPE);
+            return criteriaBuilder.equal(fuelTypeVehicleJoin.get(ID), id);
+        };
+    }
+
+    private static Specification<Vehicle> hasFuelTypeName(String name) {
+        return (root, query, criteriaBuilder) -> {
+            Join<FuelType, Vehicle> fuelTypeVehicleJoin = root.join(FUEL_TYPE);
+            return criteriaBuilder.like(fuelTypeVehicleJoin.get(NAME), "%" + name + "%");
+        };
     }
 }

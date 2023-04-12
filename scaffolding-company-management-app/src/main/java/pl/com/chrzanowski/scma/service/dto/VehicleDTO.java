@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.scma.service.dto;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,9 +21,9 @@ public class VehicleDTO {
     private String fuelTypeName;
     private Long vehicleTypeId;
     private String vehicleTypeName;
-    private Float length;
-    private Float width;
-    private Float height;
+    private BigDecimal length;
+    private BigDecimal width;
+    private BigDecimal height;
     private Instant createDate;
     private Instant modifyDate;
 
@@ -40,9 +41,9 @@ public class VehicleDTO {
                       String fuelTypeName,
                       Long vehicleTypeId,
                       String vehicleTypeName,
-                      Float length,
-                      Float width,
-                      Float height,
+                      BigDecimal length,
+                      BigDecimal width,
+                      BigDecimal height,
                       Instant createDate,
                       Instant modifyDate) {
         this.id = id;
@@ -151,15 +152,15 @@ public class VehicleDTO {
         return vehicleTypeName;
     }
 
-    public Float getLength() {
+    public BigDecimal getLength() {
         return length;
     }
 
-    public Float getWidth() {
+    public BigDecimal getWidth() {
         return width;
     }
 
-    public Float getHeight() {
+    public BigDecimal getHeight() {
         return height;
     }
 
@@ -264,15 +265,16 @@ public class VehicleDTO {
         private String registrationNumber;
         private String vin;
         private Short productionYear;
+
         private LocalDate firstRegistrationDate;
         private Short freePlacesForTechInspection;
         private Long fuelTypeId;
         private String fuelTypeName;
         private Long vehicleTypeId;
         private String vehicleTypeName;
-        private Float length;
-        private Float width;
-        private Float height;
+        private BigDecimal length;
+        private BigDecimal width;
+        private BigDecimal height;
         private Instant createDate;
         private Instant modifyDate;
 
@@ -349,17 +351,17 @@ public class VehicleDTO {
             return this;
         }
 
-        public Builder length(Float length) {
+        public Builder length(BigDecimal length) {
             this.length = length;
             return this;
         }
 
-        public Builder width(Float width) {
+        public Builder width(BigDecimal width) {
             this.width = width;
             return this;
         }
 
-        public Builder height(Float height) {
+        public Builder height(BigDecimal height) {
             this.height = height;
             return this;
         }
