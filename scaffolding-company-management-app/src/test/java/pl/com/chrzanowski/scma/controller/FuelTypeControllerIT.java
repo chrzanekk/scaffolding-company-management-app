@@ -58,6 +58,9 @@ public class FuelTypeControllerIT {
     public static FuelType createEntity(EntityManager em) {
         return new FuelType().name(FIRST_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
     }
+    public static FuelType createSecondEntity(EntityManager em) {
+        return new FuelType().name(SECOND_DEFAULT_NAME).createDate(DEFAULT_CREATE_DATE);
+    }
 
     public static FuelType createUpdatedEntity(EntityManager em) {
         return new FuelType().name(FIRST_UPDATED_NAME).createDate(DEFAULT_CREATE_DATE).modifyDate(DEFAULT_MODIFY_DATE);
