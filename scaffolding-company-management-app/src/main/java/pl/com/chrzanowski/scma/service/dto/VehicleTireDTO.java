@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.dto;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class VehicleTireDTO {
@@ -25,7 +26,8 @@ public class VehicleTireDTO {
     private final Instant createDate;
     private final Instant modifyDate;
     private final Instant removeDate;
-
+    private final Integer productionYear;
+    private final LocalDate purchaseDate;
 
     public VehicleTireDTO(Long id,
                           String brand,
@@ -45,7 +47,9 @@ public class VehicleTireDTO {
                           String vehicleModelName,
                           Instant createDate,
                           Instant modifyDate,
-                          Instant removeDate) {
+                          Instant removeDate,
+                          Integer productionYear,
+                          LocalDate purchaseDate) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -65,6 +69,8 @@ public class VehicleTireDTO {
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
+        this.productionYear = productionYear;
+        this.purchaseDate = purchaseDate;
     }
 
     private VehicleTireDTO(Builder builder) {
@@ -87,10 +93,8 @@ public class VehicleTireDTO {
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        productionYear = builder.productionYear;
+        purchaseDate = builder.purchaseDate;
     }
 
     public Long getId() {
@@ -169,60 +173,25 @@ public class VehicleTireDTO {
         return removeDate;
     }
 
+    public Integer getProductionYear() {
+        return productionYear;
+    }
+
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         VehicleTireDTO that = (VehicleTireDTO) o;
-
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(brand, that.brand)) return false;
-        if (!Objects.equals(model, that.model)) return false;
-        if (!Objects.equals(width, that.width)) return false;
-        if (!Objects.equals(profile, that.profile)) return false;
-        if (type != that.type) return false;
-        if (tireReinforcedIndex != that.tireReinforcedIndex) return false;
-        if (speedIndex != that.speedIndex) return false;
-        if (capacityIndex != that.capacityIndex) return false;
-        if (tireSeasonType != that.tireSeasonType) return false;
-        if (!Objects.equals(runOnFlat, that.runOnFlat)) return false;
-        if (!Objects.equals(vehicleId, that.vehicleId)) return false;
-        if (!Objects.equals(vehicleBrandId, that.vehicleBrandId))
-            return false;
-        if (!Objects.equals(vehicleModelId, that.vehicleModelId))
-            return false;
-        if (!Objects.equals(vehicleBrandName, that.vehicleBrandName))
-            return false;
-        if (!Objects.equals(vehicleModelName, that.vehicleModelName))
-            return false;
-        if (!Objects.equals(createDate, that.createDate)) return false;
-        if (!Objects.equals(modifyDate, that.modifyDate)) return false;
-        return Objects.equals(removeDate, that.removeDate);
+        return Objects.equals(id, that.id) && Objects.equals(brand, that.brand) && Objects.equals(model, that.model) && Objects.equals(width, that.width) && Objects.equals(profile, that.profile) && type == that.type && tireReinforcedIndex == that.tireReinforcedIndex && speedIndex == that.speedIndex && capacityIndex == that.capacityIndex && tireSeasonType == that.tireSeasonType && Objects.equals(runOnFlat, that.runOnFlat) && Objects.equals(vehicleId, that.vehicleId) && Objects.equals(vehicleBrandId, that.vehicleBrandId) && Objects.equals(vehicleModelId, that.vehicleModelId) && Objects.equals(vehicleBrandName, that.vehicleBrandName) && Objects.equals(vehicleModelName, that.vehicleModelName) && Objects.equals(createDate, that.createDate) && Objects.equals(modifyDate, that.modifyDate) && Objects.equals(removeDate, that.removeDate) && Objects.equals(productionYear, that.productionYear) && Objects.equals(purchaseDate, that.purchaseDate);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (brand != null ? brand.hashCode() : 0);
-        result = 31 * result + (model != null ? model.hashCode() : 0);
-        result = 31 * result + (width != null ? width.hashCode() : 0);
-        result = 31 * result + (profile != null ? profile.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (tireReinforcedIndex != null ? tireReinforcedIndex.hashCode() : 0);
-        result = 31 * result + (speedIndex != null ? speedIndex.hashCode() : 0);
-        result = 31 * result + (capacityIndex != null ? capacityIndex.hashCode() : 0);
-        result = 31 * result + (tireSeasonType != null ? tireSeasonType.hashCode() : 0);
-        result = 31 * result + (runOnFlat != null ? runOnFlat.hashCode() : 0);
-        result = 31 * result + (vehicleId != null ? vehicleId.hashCode() : 0);
-        result = 31 * result + (vehicleBrandId != null ? vehicleBrandId.hashCode() : 0);
-        result = 31 * result + (vehicleModelId != null ? vehicleModelId.hashCode() : 0);
-        result = 31 * result + (vehicleBrandName != null ? vehicleBrandName.hashCode() : 0);
-        result = 31 * result + (vehicleModelName != null ? vehicleModelName.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
-        result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
-        return result;
+        return Objects.hash(id, brand, model, width, profile, type, tireReinforcedIndex, speedIndex, capacityIndex, tireSeasonType, runOnFlat, vehicleId, vehicleBrandId, vehicleModelId, vehicleBrandName, vehicleModelName, createDate, modifyDate, removeDate, productionYear, purchaseDate);
     }
 
     @Override
@@ -247,6 +216,8 @@ public class VehicleTireDTO {
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
+                ", productionYear=" + productionYear +
+                ", purchaseDate=" + purchaseDate +
                 '}';
     }
 
@@ -271,102 +242,118 @@ public class VehicleTireDTO {
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
+        private Integer productionYear;
+        private LocalDate purchaseDate;
 
         private Builder() {
         }
 
-        public Builder id(Long id) {
-            this.id = id;
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder id(Long val) {
+            id = val;
             return this;
         }
 
-        public Builder brand(String brand) {
-            this.brand = brand;
+        public Builder brand(String val) {
+            brand = val;
             return this;
         }
 
-        public Builder model(String model) {
-            this.model = model;
+        public Builder model(String val) {
+            model = val;
             return this;
         }
 
-        public Builder width(Integer width) {
-            this.width = width;
+        public Builder width(Integer val) {
+            width = val;
             return this;
         }
 
-        public Builder profile(Integer profile) {
-            this.profile = profile;
+        public Builder profile(Integer val) {
+            profile = val;
             return this;
         }
 
-        public Builder type(TireType type) {
-            this.type = type;
+        public Builder type(TireType val) {
+            type = val;
             return this;
         }
 
-        public Builder tireReinforcedIndex(TireReinforcedIndex tireReinforcedIndex) {
-            this.tireReinforcedIndex = tireReinforcedIndex;
+        public Builder tireReinforcedIndex(TireReinforcedIndex val) {
+            tireReinforcedIndex = val;
             return this;
         }
 
-        public Builder speedIndex(TireSpeedIndex speedIndex) {
-            this.speedIndex = speedIndex;
+        public Builder speedIndex(TireSpeedIndex val) {
+            speedIndex = val;
             return this;
         }
 
-        public Builder capacityIndex(TireLoadCapacityIndex capacityIndex) {
-            this.capacityIndex = capacityIndex;
+        public Builder capacityIndex(TireLoadCapacityIndex val) {
+            capacityIndex = val;
             return this;
         }
 
-        public Builder tireSeasonType(TireSeasonType tireSeasonType) {
-            this.tireSeasonType = tireSeasonType;
+        public Builder tireSeasonType(TireSeasonType val) {
+            tireSeasonType = val;
             return this;
         }
 
-        public Builder runOnFlat(Boolean runOnFlat) {
-            this.runOnFlat = runOnFlat;
+        public Builder runOnFlat(Boolean val) {
+            runOnFlat = val;
             return this;
         }
 
-        public Builder vehicleId(Long vehicleId) {
-            this.vehicleId = vehicleId;
+        public Builder vehicleId(Long val) {
+            vehicleId = val;
             return this;
         }
 
-        public Builder vehicleBrandId(Long vehicleBrandId) {
-            this.vehicleBrandId = vehicleBrandId;
+        public Builder vehicleBrandId(Long val) {
+            vehicleBrandId = val;
             return this;
         }
 
-        public Builder vehicleModelId(Long vehicleModelId) {
-            this.vehicleModelId = vehicleModelId;
+        public Builder vehicleModelId(Long val) {
+            vehicleModelId = val;
             return this;
         }
 
-        public Builder vehicleBrandName(String vehicleBrandName) {
-            this.vehicleBrandName = vehicleBrandName;
+        public Builder vehicleBrandName(String val) {
+            vehicleBrandName = val;
             return this;
         }
 
-        public Builder vehicleModelName(String vehicleModelName) {
-            this.vehicleModelName = vehicleModelName;
+        public Builder vehicleModelName(String val) {
+            vehicleModelName = val;
             return this;
         }
 
-        public Builder createDate(Instant createDate) {
-            this.createDate = createDate;
+        public Builder createDate(Instant val) {
+            createDate = val;
             return this;
         }
 
-        public Builder modifyDate(Instant modifyDate) {
-            this.modifyDate = modifyDate;
+        public Builder modifyDate(Instant val) {
+            modifyDate = val;
             return this;
         }
 
-        public Builder removeDate(Instant removeDate) {
-            this.removeDate = removeDate;
+        public Builder removeDate(Instant val) {
+            removeDate = val;
+            return this;
+        }
+
+        public Builder productionYear(Integer val) {
+            productionYear = val;
+            return this;
+        }
+
+        public Builder purchaseDate(LocalDate val) {
+            purchaseDate = val;
             return this;
         }
 
