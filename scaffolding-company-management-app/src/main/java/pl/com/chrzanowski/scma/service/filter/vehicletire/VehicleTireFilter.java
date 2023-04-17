@@ -25,9 +25,12 @@ public class VehicleTireFilter {
     private Long vehicleModelId;
     private String vehicleBrandName;
     private String vehicleModelName;
-    private Instant createDate;
-    private Instant modifyDate;
-    private Instant removeDate;
+    private Instant createDateStartsWith;
+    private Instant createDateEndWith;
+    private Instant modifyDateStartsWith;
+    private Instant modifyDateEndWith;
+    private Instant removeDateStartsWith;
+    private Instant removeDateEndWith;
     private Integer productionYearStartsWith;
     private Integer productionYearEndWith;
     private LocalDate purchaseDateStartsWith;
@@ -36,33 +39,7 @@ public class VehicleTireFilter {
     public VehicleTireFilter() {
     }
 
-    private VehicleTireFilter(Builder builder) {
-        setId(builder.id);
-        setBrand(builder.brand);
-        setModel(builder.model);
-        setWidthStartsWith(builder.widthStartsWith);
-        setWidthEndWith(builder.widthEndWith);
-        setProfileStartsWith(builder.profileStartsWith);
-        setProfileEndWith(builder.profileEndWith);
-        setType(builder.type);
-        setReinforcedIndex(builder.reinforcedIndex);
-        setSpeedIndex(builder.speedIndex);
-        setLoadCapacityIndex(builder.loadCapacityIndex);
-        setSeasonType(builder.seasonType);
-        setRunOnFlat(builder.runOnFlat);
-        setVehicleId(builder.vehicleId);
-        setVehicleBrandId(builder.vehicleBrandId);
-        setVehicleModelId(builder.vehicleModelId);
-        setVehicleBrandName(builder.vehicleBrandName);
-        setVehicleModelName(builder.vehicleModelName);
-        setCreateDate(builder.createDate);
-        setModifyDate(builder.modifyDate);
-        setRemoveDate(builder.removeDate);
-        setProductionYearStartsWith(builder.productionYearStartsWith);
-        setProductionYearEndWith(builder.productionYearEndWith);
-        setPurchaseDateStartsWith(builder.purchaseDateStartsWith);
-        setPurchaseDateEndWith(builder.purchaseDateEndWith);
-    }
+
 
     public Long getId() {
         return id;
@@ -207,20 +184,20 @@ public class VehicleTireFilter {
         this.vehicleModelName = vehicleModelName;
     }
 
-    public Instant getCreateDate() {
-        return createDate;
+    public Instant getCreateDateStartsWith() {
+        return createDateStartsWith;
     }
 
-    public void setCreateDate(Instant createDate) {
-        this.createDate = createDate;
+    public void setCreateDateStartsWith(Instant createDateStartsWith) {
+        this.createDateStartsWith = createDateStartsWith;
     }
 
-    public Instant getModifyDate() {
-        return modifyDate;
+    public Instant getModifyDateStartsWith() {
+        return modifyDateStartsWith;
     }
 
-    public void setModifyDate(Instant modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setModifyDateStartsWith(Instant modifyDateStartsWith) {
+        this.modifyDateStartsWith = modifyDateStartsWith;
     }
 
     public Instant getRemoveDate() {
