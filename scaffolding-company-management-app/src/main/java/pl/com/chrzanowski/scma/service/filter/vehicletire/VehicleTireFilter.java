@@ -14,6 +14,8 @@ public class VehicleTireFilter {
     private Integer widthEndWith;
     private Integer profileStartsWith;
     private Integer profileEndWith;
+    private Integer diameterStartsWith;
+    private Integer diameterEndWith;
     private TireType type;
     private TireReinforcedIndex reinforcedIndex;
     private TireSpeedIndex speedIndex;
@@ -39,206 +41,313 @@ public class VehicleTireFilter {
     public VehicleTireFilter() {
     }
 
+    private VehicleTireFilter(Builder builder) {
+        setId(builder.id);
+        setBrand(builder.brand);
+        setModel(builder.model);
+        setWidthStartsWith(builder.widthStartsWith);
+        setWidthEndWith(builder.widthEndWith);
+        setProfileStartsWith(builder.profileStartsWith);
+        setProfileEndWith(builder.profileEndWith);
+        setDiameterStartsWith(builder.diameterStartsWith);
+        setDiameterEndWith(builder.diameterEndWith);
+        setType(builder.type);
+        setReinforcedIndex(builder.reinforcedIndex);
+        setSpeedIndex(builder.speedIndex);
+        setLoadCapacityIndex(builder.loadCapacityIndex);
+        setSeasonType(builder.seasonType);
+        setRunOnFlat(builder.runOnFlat);
+        setVehicleId(builder.vehicleId);
+        setVehicleBrandId(builder.vehicleBrandId);
+        setVehicleModelId(builder.vehicleModelId);
+        setVehicleBrandName(builder.vehicleBrandName);
+        setVehicleModelName(builder.vehicleModelName);
+        setCreateDateStartsWith(builder.createDateStartsWith);
+        setCreateDateEndWith(builder.createDateEndWith);
+        setModifyDateStartsWith(builder.modifyDateStartsWith);
+        setModifyDateEndWith(builder.modifyDateEndWith);
+        setRemoveDateStartsWith(builder.removeDateStartsWith);
+        setRemoveDateEndWith(builder.removeDateEndWith);
+        setProductionYearStartsWith(builder.productionYearStartsWith);
+        setProductionYearEndWith(builder.productionYearEndWith);
+        setPurchaseDateStartsWith(builder.purchaseDateStartsWith);
+        setPurchaseDateEndWith(builder.purchaseDateEndWith);
+    }
 
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public VehicleTireFilter setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getBrand() {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public VehicleTireFilter setBrand(String brand) {
         this.brand = brand;
+        return this;
     }
 
     public String getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    public VehicleTireFilter setModel(String model) {
         this.model = model;
+        return this;
     }
 
     public Integer getWidthStartsWith() {
         return widthStartsWith;
     }
 
-    public void setWidthStartsWith(Integer widthStartsWith) {
+    public VehicleTireFilter setWidthStartsWith(Integer widthStartsWith) {
         this.widthStartsWith = widthStartsWith;
+        return this;
     }
 
     public Integer getWidthEndWith() {
         return widthEndWith;
     }
 
-    public void setWidthEndWith(Integer widthEndWith) {
+    public VehicleTireFilter setWidthEndWith(Integer widthEndWith) {
         this.widthEndWith = widthEndWith;
+        return this;
     }
 
     public Integer getProfileStartsWith() {
         return profileStartsWith;
     }
 
-    public void setProfileStartsWith(Integer profileStartsWith) {
+    public VehicleTireFilter setProfileStartsWith(Integer profileStartsWith) {
         this.profileStartsWith = profileStartsWith;
+        return this;
     }
 
     public Integer getProfileEndWith() {
         return profileEndWith;
     }
 
-    public void setProfileEndWith(Integer profileEndWith) {
+    public VehicleTireFilter setProfileEndWith(Integer profileEndWith) {
         this.profileEndWith = profileEndWith;
+        return this;
+    }
+
+    public Integer getDiameterStartsWith() {
+        return diameterStartsWith;
+    }
+
+    public VehicleTireFilter setDiameterStartsWith(Integer diameterStartsWith) {
+        this.diameterStartsWith = diameterStartsWith;
+        return this;
+    }
+
+    public Integer getDiameterEndWith() {
+        return diameterEndWith;
+    }
+
+    public VehicleTireFilter setDiameterEndWith(Integer diameterEndWith) {
+        this.diameterEndWith = diameterEndWith;
+        return this;
     }
 
     public TireType getType() {
         return type;
     }
 
-    public void setType(TireType type) {
+    public VehicleTireFilter setType(TireType type) {
         this.type = type;
+        return this;
     }
 
     public TireReinforcedIndex getReinforcedIndex() {
         return reinforcedIndex;
     }
 
-    public void setReinforcedIndex(TireReinforcedIndex reinforcedIndex) {
+    public VehicleTireFilter setReinforcedIndex(TireReinforcedIndex reinforcedIndex) {
         this.reinforcedIndex = reinforcedIndex;
+        return this;
     }
 
     public TireSpeedIndex getSpeedIndex() {
         return speedIndex;
     }
 
-    public void setSpeedIndex(TireSpeedIndex speedIndex) {
+    public VehicleTireFilter setSpeedIndex(TireSpeedIndex speedIndex) {
         this.speedIndex = speedIndex;
+        return this;
     }
+
     public TireLoadCapacityIndex getLoadCapacityIndex() {
         return loadCapacityIndex;
     }
 
-    public void setLoadCapacityIndex(TireLoadCapacityIndex loadCapacityIndex) {
+    public VehicleTireFilter setLoadCapacityIndex(TireLoadCapacityIndex loadCapacityIndex) {
         this.loadCapacityIndex = loadCapacityIndex;
+        return this;
     }
 
     public TireSeasonType getSeasonType() {
         return seasonType;
     }
 
-    public void setSeasonType(TireSeasonType seasonType) {
+    public VehicleTireFilter setSeasonType(TireSeasonType seasonType) {
         this.seasonType = seasonType;
+        return this;
     }
 
     public Boolean getRunOnFlat() {
         return runOnFlat;
     }
 
-    public void setRunOnFlat(Boolean runOnFlat) {
+    public VehicleTireFilter setRunOnFlat(Boolean runOnFlat) {
         this.runOnFlat = runOnFlat;
+        return this;
     }
 
     public Long getVehicleId() {
         return vehicleId;
     }
 
-    public void setVehicleId(Long vehicleId) {
+    public VehicleTireFilter setVehicleId(Long vehicleId) {
         this.vehicleId = vehicleId;
+        return this;
     }
 
     public Long getVehicleBrandId() {
         return vehicleBrandId;
     }
 
-    public void setVehicleBrandId(Long vehicleBrandId) {
+    public VehicleTireFilter setVehicleBrandId(Long vehicleBrandId) {
         this.vehicleBrandId = vehicleBrandId;
+        return this;
     }
 
     public Long getVehicleModelId() {
         return vehicleModelId;
     }
 
-    public void setVehicleModelId(Long vehicleModelId) {
+    public VehicleTireFilter setVehicleModelId(Long vehicleModelId) {
         this.vehicleModelId = vehicleModelId;
+        return this;
     }
 
     public String getVehicleBrandName() {
         return vehicleBrandName;
     }
 
-    public void setVehicleBrandName(String vehicleBrandName) {
+    public VehicleTireFilter setVehicleBrandName(String vehicleBrandName) {
         this.vehicleBrandName = vehicleBrandName;
+        return this;
     }
 
     public String getVehicleModelName() {
         return vehicleModelName;
     }
 
-    public void setVehicleModelName(String vehicleModelName) {
+    public VehicleTireFilter setVehicleModelName(String vehicleModelName) {
         this.vehicleModelName = vehicleModelName;
+        return this;
     }
 
     public Instant getCreateDateStartsWith() {
         return createDateStartsWith;
     }
 
-    public void setCreateDateStartsWith(Instant createDateStartsWith) {
+    public VehicleTireFilter setCreateDateStartsWith(Instant createDateStartsWith) {
         this.createDateStartsWith = createDateStartsWith;
+        return this;
+    }
+
+    public Instant getCreateDateEndWith() {
+        return createDateEndWith;
+    }
+
+    public VehicleTireFilter setCreateDateEndWith(Instant createDateEndWith) {
+        this.createDateEndWith = createDateEndWith;
+        return this;
     }
 
     public Instant getModifyDateStartsWith() {
         return modifyDateStartsWith;
     }
 
-    public void setModifyDateStartsWith(Instant modifyDateStartsWith) {
+    public VehicleTireFilter setModifyDateStartsWith(Instant modifyDateStartsWith) {
         this.modifyDateStartsWith = modifyDateStartsWith;
+        return this;
     }
 
-    public Instant getRemoveDate() {
-        return removeDate;
+    public Instant getModifyDateEndWith() {
+        return modifyDateEndWith;
     }
 
-    public void setRemoveDate(Instant removeDate) {
-        this.removeDate = removeDate;
+    public VehicleTireFilter setModifyDateEndWith(Instant modifyDateEndWith) {
+        this.modifyDateEndWith = modifyDateEndWith;
+        return this;
+    }
+
+    public Instant getRemoveDateStartsWith() {
+        return removeDateStartsWith;
+    }
+
+    public VehicleTireFilter setRemoveDateStartsWith(Instant removeDateStartsWith) {
+        this.removeDateStartsWith = removeDateStartsWith;
+        return this;
+    }
+
+    public Instant getRemoveDateEndWith() {
+        return removeDateEndWith;
+    }
+
+    public VehicleTireFilter setRemoveDateEndWith(Instant removeDateEndWith) {
+        this.removeDateEndWith = removeDateEndWith;
+        return this;
     }
 
     public Integer getProductionYearStartsWith() {
         return productionYearStartsWith;
     }
 
-    public void setProductionYearStartsWith(Integer productionYearStartsWith) {
+    public VehicleTireFilter setProductionYearStartsWith(Integer productionYearStartsWith) {
         this.productionYearStartsWith = productionYearStartsWith;
+        return this;
     }
 
     public Integer getProductionYearEndWith() {
         return productionYearEndWith;
     }
 
-    public void setProductionYearEndWith(Integer productionYearEndWith) {
+    public VehicleTireFilter setProductionYearEndWith(Integer productionYearEndWith) {
         this.productionYearEndWith = productionYearEndWith;
+        return this;
     }
 
     public LocalDate getPurchaseDateStartsWith() {
         return purchaseDateStartsWith;
     }
 
-    public void setPurchaseDateStartsWith(LocalDate purchaseDateStartsWith) {
+    public VehicleTireFilter setPurchaseDateStartsWith(LocalDate purchaseDateStartsWith) {
         this.purchaseDateStartsWith = purchaseDateStartsWith;
+        return this;
     }
 
     public LocalDate getPurchaseDateEndWith() {
         return purchaseDateEndWith;
     }
 
-    public void setPurchaseDateEndWith(LocalDate purchaseDateEndWith) {
+    public VehicleTireFilter setPurchaseDateEndWith(LocalDate purchaseDateEndWith) {
         this.purchaseDateEndWith = purchaseDateEndWith;
+        return this;
     }
+
 
     public static final class Builder {
         private Long id;
@@ -248,6 +357,8 @@ public class VehicleTireFilter {
         private Integer widthEndWith;
         private Integer profileStartsWith;
         private Integer profileEndWith;
+        private Integer diameterStartsWith;
+        private Integer diameterEndWith;
         private TireType type;
         private TireReinforcedIndex reinforcedIndex;
         private TireSpeedIndex speedIndex;
@@ -259,19 +370,18 @@ public class VehicleTireFilter {
         private Long vehicleModelId;
         private String vehicleBrandName;
         private String vehicleModelName;
-        private Instant createDate;
-        private Instant modifyDate;
-        private Instant removeDate;
+        private Instant createDateStartsWith;
+        private Instant createDateEndWith;
+        private Instant modifyDateStartsWith;
+        private Instant modifyDateEndWith;
+        private Instant removeDateStartsWith;
+        private Instant removeDateEndWith;
         private Integer productionYearStartsWith;
         private Integer productionYearEndWith;
         private LocalDate purchaseDateStartsWith;
         private LocalDate purchaseDateEndWith;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {
@@ -306,6 +416,16 @@ public class VehicleTireFilter {
 
         public Builder profileEndWith(Integer profileEndWith) {
             this.profileEndWith = profileEndWith;
+            return this;
+        }
+
+        public Builder diameterStartsWith(Integer diameterStartsWith) {
+            this.diameterStartsWith = diameterStartsWith;
+            return this;
+        }
+
+        public Builder diameterEndWith(Integer diameterEndWith) {
+            this.diameterEndWith = diameterEndWith;
             return this;
         }
 
@@ -364,18 +484,33 @@ public class VehicleTireFilter {
             return this;
         }
 
-        public Builder createDate(Instant createDate) {
-            this.createDate = createDate;
+        public Builder createDateStartsWith(Instant createDateStartsWith) {
+            this.createDateStartsWith = createDateStartsWith;
             return this;
         }
 
-        public Builder modifyDate(Instant modifyDate) {
-            this.modifyDate = modifyDate;
+        public Builder createDateEndWith(Instant createDateEndWith) {
+            this.createDateEndWith = createDateEndWith;
             return this;
         }
 
-        public Builder removeDate(Instant removeDate) {
-            this.removeDate = removeDate;
+        public Builder modifyDateStartsWith(Instant modifyDateStartsWith) {
+            this.modifyDateStartsWith = modifyDateStartsWith;
+            return this;
+        }
+
+        public Builder modifyDateEndWith(Instant modifyDateEndWith) {
+            this.modifyDateEndWith = modifyDateEndWith;
+            return this;
+        }
+
+        public Builder removeDateStartsWith(Instant removeDateStartsWith) {
+            this.removeDateStartsWith = removeDateStartsWith;
+            return this;
+        }
+
+        public Builder removeDateEndWith(Instant removeDateEndWith) {
+            this.removeDateEndWith = removeDateEndWith;
             return this;
         }
 

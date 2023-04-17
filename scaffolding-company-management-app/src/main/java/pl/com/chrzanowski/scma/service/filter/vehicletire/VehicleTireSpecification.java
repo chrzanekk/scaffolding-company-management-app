@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.service.filter.vehicletire;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.Vehicle;
 import pl.com.chrzanowski.scma.domain.VehicleBrand;
 import pl.com.chrzanowski.scma.domain.VehicleModel;
@@ -10,7 +11,7 @@ import pl.com.chrzanowski.scma.domain.enumeration.*;
 import javax.persistence.criteria.Join;
 import java.time.Instant;
 import java.time.LocalDate;
-
+@Component
 public class VehicleTireSpecification {
 
     private static final String ID = "id";
@@ -18,6 +19,7 @@ public class VehicleTireSpecification {
     private static final String MODEL = "model";
     private static final String WIDTH = "width";
     private static final String PROFILE = "profile";
+    private static final String DIAMETER = "diameter";
     private static final String TYPE = "type";
     private static final String TIRE_REINFORCED_INDEX = "tireReinforcedIndex";
     private static final String SPEED_INDEX = "speedIndex";
@@ -25,9 +27,6 @@ public class VehicleTireSpecification {
     private static final String TIRE_SEASON_TYPE = "tireSeasonType";
     private static final String RUN_ON_FLAT = "runOnFlat";
     private static final String VEHICLE = "vehicle";
-    private static final String VEHICLE_ID = "vehicleId";
-    private static final String VEHICLE_BRAND_ID = "vehicleBrandId";
-    private static final String VEHICLE_MODEL_ID = "vehicleModelId";
     private static final String VEHICLE_BRAND_NAME = "vehicleBrandName";
     private static final String VEHICLE_MODEL_NAME = "vehicleModelName";
     private static final String PRODUCTION_YEAR = "productionYear";
@@ -76,6 +75,12 @@ public class VehicleTireSpecification {
             if (filter.getProfileEndWith() != null) {
                 specification = specification.and(hasIntegerTypeEndWith(filter.getProfileEndWith(), PROFILE));
             }
+            if (filter.getDiameterStartsWith() != null) {
+                specification = specification.and(hasIntegerTypeStartWith(filter.getDiameterStartsWith(), DIAMETER));
+            }
+            if (filter.getDiameterEndWith() != null) {
+                specification = specification.and(hasIntegerTypeEndWith(filter.getDiameterEndWith(), DIAMETER));
+            }
             if (filter.getType() != null) {
                 specification = specification.and(hasTireType(filter.getType()));
             }
@@ -106,9 +111,20 @@ public class VehicleTireSpecification {
             if (filter.getPurchaseDateEndWith() != null) {
                 specification = specification.and(hasDateEndWith(filter.getPurchaseDateEndWith(), PURCHASE_DATE));
             }
-            if(filter.getCreateDateStartsWith() != null)
-
-
+            if(filter.getCreateDateStartsWith() != null) {
+                specification = specification.and(hasInstantDateStartWith(filter.getCreateDateStartsWith(),
+                        CREATE_DATE));
+            }if(filter.getCreateDateEndWith() != null) {
+                specification = specification.and(hasInstantDateEndWith(filter.getCreateDateStartsWith(),
+                        CREATE_DATE));
+            }
+            if(filter.getModifyDateStartsWith() != null) {
+                specification = specification.and(hasInstantDateStartWith(filter.getModifyDateStartsWith(),
+                        MODIFY_DATE));
+            }if(filter.getModifyDateEndWith() != null) {
+                specification = specification.and(hasInstantDateEndWith(filter.getModifyDateEndWith(),
+                        MODIFY_DATE));
+            }
         }
         return specification;
     }

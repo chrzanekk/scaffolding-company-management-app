@@ -48,7 +48,7 @@ public class VehicleController {
 
     @GetMapping("/page")
     public ResponseEntity<List<VehicleDTO>> getAllVehiclesByFilterAndPage(VehicleFilter vehicleFilter,
-                                                                           Pageable pageable) {
+                                                                          Pageable pageable) {
         log.debug("REST request to get all vehicles by filter: {}", vehicleFilter);
         Page<VehicleDTO> page = vehicleService.findByFilterAndPage(vehicleFilter,
                 pageable);
