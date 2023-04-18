@@ -3,10 +3,9 @@ package pl.com.chrzanowski.scma.service.dto;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Objects;
 
-public class VehicleTireDTO {
+public class TireDTO {
     private final Long id;
     private final String brand;
     private final String model;
@@ -19,38 +18,24 @@ public class VehicleTireDTO {
     private final TireLoadCapacityIndex capacityIndex;
     private final TireSeasonType tireSeasonType;
     private final Boolean runOnFlat;
-    private final Long vehicleId;
-    private final Long vehicleBrandId;
-    private final Long vehicleModelId;
-    private final String vehicleBrandName;
-    private final String vehicleModelName;
     private final Instant createDate;
     private final Instant modifyDate;
     private final Instant removeDate;
-    private final Integer productionYear;
-    private final LocalDate purchaseDate;
 
-    public VehicleTireDTO(Long id,
-                          String brand,
-                          String model,
-                          Integer width,
-                          Integer profile,
-                          Integer diameter, TireType type,
-                          TireReinforcedIndex tireReinforcedIndex,
-                          TireSpeedIndex speedIndex,
-                          TireLoadCapacityIndex capacityIndex,
-                          TireSeasonType tireSeasonType,
-                          Boolean runOnFlat,
-                          Long vehicleId,
-                          Long vehicleBrandId,
-                          Long vehicleModelId,
-                          String vehicleBrandName,
-                          String vehicleModelName,
-                          Instant createDate,
-                          Instant modifyDate,
-                          Instant removeDate,
-                          Integer productionYear,
-                          LocalDate purchaseDate) {
+    public TireDTO(Long id,
+                   String brand,
+                   String model,
+                   Integer width,
+                   Integer profile,
+                   Integer diameter, TireType type,
+                   TireReinforcedIndex tireReinforcedIndex,
+                   TireSpeedIndex speedIndex,
+                   TireLoadCapacityIndex capacityIndex,
+                   TireSeasonType tireSeasonType,
+                   Boolean runOnFlat,
+                   Instant createDate,
+                   Instant modifyDate,
+                   Instant removeDate) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -63,21 +48,13 @@ public class VehicleTireDTO {
         this.capacityIndex = capacityIndex;
         this.tireSeasonType = tireSeasonType;
         this.runOnFlat = runOnFlat;
-        this.vehicleId = vehicleId;
-        this.vehicleBrandId = vehicleBrandId;
-        this.vehicleModelId = vehicleModelId;
-        this.vehicleBrandName = vehicleBrandName;
-        this.vehicleModelName = vehicleModelName;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
-        this.productionYear = productionYear;
-        this.purchaseDate = purchaseDate;
     }
 
 
-
-    private VehicleTireDTO(Builder builder) {
+    private TireDTO(Builder builder) {
         id = builder.id;
         brand = builder.brand;
         model = builder.model;
@@ -90,16 +67,9 @@ public class VehicleTireDTO {
         capacityIndex = builder.capacityIndex;
         tireSeasonType = builder.tireSeasonType;
         runOnFlat = builder.runOnFlat;
-        vehicleId = builder.vehicleId;
-        vehicleBrandId = builder.vehicleBrandId;
-        vehicleModelId = builder.vehicleModelId;
-        vehicleBrandName = builder.vehicleBrandName;
-        vehicleModelName = builder.vehicleModelName;
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
-        productionYear = builder.productionYear;
-        purchaseDate = builder.purchaseDate;
     }
 
     public static Builder builder() {
@@ -154,26 +124,6 @@ public class VehicleTireDTO {
         return runOnFlat;
     }
 
-    public Long getVehicleId() {
-        return vehicleId;
-    }
-
-    public Long getVehicleBrandId() {
-        return vehicleBrandId;
-    }
-
-    public Long getVehicleModelId() {
-        return vehicleModelId;
-    }
-
-    public String getVehicleBrandName() {
-        return vehicleBrandName;
-    }
-
-    public String getVehicleModelName() {
-        return vehicleModelName;
-    }
-
     public Instant getCreateDate() {
         return createDate;
     }
@@ -186,48 +136,28 @@ public class VehicleTireDTO {
         return removeDate;
     }
 
-    public Integer getProductionYear() {
-        return productionYear;
-    }
-
-    public LocalDate getPurchaseDate() {
-        return purchaseDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VehicleTireDTO that = (VehicleTireDTO) o;
+        TireDTO tireDTO = (TireDTO) o;
 
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(brand, that.brand)) return false;
-        if (!Objects.equals(model, that.model)) return false;
-        if (!Objects.equals(width, that.width)) return false;
-        if (!Objects.equals(profile, that.profile)) return false;
-        if (!Objects.equals(diameter, that.diameter)) return false;
-        if (type != that.type) return false;
-        if (tireReinforcedIndex != that.tireReinforcedIndex) return false;
-        if (speedIndex != that.speedIndex) return false;
-        if (capacityIndex != that.capacityIndex) return false;
-        if (tireSeasonType != that.tireSeasonType) return false;
-        if (!Objects.equals(runOnFlat, that.runOnFlat)) return false;
-        if (!Objects.equals(vehicleId, that.vehicleId)) return false;
-        if (!Objects.equals(vehicleBrandId, that.vehicleBrandId))
-            return false;
-        if (!Objects.equals(vehicleModelId, that.vehicleModelId))
-            return false;
-        if (!Objects.equals(vehicleBrandName, that.vehicleBrandName))
-            return false;
-        if (!Objects.equals(vehicleModelName, that.vehicleModelName))
-            return false;
-        if (!Objects.equals(createDate, that.createDate)) return false;
-        if (!Objects.equals(modifyDate, that.modifyDate)) return false;
-        if (!Objects.equals(removeDate, that.removeDate)) return false;
-        if (!Objects.equals(productionYear, that.productionYear))
-            return false;
-        return Objects.equals(purchaseDate, that.purchaseDate);
+        if (!Objects.equals(id, tireDTO.id)) return false;
+        if (!Objects.equals(brand, tireDTO.brand)) return false;
+        if (!Objects.equals(model, tireDTO.model)) return false;
+        if (!Objects.equals(width, tireDTO.width)) return false;
+        if (!Objects.equals(profile, tireDTO.profile)) return false;
+        if (!Objects.equals(diameter, tireDTO.diameter)) return false;
+        if (type != tireDTO.type) return false;
+        if (tireReinforcedIndex != tireDTO.tireReinforcedIndex) return false;
+        if (speedIndex != tireDTO.speedIndex) return false;
+        if (capacityIndex != tireDTO.capacityIndex) return false;
+        if (tireSeasonType != tireDTO.tireSeasonType) return false;
+        if (!Objects.equals(runOnFlat, tireDTO.runOnFlat)) return false;
+        if (!Objects.equals(createDate, tireDTO.createDate)) return false;
+        if (!Objects.equals(modifyDate, tireDTO.modifyDate)) return false;
+        return Objects.equals(removeDate, tireDTO.removeDate);
     }
 
     @Override
@@ -244,22 +174,15 @@ public class VehicleTireDTO {
         result = 31 * result + (capacityIndex != null ? capacityIndex.hashCode() : 0);
         result = 31 * result + (tireSeasonType != null ? tireSeasonType.hashCode() : 0);
         result = 31 * result + (runOnFlat != null ? runOnFlat.hashCode() : 0);
-        result = 31 * result + (vehicleId != null ? vehicleId.hashCode() : 0);
-        result = 31 * result + (vehicleBrandId != null ? vehicleBrandId.hashCode() : 0);
-        result = 31 * result + (vehicleModelId != null ? vehicleModelId.hashCode() : 0);
-        result = 31 * result + (vehicleBrandName != null ? vehicleBrandName.hashCode() : 0);
-        result = 31 * result + (vehicleModelName != null ? vehicleModelName.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
-        result = 31 * result + (productionYear != null ? productionYear.hashCode() : 0);
-        result = 31 * result + (purchaseDate != null ? purchaseDate.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "VehicleTireDTO{" +
+        return "TireDTO{" +
                 "id=" + id +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
@@ -272,16 +195,9 @@ public class VehicleTireDTO {
                 ", capacityIndex=" + capacityIndex +
                 ", tireSeasonType=" + tireSeasonType +
                 ", runOnFlat=" + runOnFlat +
-                ", vehicleId=" + vehicleId +
-                ", vehicleBrandId=" + vehicleBrandId +
-                ", vehicleModelId=" + vehicleModelId +
-                ", vehicleBrandName='" + vehicleBrandName + '\'' +
-                ", vehicleModelName='" + vehicleModelName + '\'' +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
-                ", productionYear=" + productionYear +
-                ", purchaseDate=" + purchaseDate +
                 '}';
     }
 
@@ -299,16 +215,9 @@ public class VehicleTireDTO {
         private TireLoadCapacityIndex capacityIndex;
         private TireSeasonType tireSeasonType;
         private Boolean runOnFlat;
-        private Long vehicleId;
-        private Long vehicleBrandId;
-        private Long vehicleModelId;
-        private String vehicleBrandName;
-        private String vehicleModelName;
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
-        private Integer productionYear;
-        private LocalDate purchaseDate;
 
         private Builder() {
         }
@@ -373,31 +282,6 @@ public class VehicleTireDTO {
             return this;
         }
 
-        public Builder vehicleId(Long vehicleId) {
-            this.vehicleId = vehicleId;
-            return this;
-        }
-
-        public Builder vehicleBrandId(Long vehicleBrandId) {
-            this.vehicleBrandId = vehicleBrandId;
-            return this;
-        }
-
-        public Builder vehicleModelId(Long vehicleModelId) {
-            this.vehicleModelId = vehicleModelId;
-            return this;
-        }
-
-        public Builder vehicleBrandName(String vehicleBrandName) {
-            this.vehicleBrandName = vehicleBrandName;
-            return this;
-        }
-
-        public Builder vehicleModelName(String vehicleModelName) {
-            this.vehicleModelName = vehicleModelName;
-            return this;
-        }
-
         public Builder createDate(Instant createDate) {
             this.createDate = createDate;
             return this;
@@ -413,18 +297,8 @@ public class VehicleTireDTO {
             return this;
         }
 
-        public Builder productionYear(Integer productionYear) {
-            this.productionYear = productionYear;
-            return this;
-        }
-
-        public Builder purchaseDate(LocalDate purchaseDate) {
-            this.purchaseDate = purchaseDate;
-            return this;
-        }
-
-        public VehicleTireDTO build() {
-            return new VehicleTireDTO(this);
+        public TireDTO build() {
+            return new TireDTO(this);
         }
     }
 }

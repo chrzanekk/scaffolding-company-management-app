@@ -1,11 +1,10 @@
-package pl.com.chrzanowski.scma.service.filter.vehicletire;
+package pl.com.chrzanowski.scma.service.filter.tire;
 
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
-public class VehicleTireFilter {
+public class TireFilter {
 
     private Long id;
     private String brand;
@@ -22,26 +21,17 @@ public class VehicleTireFilter {
     private TireLoadCapacityIndex loadCapacityIndex;
     private TireSeasonType seasonType;
     private Boolean runOnFlat;
-    private Long vehicleId;
-    private Long vehicleBrandId;
-    private Long vehicleModelId;
-    private String vehicleBrandName;
-    private String vehicleModelName;
     private Instant createDateStartsWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartsWith;
     private Instant modifyDateEndWith;
     private Instant removeDateStartsWith;
     private Instant removeDateEndWith;
-    private Integer productionYearStartsWith;
-    private Integer productionYearEndWith;
-    private LocalDate purchaseDateStartsWith;
-    private LocalDate purchaseDateEndWith;
 
-    public VehicleTireFilter() {
+    public TireFilter() {
     }
 
-    private VehicleTireFilter(Builder builder) {
+    private TireFilter(Builder builder) {
         setId(builder.id);
         setBrand(builder.brand);
         setModel(builder.model);
@@ -57,21 +47,12 @@ public class VehicleTireFilter {
         setLoadCapacityIndex(builder.loadCapacityIndex);
         setSeasonType(builder.seasonType);
         setRunOnFlat(builder.runOnFlat);
-        setVehicleId(builder.vehicleId);
-        setVehicleBrandId(builder.vehicleBrandId);
-        setVehicleModelId(builder.vehicleModelId);
-        setVehicleBrandName(builder.vehicleBrandName);
-        setVehicleModelName(builder.vehicleModelName);
         setCreateDateStartsWith(builder.createDateStartsWith);
         setCreateDateEndWith(builder.createDateEndWith);
         setModifyDateStartsWith(builder.modifyDateStartsWith);
         setModifyDateEndWith(builder.modifyDateEndWith);
         setRemoveDateStartsWith(builder.removeDateStartsWith);
         setRemoveDateEndWith(builder.removeDateEndWith);
-        setProductionYearStartsWith(builder.productionYearStartsWith);
-        setProductionYearEndWith(builder.productionYearEndWith);
-        setPurchaseDateStartsWith(builder.purchaseDateStartsWith);
-        setPurchaseDateEndWith(builder.purchaseDateEndWith);
     }
 
     public static Builder builder() {
@@ -82,7 +63,7 @@ public class VehicleTireFilter {
         return id;
     }
 
-    public VehicleTireFilter setId(Long id) {
+    public TireFilter setId(Long id) {
         this.id = id;
         return this;
     }
@@ -91,7 +72,7 @@ public class VehicleTireFilter {
         return brand;
     }
 
-    public VehicleTireFilter setBrand(String brand) {
+    public TireFilter setBrand(String brand) {
         this.brand = brand;
         return this;
     }
@@ -100,7 +81,7 @@ public class VehicleTireFilter {
         return model;
     }
 
-    public VehicleTireFilter setModel(String model) {
+    public TireFilter setModel(String model) {
         this.model = model;
         return this;
     }
@@ -109,7 +90,7 @@ public class VehicleTireFilter {
         return widthStartsWith;
     }
 
-    public VehicleTireFilter setWidthStartsWith(Integer widthStartsWith) {
+    public TireFilter setWidthStartsWith(Integer widthStartsWith) {
         this.widthStartsWith = widthStartsWith;
         return this;
     }
@@ -118,7 +99,7 @@ public class VehicleTireFilter {
         return widthEndWith;
     }
 
-    public VehicleTireFilter setWidthEndWith(Integer widthEndWith) {
+    public TireFilter setWidthEndWith(Integer widthEndWith) {
         this.widthEndWith = widthEndWith;
         return this;
     }
@@ -127,7 +108,7 @@ public class VehicleTireFilter {
         return profileStartsWith;
     }
 
-    public VehicleTireFilter setProfileStartsWith(Integer profileStartsWith) {
+    public TireFilter setProfileStartsWith(Integer profileStartsWith) {
         this.profileStartsWith = profileStartsWith;
         return this;
     }
@@ -136,7 +117,7 @@ public class VehicleTireFilter {
         return profileEndWith;
     }
 
-    public VehicleTireFilter setProfileEndWith(Integer profileEndWith) {
+    public TireFilter setProfileEndWith(Integer profileEndWith) {
         this.profileEndWith = profileEndWith;
         return this;
     }
@@ -145,7 +126,7 @@ public class VehicleTireFilter {
         return diameterStartsWith;
     }
 
-    public VehicleTireFilter setDiameterStartsWith(Integer diameterStartsWith) {
+    public TireFilter setDiameterStartsWith(Integer diameterStartsWith) {
         this.diameterStartsWith = diameterStartsWith;
         return this;
     }
@@ -154,7 +135,7 @@ public class VehicleTireFilter {
         return diameterEndWith;
     }
 
-    public VehicleTireFilter setDiameterEndWith(Integer diameterEndWith) {
+    public TireFilter setDiameterEndWith(Integer diameterEndWith) {
         this.diameterEndWith = diameterEndWith;
         return this;
     }
@@ -163,7 +144,7 @@ public class VehicleTireFilter {
         return type;
     }
 
-    public VehicleTireFilter setType(TireType type) {
+    public TireFilter setType(TireType type) {
         this.type = type;
         return this;
     }
@@ -172,7 +153,7 @@ public class VehicleTireFilter {
         return reinforcedIndex;
     }
 
-    public VehicleTireFilter setReinforcedIndex(TireReinforcedIndex reinforcedIndex) {
+    public TireFilter setReinforcedIndex(TireReinforcedIndex reinforcedIndex) {
         this.reinforcedIndex = reinforcedIndex;
         return this;
     }
@@ -181,7 +162,7 @@ public class VehicleTireFilter {
         return speedIndex;
     }
 
-    public VehicleTireFilter setSpeedIndex(TireSpeedIndex speedIndex) {
+    public TireFilter setSpeedIndex(TireSpeedIndex speedIndex) {
         this.speedIndex = speedIndex;
         return this;
     }
@@ -190,7 +171,7 @@ public class VehicleTireFilter {
         return loadCapacityIndex;
     }
 
-    public VehicleTireFilter setLoadCapacityIndex(TireLoadCapacityIndex loadCapacityIndex) {
+    public TireFilter setLoadCapacityIndex(TireLoadCapacityIndex loadCapacityIndex) {
         this.loadCapacityIndex = loadCapacityIndex;
         return this;
     }
@@ -199,7 +180,7 @@ public class VehicleTireFilter {
         return seasonType;
     }
 
-    public VehicleTireFilter setSeasonType(TireSeasonType seasonType) {
+    public TireFilter setSeasonType(TireSeasonType seasonType) {
         this.seasonType = seasonType;
         return this;
     }
@@ -208,53 +189,8 @@ public class VehicleTireFilter {
         return runOnFlat;
     }
 
-    public VehicleTireFilter setRunOnFlat(Boolean runOnFlat) {
+    public TireFilter setRunOnFlat(Boolean runOnFlat) {
         this.runOnFlat = runOnFlat;
-        return this;
-    }
-
-    public Long getVehicleId() {
-        return vehicleId;
-    }
-
-    public VehicleTireFilter setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-        return this;
-    }
-
-    public Long getVehicleBrandId() {
-        return vehicleBrandId;
-    }
-
-    public VehicleTireFilter setVehicleBrandId(Long vehicleBrandId) {
-        this.vehicleBrandId = vehicleBrandId;
-        return this;
-    }
-
-    public Long getVehicleModelId() {
-        return vehicleModelId;
-    }
-
-    public VehicleTireFilter setVehicleModelId(Long vehicleModelId) {
-        this.vehicleModelId = vehicleModelId;
-        return this;
-    }
-
-    public String getVehicleBrandName() {
-        return vehicleBrandName;
-    }
-
-    public VehicleTireFilter setVehicleBrandName(String vehicleBrandName) {
-        this.vehicleBrandName = vehicleBrandName;
-        return this;
-    }
-
-    public String getVehicleModelName() {
-        return vehicleModelName;
-    }
-
-    public VehicleTireFilter setVehicleModelName(String vehicleModelName) {
-        this.vehicleModelName = vehicleModelName;
         return this;
     }
 
@@ -262,7 +198,7 @@ public class VehicleTireFilter {
         return createDateStartsWith;
     }
 
-    public VehicleTireFilter setCreateDateStartsWith(Instant createDateStartsWith) {
+    public TireFilter setCreateDateStartsWith(Instant createDateStartsWith) {
         this.createDateStartsWith = createDateStartsWith;
         return this;
     }
@@ -271,7 +207,7 @@ public class VehicleTireFilter {
         return createDateEndWith;
     }
 
-    public VehicleTireFilter setCreateDateEndWith(Instant createDateEndWith) {
+    public TireFilter setCreateDateEndWith(Instant createDateEndWith) {
         this.createDateEndWith = createDateEndWith;
         return this;
     }
@@ -280,7 +216,7 @@ public class VehicleTireFilter {
         return modifyDateStartsWith;
     }
 
-    public VehicleTireFilter setModifyDateStartsWith(Instant modifyDateStartsWith) {
+    public TireFilter setModifyDateStartsWith(Instant modifyDateStartsWith) {
         this.modifyDateStartsWith = modifyDateStartsWith;
         return this;
     }
@@ -289,7 +225,7 @@ public class VehicleTireFilter {
         return modifyDateEndWith;
     }
 
-    public VehicleTireFilter setModifyDateEndWith(Instant modifyDateEndWith) {
+    public TireFilter setModifyDateEndWith(Instant modifyDateEndWith) {
         this.modifyDateEndWith = modifyDateEndWith;
         return this;
     }
@@ -298,7 +234,7 @@ public class VehicleTireFilter {
         return removeDateStartsWith;
     }
 
-    public VehicleTireFilter setRemoveDateStartsWith(Instant removeDateStartsWith) {
+    public TireFilter setRemoveDateStartsWith(Instant removeDateStartsWith) {
         this.removeDateStartsWith = removeDateStartsWith;
         return this;
     }
@@ -307,46 +243,11 @@ public class VehicleTireFilter {
         return removeDateEndWith;
     }
 
-    public VehicleTireFilter setRemoveDateEndWith(Instant removeDateEndWith) {
+    public TireFilter setRemoveDateEndWith(Instant removeDateEndWith) {
         this.removeDateEndWith = removeDateEndWith;
         return this;
     }
 
-    public Integer getProductionYearStartsWith() {
-        return productionYearStartsWith;
-    }
-
-    public VehicleTireFilter setProductionYearStartsWith(Integer productionYearStartsWith) {
-        this.productionYearStartsWith = productionYearStartsWith;
-        return this;
-    }
-
-    public Integer getProductionYearEndWith() {
-        return productionYearEndWith;
-    }
-
-    public VehicleTireFilter setProductionYearEndWith(Integer productionYearEndWith) {
-        this.productionYearEndWith = productionYearEndWith;
-        return this;
-    }
-
-    public LocalDate getPurchaseDateStartsWith() {
-        return purchaseDateStartsWith;
-    }
-
-    public VehicleTireFilter setPurchaseDateStartsWith(LocalDate purchaseDateStartsWith) {
-        this.purchaseDateStartsWith = purchaseDateStartsWith;
-        return this;
-    }
-
-    public LocalDate getPurchaseDateEndWith() {
-        return purchaseDateEndWith;
-    }
-
-    public VehicleTireFilter setPurchaseDateEndWith(LocalDate purchaseDateEndWith) {
-        this.purchaseDateEndWith = purchaseDateEndWith;
-        return this;
-    }
 
 
     public static final class Builder {
@@ -365,21 +266,12 @@ public class VehicleTireFilter {
         private TireLoadCapacityIndex loadCapacityIndex;
         private TireSeasonType seasonType;
         private Boolean runOnFlat;
-        private Long vehicleId;
-        private Long vehicleBrandId;
-        private Long vehicleModelId;
-        private String vehicleBrandName;
-        private String vehicleModelName;
         private Instant createDateStartsWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartsWith;
         private Instant modifyDateEndWith;
         private Instant removeDateStartsWith;
         private Instant removeDateEndWith;
-        private Integer productionYearStartsWith;
-        private Integer productionYearEndWith;
-        private LocalDate purchaseDateStartsWith;
-        private LocalDate purchaseDateEndWith;
 
         private Builder() {
         }
@@ -459,31 +351,6 @@ public class VehicleTireFilter {
             return this;
         }
 
-        public Builder vehicleId(Long vehicleId) {
-            this.vehicleId = vehicleId;
-            return this;
-        }
-
-        public Builder vehicleBrandId(Long vehicleBrandId) {
-            this.vehicleBrandId = vehicleBrandId;
-            return this;
-        }
-
-        public Builder vehicleModelId(Long vehicleModelId) {
-            this.vehicleModelId = vehicleModelId;
-            return this;
-        }
-
-        public Builder vehicleBrandName(String vehicleBrandName) {
-            this.vehicleBrandName = vehicleBrandName;
-            return this;
-        }
-
-        public Builder vehicleModelName(String vehicleModelName) {
-            this.vehicleModelName = vehicleModelName;
-            return this;
-        }
-
         public Builder createDateStartsWith(Instant createDateStartsWith) {
             this.createDateStartsWith = createDateStartsWith;
             return this;
@@ -514,28 +381,8 @@ public class VehicleTireFilter {
             return this;
         }
 
-        public Builder productionYearStartsWith(Integer productionYearStartsWith) {
-            this.productionYearStartsWith = productionYearStartsWith;
-            return this;
-        }
-
-        public Builder productionYearEndWith(Integer productionYearEndWith) {
-            this.productionYearEndWith = productionYearEndWith;
-            return this;
-        }
-
-        public Builder purchaseDateStartsWith(LocalDate purchaseDateStartsWith) {
-            this.purchaseDateStartsWith = purchaseDateStartsWith;
-            return this;
-        }
-
-        public Builder purchaseDateEndWith(LocalDate purchaseDateEndWith) {
-            this.purchaseDateEndWith = purchaseDateEndWith;
-            return this;
-        }
-
-        public VehicleTireFilter build() {
-            return new VehicleTireFilter(this);
+        public TireFilter build() {
+            return new TireFilter(this);
         }
     }
 }

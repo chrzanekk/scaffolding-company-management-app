@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle_tires")
-public class VehicleTire {
+public class Tire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,31 +72,26 @@ public class VehicleTire {
     @NotBlank
     private Boolean runOnFlat;
 
-    @ManyToOne
-    @JoinColumn(name = "vehicle")
-    private Vehicle vehicle;
-
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
 
 
-    public VehicleTire(Long id,
-                       String brand,
-                       String model,
-                       Integer width,
-                       Integer profile,
-                       Integer diameter,
-                       TireType type,
-                       TireReinforcedIndex tireReinforcedIndex,
-                       TireSpeedIndex speedIndex,
-                       TireLoadCapacityIndex capacityIndex,
-                       TireSeasonType tireSeasonType,
-                       Boolean runOnFlat,
-                       Vehicle vehicle,
-                       Instant createDate,
-                       Instant modifyDate,
-                       Instant removeDate) {
+    public Tire(Long id,
+                String brand,
+                String model,
+                Integer width,
+                Integer profile,
+                Integer diameter,
+                TireType type,
+                TireReinforcedIndex tireReinforcedIndex,
+                TireSpeedIndex speedIndex,
+                TireLoadCapacityIndex capacityIndex,
+                TireSeasonType tireSeasonType,
+                Boolean runOnFlat,
+                Instant createDate,
+                Instant modifyDate,
+                Instant removeDate) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -109,13 +104,12 @@ public class VehicleTire {
         this.capacityIndex = capacityIndex;
         this.tireSeasonType = tireSeasonType;
         this.runOnFlat = runOnFlat;
-        this.vehicle = vehicle;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
     }
 
-    public VehicleTire() {
+    public Tire() {
     }
 
     public Long getId() {
@@ -166,10 +160,6 @@ public class VehicleTire {
         return runOnFlat;
     }
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
     public Instant getCreateDate() {
         return createDate;
     }
@@ -182,82 +172,77 @@ public class VehicleTire {
         return removeDate;
     }
 
-    public VehicleTire setId(Long id) {
+    public Tire setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public VehicleTire setBrand(String brand) {
+    public Tire setBrand(String brand) {
         this.brand = brand;
         return this;
     }
 
-    public VehicleTire setModel(String model) {
+    public Tire setModel(String model) {
         this.model = model;
         return this;
     }
 
-    public VehicleTire setWidth(Integer width) {
+    public Tire setWidth(Integer width) {
         this.width = width;
         return this;
     }
 
-    public VehicleTire setProfile(Integer profile) {
+    public Tire setProfile(Integer profile) {
         this.profile = profile;
         return this;
     }
 
-    public VehicleTire setDiameter(Integer diameter) {
+    public Tire setDiameter(Integer diameter) {
         this.diameter = diameter;
         return this;
     }
 
-    public VehicleTire setType(TireType type) {
+    public Tire setType(TireType type) {
         this.type = type;
         return this;
     }
 
-    public VehicleTire setTireReinforcedIndex(TireReinforcedIndex tireReinforcedIndex) {
+    public Tire setTireReinforcedIndex(TireReinforcedIndex tireReinforcedIndex) {
         this.tireReinforcedIndex = tireReinforcedIndex;
         return this;
     }
 
-    public VehicleTire setSpeedIndex(TireSpeedIndex speedIndex) {
+    public Tire setSpeedIndex(TireSpeedIndex speedIndex) {
         this.speedIndex = speedIndex;
         return this;
     }
 
-    public VehicleTire setCapacityIndex(TireLoadCapacityIndex capacityIndex) {
+    public Tire setCapacityIndex(TireLoadCapacityIndex capacityIndex) {
         this.capacityIndex = capacityIndex;
         return this;
     }
 
-    public VehicleTire setTireSeasonType(TireSeasonType tireSeasonType) {
+    public Tire setTireSeasonType(TireSeasonType tireSeasonType) {
         this.tireSeasonType = tireSeasonType;
         return this;
     }
 
-    public VehicleTire setRunOnFlat(Boolean runOnFlat) {
+    public Tire setRunOnFlat(Boolean runOnFlat) {
         this.runOnFlat = runOnFlat;
         return this;
     }
 
-    public VehicleTire setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-        return this;
-    }
-
-    public VehicleTire setCreateDate(Instant createDate) {
+    public Tire setCreateDate(Instant createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public VehicleTire setModifyDate(Instant modifyDate) {
+    public Tire setModifyDate(Instant modifyDate) {
         this.modifyDate = modifyDate;
         return this;
     }
 
-    public VehicleTire setRemoveDate(Instant removeDate) {
+    public Tire setRemoveDate(Instant removeDate) {
         this.removeDate = removeDate;
         return this;
     }
@@ -267,7 +252,7 @@ public class VehicleTire {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        VehicleTire that = (VehicleTire) o;
+        Tire that = (Tire) o;
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(brand, that.brand)) return false;
@@ -281,7 +266,6 @@ public class VehicleTire {
         if (capacityIndex != that.capacityIndex) return false;
         if (tireSeasonType != that.tireSeasonType) return false;
         if (!Objects.equals(runOnFlat, that.runOnFlat)) return false;
-        if (!Objects.equals(vehicle, that.vehicle)) return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
         return Objects.equals(removeDate, that.removeDate);
@@ -301,7 +285,6 @@ public class VehicleTire {
         result = 31 * result + (capacityIndex != null ? capacityIndex.hashCode() : 0);
         result = 31 * result + (tireSeasonType != null ? tireSeasonType.hashCode() : 0);
         result = 31 * result + (runOnFlat != null ? runOnFlat.hashCode() : 0);
-        result = 31 * result + (vehicle != null ? vehicle.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -323,7 +306,6 @@ public class VehicleTire {
                 ", capacityIndex=" + capacityIndex +
                 ", tireSeasonType=" + tireSeasonType +
                 ", runOnFlat=" + runOnFlat +
-                ", vehicle=" + vehicle +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
