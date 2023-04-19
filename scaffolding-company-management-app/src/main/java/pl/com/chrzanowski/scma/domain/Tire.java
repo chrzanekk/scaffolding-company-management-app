@@ -27,49 +27,40 @@ public class Tire {
 
     @Column(name = "width")
     @NotNull
-    @NotBlank
     private Integer width;
 
     @Column(name = "profile")
     @NotNull
-    @NotBlank
     private Integer profile;
 
     @Column(name = "diameter")
     @NotNull
-    @NotBlank
     private Integer diameter;
     @Column(name = "type")
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private TireType type;
 
     @Column(name = "reinforced_index")
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private TireReinforcedIndex tireReinforcedIndex;
     @Column(name = "speed_index")
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private TireSpeedIndex speedIndex;
 
     @Column(name = "capacity_index")
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private TireLoadCapacityIndex capacityIndex;
     @Column(name = "season_type")
     @NotNull
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private TireSeasonType tireSeasonType;
 
     @Column(name = "run_on_flat")
     @NotNull
-    @NotBlank
     private Boolean runOnFlat;
 
     private Instant createDate;

@@ -49,9 +49,11 @@ public class TireServiceImpl implements TireService {
                 .speedIndex(tireDTO.getSpeedIndex())
                 .capacityIndex(tireDTO.getCapacityIndex())
                 .tireSeasonType(tireDTO.getTireSeasonType())
+                .type(tireDTO.getType())
                 .runOnFlat(tireDTO.getRunOnFlat())
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(tireDTO.getCreateDate())).build();
-        Tire tire = tireRepository.save(tireMapper.toEntity(tireDTOtoSave));
+        Tire tireToSave = tireMapper.toEntity(tireDTOtoSave);
+        Tire tire = tireRepository.save(tireToSave);
         return tireMapper.toDto(tire);
     }
 
@@ -61,6 +63,7 @@ public class TireServiceImpl implements TireService {
         validateVehicleTireDTO(tireDTO);
         FieldValidator.validateObject(tireDTO.getId(), "id");
         TireDTO tireDTOtoUpdate = TireDTO.builder()
+                .id(tireDTO.getId())
                 .brand(tireDTO.getBrand())
                 .model(tireDTO.getModel())
                 .width(tireDTO.getWidth())
@@ -70,6 +73,7 @@ public class TireServiceImpl implements TireService {
                 .speedIndex(tireDTO.getSpeedIndex())
                 .capacityIndex(tireDTO.getCapacityIndex())
                 .tireSeasonType(tireDTO.getTireSeasonType())
+                .type(tireDTO.getType())
                 .runOnFlat(tireDTO.getRunOnFlat())
                 .createDate(tireDTO.getCreateDate())
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(tireDTO.getModifyDate())).build();
@@ -111,7 +115,7 @@ public class TireServiceImpl implements TireService {
     public void delete(Long id) {
         log.debug("De;ete vehicle tire by id: {}", id);
         FieldValidator.validateObject(id, "id");
-        tireRepository.deleteByVehicleTireId(id);
+        tireRepository.deleteTireById(id);
     }
 
 

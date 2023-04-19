@@ -8,7 +8,7 @@ import pl.com.chrzanowski.scma.domain.Tire;
 @Repository
 public interface TireRepository extends JpaRepository<Tire, Long>, JpaSpecificationExecutor<Tire> {
 
-    void deleteByVehicleTireId(Long id);
+    void deleteTireById(Long id);
 
 }
 

@@ -70,7 +70,7 @@ public class TireController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<TireDTO> addVehicleTire(@RequestBody TireDTO tireDTO) {
+    public ResponseEntity<TireDTO> addVehicleTire(@Valid @RequestBody TireDTO tireDTO) {
         log.debug("REST request to add new vehicle tire: {}", tireDTO);
         try {
             TireDTO newTireDTO = tireService.save(tireDTO);
@@ -83,7 +83,7 @@ public class TireController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<TireDTO> updateVehicleTire(@RequestBody TireDTO tireDTO) {
+    public ResponseEntity<TireDTO> updateVehicleTire(@Valid @RequestBody TireDTO tireDTO) {
         log.debug("RST request to update vehicle: {}", tireDTO);
         try {
             TireDTO updatedTireDTO = tireService.update(tireDTO);
