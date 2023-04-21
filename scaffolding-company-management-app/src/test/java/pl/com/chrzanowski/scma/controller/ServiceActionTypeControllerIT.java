@@ -180,7 +180,11 @@ public class ServiceActionTypeControllerIT {
 
         int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
 
-        restServiceActionTypeMockMvc.perform(get(API_PATH + "/all")).andExpect(status().isOk());
+        restServiceActionTypeMockMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
+
 
         List<ServiceActionType> allServiceActionTypes = serviceActionTypeRepository.findAll();
         int sizeAfterTest = allServiceActionTypes.size();

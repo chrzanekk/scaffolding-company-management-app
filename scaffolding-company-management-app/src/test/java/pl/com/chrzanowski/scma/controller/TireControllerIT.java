@@ -1,5 +1,10 @@
 package pl.com.chrzanowski.scma.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.Tire;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
@@ -18,12 +24,15 @@ import pl.com.chrzanowski.scma.service.mapper.TireMapper;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.time.Instant;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -77,6 +86,10 @@ public class TireControllerIT {
     private TireService tireService;
     @Autowired
     private TireMapper tireMapper;
+
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     private Tire firstTire;
     private Tire secondTire;
@@ -734,6 +747,34 @@ public class TireControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    @Transactional
+    public void findAllTires() throws Exception {
+        createGlobalTireInDB();
+        createSecondGlobalTireInDB();
+
+        int sizeBeforeTest = tireRepository.findAll().size();
+
+        MvcResult result = restTireMvc.perform(get(API_PATH + "/all")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty()).andReturn();
+
+
+
+        int sizeAfterTest = result.getResponse().getContentLength();
+        String list = result.getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(list);
+        List<Object> tireDTOList = new ArrayList<>();
+        for(int i = 0; i < jsonArray.length(); i++) {
+            tireDTOList.add(jsonArray.get(i));
+        }
+
+        int size = tireDTOList.size();
+        assertThat(size).isEqualTo(sizeBeforeTest);
     }
 
 }
