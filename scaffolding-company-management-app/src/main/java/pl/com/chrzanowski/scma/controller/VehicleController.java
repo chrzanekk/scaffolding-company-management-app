@@ -35,21 +35,21 @@ public class VehicleController {
     @GetMapping("/all")
     public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
         log.debug("REST request to get all vehicles");
-        List<VehicleDTO> workshopDTOS = vehicleService.findAll();
-        return ResponseEntity.ok().body(workshopDTOS);
+        List<VehicleDTO> vehicleDTOList = vehicleService.findAll();
+        return ResponseEntity.ok().body(vehicleDTOList);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<VehicleDTO>> getAllVehiclesByFilter(VehicleFilter vehicleFilter) {
         log.debug("REST request to get all vehicles by filter: {}", vehicleFilter);
-        List<VehicleDTO> workshopDTOS = vehicleService.findByFilter(vehicleFilter);
-        return ResponseEntity.ok().body(workshopDTOS);
+        List<VehicleDTO> vehicleDTOList = vehicleService.findByFilter(vehicleFilter);
+        return ResponseEntity.ok().body(vehicleDTOList);
     }
 
     @GetMapping("/page")
     public ResponseEntity<List<VehicleDTO>> getAllVehiclesByFilterAndPage(VehicleFilter vehicleFilter,
-                                                                           Pageable pageable) {
-        log.debug("REST request to get all vehicles by filter: {}", vehicleFilter);
+                                                                          Pageable pageable) {
+        log.debug("REST request to get all vehicles by filter and page: {}", vehicleFilter);
         Page<VehicleDTO> page = vehicleService.findByFilterAndPage(vehicleFilter,
                 pageable);
         HttpHeaders headers =
@@ -86,7 +86,7 @@ public class VehicleController {
 
     @PutMapping("/update")
     public ResponseEntity<VehicleDTO> updateVehicle(@RequestBody VehicleDTO vehicleDTO) {
-        log.debug("RST request to update vehicle: {}", vehicleDTO);
+        log.debug("REST request to update vehicle: {}", vehicleDTO);
         try {
             VehicleDTO updatedVehicleDTO = vehicleService.update(vehicleDTO);
             return ResponseEntity.ok().body(updatedVehicleDTO);

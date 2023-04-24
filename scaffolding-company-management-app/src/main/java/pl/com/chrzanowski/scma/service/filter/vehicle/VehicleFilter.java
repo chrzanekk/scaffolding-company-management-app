@@ -298,9 +298,7 @@ public class VehicleFilter {
         private String vin;
         private Short productionYearStartWith;
         private Short productionYearEndWith;
-
         private LocalDate firstRegistrationDateStartWith;
-
         private LocalDate firstRegistrationDateEndWith;
         private Short freePlacesForTechInspectionStartWith;
         private Short freePlacesForTechInspectionEndWith;

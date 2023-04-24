@@ -292,7 +292,10 @@ public class VehicleModelControllerIT {
 
         int sizeBeforeTest = vehicleModelRepository.findAll().size();
 
-        restVehicleModelMockMvc.perform(get(API_PATH + "/all")).andExpect(status().isOk());
+        restVehicleModelMockMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());;
 
         List<VehicleModel> allVehicleModels = vehicleModelRepository.findAll();
         int sizeAfterTest = allVehicleModels.size();

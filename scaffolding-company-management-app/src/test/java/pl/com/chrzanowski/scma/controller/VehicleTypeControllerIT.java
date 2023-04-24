@@ -166,7 +166,10 @@ public class VehicleTypeControllerIT {
 
         int sizeBeforeTest = vehicleTypeRepository.findAll().size();
 
-        restVehicleTypeMockMvc.perform(get(API_PATH + "/all")).andExpect(status().isOk());
+        restVehicleTypeMockMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());
 
         List<VehicleType> allVehicleTypes = vehicleTypeRepository.findAll();
         int sizeAfterTest = allVehicleTypes.size();

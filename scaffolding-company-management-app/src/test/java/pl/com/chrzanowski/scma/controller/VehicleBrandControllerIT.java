@@ -181,7 +181,10 @@ public class VehicleBrandControllerIT {
 
         int sizeBeforeTest = vehicleBrandRepository.findAll().size();
 
-        restVehicleBrandMockMvc.perform(get(API_PATH + "/all")).andExpect(status().isOk());
+        restVehicleBrandMockMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());;
 
         List<VehicleBrand> allVehicleBrands = vehicleBrandRepository.findAll();
         int sizeAfterTest = allVehicleBrands.size();

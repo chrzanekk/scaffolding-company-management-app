@@ -107,16 +107,16 @@ public class VehicleSpecification {
                 specification = specification.and(hasDimensionEndWith(filter.getWidthEndWith(), WIDTH));
             }
             if (filter.getCreateDateStartWith() != null) {
-                specification = specification.and(hasDateStartWith(filter.getCreateDateStartWith(), CREATE_DATE));
+                specification = specification.and(hasInstantDateStartWith(filter.getCreateDateStartWith(), CREATE_DATE));
             }
             if (filter.getCreateDateEndWith() != null) {
-                specification = specification.and(hasDateEndWith(filter.getCreateDateEndWith(), CREATE_DATE));
+                specification = specification.and(hasInstantDateEndWith(filter.getCreateDateEndWith(), CREATE_DATE));
             }
             if (filter.getModifyDateStartWith() != null) {
-                specification = specification.and(hasDateStartWith(filter.getModifyDateStartWith(), MODIFY_DATE));
+                specification = specification.and(hasInstantDateStartWith(filter.getModifyDateStartWith(), MODIFY_DATE));
             }
             if (filter.getModifyDateEndWith() != null) {
-                specification = specification.and(hasDateEndWith(filter.getModifyDateEndWith(), MODIFY_DATE));
+                specification = specification.and(hasInstantDateEndWith(filter.getModifyDateEndWith(), MODIFY_DATE));
             }
         }
         return specification;
@@ -130,12 +130,12 @@ public class VehicleSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(fieldType), "%" + text + "%");
     }
 
-    private static Specification<Vehicle> hasDateStartWith(Instant date, String fieldType) {
+    private static Specification<Vehicle> hasInstantDateStartWith(Instant date, String fieldType) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(fieldType),
                 date);
     }
 
-    private static Specification<Vehicle> hasDateEndWith(Instant date, String fieldType) {
+    private static Specification<Vehicle> hasInstantDateEndWith(Instant date, String fieldType) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldType),
                 date);
     }

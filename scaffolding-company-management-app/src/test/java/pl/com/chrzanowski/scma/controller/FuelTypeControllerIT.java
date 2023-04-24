@@ -174,7 +174,10 @@ public class FuelTypeControllerIT {
 
         int sizeBeforeTest = fuelTypeRepository.findAll().size();
 
-        restFuelTypeMockMvc.perform(get(API_PATH + "/all")).andExpect(status().isOk());
+        restFuelTypeMockMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty());;
 
         List<FuelType> allFuelTypes = fuelTypeRepository.findAll();
         int sizeAfterTest = allFuelTypes.size();
