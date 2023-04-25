@@ -37,38 +37,60 @@ public class VehicleFilter {
     public VehicleFilter() {
     }
 
-    private VehicleFilter(Builder builder) {
-        setId(builder.id);
-        setBrandId(builder.brandId);
-        setBrandName(builder.brandName);
-        setModelId(builder.modelId);
-        setModelName(builder.modelName);
-        setRegistrationNumber(builder.registrationNumber);
-        setVin(builder.vin);
-        setProductionYearStartWith(builder.productionYearStartWith);
-        setProductionYearEndWith(builder.productionYearEndWith);
-        setFirstRegistrationDateStartWith(builder.firstRegistrationDateStartWith);
-        setFirstRegistrationDateEndWith(builder.firstRegistrationDateEndWith);
-        setFreePlacesForTechInspectionStartWith(builder.freePlacesForTechInspectionStartWith);
-        setFreePlacesForTechInspectionEndWith(builder.freePlacesForTechInspectionEndWith);
-        setFuelTypeId(builder.fuelTypeId);
-        setFuelTypeName(builder.fuelTypeName);
-        setVehicleTypeId(builder.vehicleTypeId);
-        setVehicleTypeName(builder.vehicleTypeName);
-        setLengthStartWith(builder.lengthStartWith);
-        setLengthEndWith(builder.lengthEndWith);
-        setWidthStartWith(builder.widthStartWith);
-        setWidthEndWith(builder.widthEndWith);
-        setHeightStartWith(builder.heightStartWith);
-        setHeightEndWith(builder.heightEndWith);
-        setCreateDateStartWith(builder.createDateStartWith);
-        setCreateDateEndWith(builder.createDateEndWith);
-        setModifyDateStartWith(builder.modifyDateStartWith);
-        setModifyDateEndWith(builder.modifyDateEndWith);
-    }
-
-    public static Builder builder() {
-        return new Builder();
+    public VehicleFilter(Long id,
+                         Long brandId,
+                         String brandName,
+                         Long modelId,
+                         String modelName,
+                         String registrationNumber,
+                         String vin,
+                         Short productionYearStartWith,
+                         Short productionYearEndWith,
+                         LocalDate firstRegistrationDateStartWith,
+                         LocalDate firstRegistrationDateEndWith,
+                         Short freePlacesForTechInspectionStartWith,
+                         Short freePlacesForTechInspectionEndWith,
+                         Long fuelTypeId,
+                         String fuelTypeName,
+                         Long vehicleTypeId,
+                         String vehicleTypeName,
+                         BigDecimal lengthStartWith,
+                         BigDecimal lengthEndWith,
+                         BigDecimal widthStartWith,
+                         BigDecimal widthEndWith,
+                         BigDecimal heightStartWith,
+                         BigDecimal heightEndWith,
+                         Instant createDateStartWith,
+                         Instant createDateEndWith,
+                         Instant modifyDateStartWith,
+                         Instant modifyDateEndWith) {
+        this.id = id;
+        this.brandId = brandId;
+        this.brandName = brandName;
+        this.modelId = modelId;
+        this.modelName = modelName;
+        this.registrationNumber = registrationNumber;
+        this.vin = vin;
+        this.productionYearStartWith = productionYearStartWith;
+        this.productionYearEndWith = productionYearEndWith;
+        this.firstRegistrationDateStartWith = firstRegistrationDateStartWith;
+        this.firstRegistrationDateEndWith = firstRegistrationDateEndWith;
+        this.freePlacesForTechInspectionStartWith = freePlacesForTechInspectionStartWith;
+        this.freePlacesForTechInspectionEndWith = freePlacesForTechInspectionEndWith;
+        this.fuelTypeId = fuelTypeId;
+        this.fuelTypeName = fuelTypeName;
+        this.vehicleTypeId = vehicleTypeId;
+        this.vehicleTypeName = vehicleTypeName;
+        this.lengthStartWith = lengthStartWith;
+        this.lengthEndWith = lengthEndWith;
+        this.widthStartWith = widthStartWith;
+        this.widthEndWith = widthEndWith;
+        this.heightStartWith = heightStartWith;
+        this.heightEndWith = heightEndWith;
+        this.createDateStartWith = createDateStartWith;
+        this.createDateEndWith = createDateEndWith;
+        this.modifyDateStartWith = modifyDateStartWith;
+        this.modifyDateEndWith = modifyDateEndWith;
     }
 
     public Long getId() {
@@ -288,175 +310,5 @@ public class VehicleFilter {
     }
 
 
-    public static final class Builder {
-        private Long id;
-        private Long brandId;
-        private String brandName;
-        private Long modelId;
-        private String modelName;
-        private String registrationNumber;
-        private String vin;
-        private Short productionYearStartWith;
-        private Short productionYearEndWith;
-        private LocalDate firstRegistrationDateStartWith;
-        private LocalDate firstRegistrationDateEndWith;
-        private Short freePlacesForTechInspectionStartWith;
-        private Short freePlacesForTechInspectionEndWith;
-        private Long fuelTypeId;
-        private String fuelTypeName;
-        private Long vehicleTypeId;
-        private String vehicleTypeName;
-        private BigDecimal lengthStartWith;
-        private BigDecimal lengthEndWith;
-        private BigDecimal widthStartWith;
-        private BigDecimal widthEndWith;
-        private BigDecimal heightStartWith;
-        private BigDecimal heightEndWith;
-        private Instant createDateStartWith;
-        private Instant createDateEndWith;
-        private Instant modifyDateStartWith;
-        private Instant modifyDateEndWith;
 
-        private Builder() {
-        }
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder brandId(Long brandId) {
-            this.brandId = brandId;
-            return this;
-        }
-
-        public Builder brandName(String brandName) {
-            this.brandName = brandName;
-            return this;
-        }
-
-        public Builder modelId(Long modelId) {
-            this.modelId = modelId;
-            return this;
-        }
-
-        public Builder modelName(String modelName) {
-            this.modelName = modelName;
-            return this;
-        }
-
-        public Builder registrationNumber(String registrationNumber) {
-            this.registrationNumber = registrationNumber;
-            return this;
-        }
-
-        public Builder vin(String vin) {
-            this.vin = vin;
-            return this;
-        }
-
-        public Builder productionYearStartWith(Short productionYearStartWith) {
-            this.productionYearStartWith = productionYearStartWith;
-            return this;
-        }
-
-        public Builder productionYearEndWith(Short productionYearEndWith) {
-            this.productionYearEndWith = productionYearEndWith;
-            return this;
-        }
-
-        public Builder firstRegistrationDateStartWith(LocalDate firstRegistrationDateStartWith) {
-            this.firstRegistrationDateStartWith = firstRegistrationDateStartWith;
-            return this;
-        }
-
-        public Builder firstRegistrationDateEndWith(LocalDate firstRegistrationDateEndWith) {
-            this.firstRegistrationDateEndWith = firstRegistrationDateEndWith;
-            return this;
-        }
-
-        public Builder freePlacesForTechInspectionStartWith(Short freePlacesForTechInspectionStartWith) {
-            this.freePlacesForTechInspectionStartWith = freePlacesForTechInspectionStartWith;
-            return this;
-        }
-
-        public Builder freePlacesForTechInspectionEndWith(Short freePlacesForTechInspectionEndWith) {
-            this.freePlacesForTechInspectionEndWith = freePlacesForTechInspectionEndWith;
-            return this;
-        }
-
-        public Builder fuelTypeId(Long fuelTypeId) {
-            this.fuelTypeId = fuelTypeId;
-            return this;
-        }
-
-        public Builder fuelTypeName(String fuelTypeName) {
-            this.fuelTypeName = fuelTypeName;
-            return this;
-        }
-
-        public Builder vehicleTypeId(Long vehicleTypeId) {
-            this.vehicleTypeId = vehicleTypeId;
-            return this;
-        }
-
-        public Builder vehicleTypeName(String vehicleTypeName) {
-            this.vehicleTypeName = vehicleTypeName;
-            return this;
-        }
-
-        public Builder lengthStartWith(BigDecimal lengthStartWith) {
-            this.lengthStartWith = lengthStartWith;
-            return this;
-        }
-
-        public Builder lengthEndWith(BigDecimal lengthEndWith) {
-            this.lengthEndWith = lengthEndWith;
-            return this;
-        }
-
-        public Builder widthStartWith(BigDecimal widthStartWith) {
-            this.widthStartWith = widthStartWith;
-            return this;
-        }
-
-        public Builder widthEndWith(BigDecimal widthEndWith) {
-            this.widthEndWith = widthEndWith;
-            return this;
-        }
-
-        public Builder heightStartWith(BigDecimal heightStartWith) {
-            this.heightStartWith = heightStartWith;
-            return this;
-        }
-
-        public Builder heightEndWith(BigDecimal heightEndWith) {
-            this.heightEndWith = heightEndWith;
-            return this;
-        }
-
-        public Builder createDateStartWith(Instant createDateStartWith) {
-            this.createDateStartWith = createDateStartWith;
-            return this;
-        }
-
-        public Builder createDateEndWith(Instant createDateEndWith) {
-            this.createDateEndWith = createDateEndWith;
-            return this;
-        }
-
-        public Builder modifyDateStartWith(Instant modifyDateStartWith) {
-            this.modifyDateStartWith = modifyDateStartWith;
-            return this;
-        }
-
-        public Builder modifyDateEndWith(Instant modifyDateEndWith) {
-            this.modifyDateEndWith = modifyDateEndWith;
-            return this;
-        }
-
-        public VehicleFilter build() {
-            return new VehicleFilter(this);
-        }
-    }
 }

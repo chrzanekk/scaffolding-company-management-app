@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vehicle_tires")
+@Table(name = "tires")
 public class Tire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +62,9 @@ public class Tire {
     @Column(name = "run_on_flat")
     @NotNull
     private Boolean runOnFlat;
+
+    @OneToOne(mappedBy = "tires")
+    VehicleTire vehicleTire;
 
     private Instant createDate;
     private Instant modifyDate;
@@ -238,28 +241,37 @@ public class Tire {
         return this;
     }
 
+    public VehicleTire getVehicleTire() {
+        return vehicleTire;
+    }
+
+    public void setVehicleTire(VehicleTire vehicleTire) {
+        this.vehicleTire = vehicleTire;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Tire that = (Tire) o;
+        Tire tire = (Tire) o;
 
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(brand, that.brand)) return false;
-        if (!Objects.equals(model, that.model)) return false;
-        if (!Objects.equals(width, that.width)) return false;
-        if (!Objects.equals(profile, that.profile)) return false;
-        if (!Objects.equals(diameter, that.diameter)) return false;
-        if (type != that.type) return false;
-        if (tireReinforcedIndex != that.tireReinforcedIndex) return false;
-        if (speedIndex != that.speedIndex) return false;
-        if (capacityIndex != that.capacityIndex) return false;
-        if (tireSeasonType != that.tireSeasonType) return false;
-        if (!Objects.equals(runOnFlat, that.runOnFlat)) return false;
-        if (!Objects.equals(createDate, that.createDate)) return false;
-        if (!Objects.equals(modifyDate, that.modifyDate)) return false;
-        return Objects.equals(removeDate, that.removeDate);
+        if (!Objects.equals(id, tire.id)) return false;
+        if (!Objects.equals(brand, tire.brand)) return false;
+        if (!Objects.equals(model, tire.model)) return false;
+        if (!Objects.equals(width, tire.width)) return false;
+        if (!Objects.equals(profile, tire.profile)) return false;
+        if (!Objects.equals(diameter, tire.diameter)) return false;
+        if (type != tire.type) return false;
+        if (tireReinforcedIndex != tire.tireReinforcedIndex) return false;
+        if (speedIndex != tire.speedIndex) return false;
+        if (capacityIndex != tire.capacityIndex) return false;
+        if (tireSeasonType != tire.tireSeasonType) return false;
+        if (!Objects.equals(runOnFlat, tire.runOnFlat)) return false;
+        if (!Objects.equals(vehicleTire, tire.vehicleTire)) return false;
+        if (!Objects.equals(createDate, tire.createDate)) return false;
+        if (!Objects.equals(modifyDate, tire.modifyDate)) return false;
+        return Objects.equals(removeDate, tire.removeDate);
     }
 
     @Override
@@ -276,6 +288,7 @@ public class Tire {
         result = 31 * result + (capacityIndex != null ? capacityIndex.hashCode() : 0);
         result = 31 * result + (tireSeasonType != null ? tireSeasonType.hashCode() : 0);
         result = 31 * result + (runOnFlat != null ? runOnFlat.hashCode() : 0);
+        result = 31 * result + (vehicleTire != null ? vehicleTire.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -284,7 +297,7 @@ public class Tire {
 
     @Override
     public String toString() {
-        return "VehicleTire{" +
+        return "Tire{" +
                 "id=" + id +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
@@ -297,6 +310,7 @@ public class Tire {
                 ", capacityIndex=" + capacityIndex +
                 ", tireSeasonType=" + tireSeasonType +
                 ", runOnFlat=" + runOnFlat +
+                ", vehicleTire=" + vehicleTire +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
