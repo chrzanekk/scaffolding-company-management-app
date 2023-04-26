@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.filter.tire;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class TireFilter {
 
@@ -21,12 +22,18 @@ public class TireFilter {
     private TireLoadCapacityIndex loadCapacityIndex;
     private TireSeasonType seasonType;
     private Boolean runOnFlat;
+    private TireStatus tireStatus;
+    private Integer productionYearStartsWith;
+    private Integer productionYearEndWith;
+    private LocalDate purchaseDateStartsWith;
+    private LocalDate purchaseDateEndWith;
     private Instant createDateStartsWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartsWith;
     private Instant modifyDateEndWith;
     private Instant removeDateStartsWith;
     private Instant removeDateEndWith;
+    private Long vehicleId;
 
     public TireFilter() {
     }
@@ -46,12 +53,18 @@ public class TireFilter {
                       TireLoadCapacityIndex loadCapacityIndex,
                       TireSeasonType seasonType,
                       Boolean runOnFlat,
+                      TireStatus tireStatus,
+                      Integer productionYearStartsWith,
+                      Integer productionYearEndWith,
+                      LocalDate purchaseDateStartsWith,
+                      LocalDate purchaseDateEndWith,
                       Instant createDateStartsWith,
                       Instant createDateEndWith,
                       Instant modifyDateStartsWith,
                       Instant modifyDateEndWith,
                       Instant removeDateStartsWith,
-                      Instant removeDateEndWith) {
+                      Instant removeDateEndWith,
+                      Long vehicleId) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -67,12 +80,18 @@ public class TireFilter {
         this.loadCapacityIndex = loadCapacityIndex;
         this.seasonType = seasonType;
         this.runOnFlat = runOnFlat;
+        this.tireStatus = tireStatus;
+        this.productionYearStartsWith = productionYearStartsWith;
+        this.productionYearEndWith = productionYearEndWith;
+        this.purchaseDateStartsWith = purchaseDateStartsWith;
+        this.purchaseDateEndWith = purchaseDateEndWith;
         this.createDateStartsWith = createDateStartsWith;
         this.createDateEndWith = createDateEndWith;
         this.modifyDateStartsWith = modifyDateStartsWith;
         this.modifyDateEndWith = modifyDateEndWith;
         this.removeDateStartsWith = removeDateStartsWith;
         this.removeDateEndWith = removeDateEndWith;
+        this.vehicleId = vehicleId;
     }
 
     public Long getId() {
@@ -195,6 +214,46 @@ public class TireFilter {
         this.runOnFlat = runOnFlat;
     }
 
+    public TireStatus getTireStatus() {
+        return tireStatus;
+    }
+
+    public void setTireStatus(TireStatus tireStatus) {
+        this.tireStatus = tireStatus;
+    }
+
+    public Integer getProductionYearStartsWith() {
+        return productionYearStartsWith;
+    }
+
+    public void setProductionYearStartsWith(Integer productionYearStartsWith) {
+        this.productionYearStartsWith = productionYearStartsWith;
+    }
+
+    public Integer getProductionYearEndWith() {
+        return productionYearEndWith;
+    }
+
+    public void setProductionYearEndWith(Integer productionYearEndWith) {
+        this.productionYearEndWith = productionYearEndWith;
+    }
+
+    public LocalDate getPurchaseDateStartsWith() {
+        return purchaseDateStartsWith;
+    }
+
+    public void setPurchaseDateStartsWith(LocalDate purchaseDateStartsWith) {
+        this.purchaseDateStartsWith = purchaseDateStartsWith;
+    }
+
+    public LocalDate getPurchaseDateEndWith() {
+        return purchaseDateEndWith;
+    }
+
+    public void setPurchaseDateEndWith(LocalDate purchaseDateEndWith) {
+        this.purchaseDateEndWith = purchaseDateEndWith;
+    }
+
     public Instant getCreateDateStartsWith() {
         return createDateStartsWith;
     }
@@ -241,5 +300,13 @@ public class TireFilter {
 
     public void setRemoveDateEndWith(Instant removeDateEndWith) {
         this.removeDateEndWith = removeDateEndWith;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 }

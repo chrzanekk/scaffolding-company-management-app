@@ -28,6 +28,7 @@ public class VehicleModel {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_brand")
+    @NotNull
     private VehicleBrand vehicleBrand;
 
     public VehicleModel(Long id,
