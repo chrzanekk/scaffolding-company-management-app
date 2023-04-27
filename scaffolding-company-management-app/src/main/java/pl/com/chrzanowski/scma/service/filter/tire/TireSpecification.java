@@ -3,10 +3,13 @@ package pl.com.chrzanowski.scma.service.filter.tire;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.Tire;
+import pl.com.chrzanowski.scma.domain.Vehicle;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
+import javax.persistence.criteria.Join;
 import java.time.Instant;
 import java.time.LocalDate;
+
 @Component
 public class TireSpecification {
 
@@ -22,7 +25,9 @@ public class TireSpecification {
     private static final String CAPACITY_INDEX = "capacityIndex";
     private static final String TIRE_SEASON_TYPE = "tireSeasonType";
     private static final String RUN_ON_FLAT = "runOnFlat";
+    private static final String TIRE_STATUS = "tireStatus";
     private static final String VEHICLE = "vehicle";
+    private static final String VEHICLE_ID = "vehicleId";
     private static final String VEHICLE_BRAND_NAME = "vehicleBrandName";
     private static final String VEHICLE_MODEL_NAME = "vehicleModelName";
     private static final String PRODUCTION_YEAR = "productionYear";
@@ -36,7 +41,7 @@ public class TireSpecification {
         Specification<Tire> specification = Specification.where(null);
         if (filter != null) {
             if (filter.getId() != null) {
-                specification = specification.and(hasId(filter.getId(), ID));
+                specification = specification.and(hasId(filter.getId()));
             }
             if (filter.getBrand() != null) {
                 specification = specification.and(hasString(filter.getBrand(), BRAND));
@@ -80,26 +85,48 @@ public class TireSpecification {
             if (filter.getRunOnFlat() != null) {
                 specification = specification.and(hasRunOnFlat(filter.getRunOnFlat()));
             }
-            if(filter.getCreateDateStartsWith() != null) {
+            if (filter.getCreateDateStartsWith() != null) {
                 specification = specification.and(hasInstantDateStartWith(filter.getCreateDateStartsWith(),
                         CREATE_DATE));
-            }if(filter.getCreateDateEndWith() != null) {
+            }
+            if (filter.getCreateDateEndWith() != null) {
                 specification = specification.and(hasInstantDateEndWith(filter.getCreateDateStartsWith(),
                         CREATE_DATE));
             }
-            if(filter.getModifyDateStartsWith() != null) {
+            if (filter.getModifyDateStartsWith() != null) {
                 specification = specification.and(hasInstantDateStartWith(filter.getModifyDateStartsWith(),
                         MODIFY_DATE));
-            }if(filter.getModifyDateEndWith() != null) {
+            }
+            if (filter.getModifyDateEndWith() != null) {
                 specification = specification.and(hasInstantDateEndWith(filter.getModifyDateEndWith(),
                         MODIFY_DATE));
+            }
+            if (filter.getTireStatus() != null) {
+                specification = specification.and(hasTireStatus(filter.getTireStatus()));
+            }
+            if (filter.getProductionYearStartsWith() != null) {
+                specification = specification.and(hasIntegerTypeStartWith(filter.getProductionYearStartsWith(),
+                        PRODUCTION_YEAR));
+            }
+            if (filter.getProductionYearEndWith() != null) {
+                specification = specification.and(hasIntegerTypeEndWith(filter.getProductionYearEndWith(),
+                        PRODUCTION_YEAR));
+            }
+            if (filter.getPurchaseDateStartsWith() != null) {
+                specification = specification.and(hasDateStartWith(filter.getPurchaseDateStartsWith(), PURCHASE_DATE));
+            }
+            if (filter.getPurchaseDateEndWith() != null) {
+                specification = specification.and(hasDateEndWith(filter.getPurchaseDateEndWith(), PURCHASE_DATE));
+            }
+            if (filter.getVehicleId() != null) {
+                specification = specification.and(hasVehicleId(filter.getVehicleId()));
             }
         }
         return specification;
     }
 
-    private static Specification<Tire> hasId(Long id, String fieldType) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.<Long>get(fieldType), id);
+    private static Specification<Tire> hasId(Long id) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.<Long>get(ID), id);
     }
 
     private static Specification<Tire> hasString(String text, String fieldType) {
@@ -156,5 +183,16 @@ public class TireSpecification {
 
     private static Specification<Tire> hasRunOnFlat(Boolean runOnFlat) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(RUN_ON_FLAT), runOnFlat);
+    }
+
+    private static Specification<Tire> hasTireStatus(TireStatus status) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(TIRE_STATUS), status);
+    }
+
+    private static Specification<Tire> hasVehicleId(Long vehicleId) {
+        return (root,query, criteriaBuilder) -> {
+            Join<Vehicle, Tire> vehicleTireJoin = root.join(VEHICLE);
+            return criteriaBuilder.equal(vehicleTireJoin.get(VEHICLE_ID), vehicleId);
+        };
     }
 }

@@ -31,6 +31,16 @@ public class VehicleTypeDTO {
         return new Builder();
     }
 
+    public static Builder builder(VehicleTypeDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.name = copy.getName();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        builder.removeDate = copy.getRemoveDate();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }

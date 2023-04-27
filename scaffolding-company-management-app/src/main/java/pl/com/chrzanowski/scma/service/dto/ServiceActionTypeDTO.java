@@ -30,6 +30,17 @@ public class ServiceActionTypeDTO {
         return new Builder();
     }
 
+    public static Builder builder(ServiceActionTypeDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.name = copy.getName();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        builder.removeDate = copy.getRemoveDate();
+        builder.workshops = copy.getWorkshops();
+        return builder;
+    }
+
 
     public Long getId() {
         return id;

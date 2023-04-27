@@ -130,7 +130,7 @@ public class VehicleControllerIT {
     }
 
 
-    private static Vehicle createFirstBasicVehicle() {
+    public static Vehicle createFirstBasicVehicle() {
         return new Vehicle()
                 .setRegistrationNumber(FIST_REGISTRATION_NUMBER)
                 .setVin(FIRST_VIN)
@@ -143,7 +143,7 @@ public class VehicleControllerIT {
                 .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
-    private static Vehicle createSecondBasicVehicle() {
+    public static Vehicle createSecondBasicVehicle() {
         return new Vehicle()
                 .setRegistrationNumber(SECOND_REGISTRATION_NUMBER)
                 .setVin(SECOND_VIN)
@@ -156,7 +156,7 @@ public class VehicleControllerIT {
                 .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
-    private static Vehicle createUpdatedBasicVehicle() {
+    public static Vehicle createUpdatedBasicVehicle() {
         return new Vehicle()
                 .setRegistrationNumber(UPDATED_REGISTRATION_NUMBER)
                 .setVin(UPDATED_VIN)

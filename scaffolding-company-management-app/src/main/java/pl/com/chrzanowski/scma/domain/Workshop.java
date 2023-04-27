@@ -5,7 +5,6 @@ import pl.com.chrzanowski.scma.domain.enumeration.Country;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "workshops")
-public class Workshop implements Serializable {
+public class Workshop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

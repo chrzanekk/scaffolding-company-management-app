@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.scma.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,9 +11,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
-import pl.com.chrzanowski.scma.domain.Tire;
+import pl.com.chrzanowski.scma.domain.FuelType;
+import pl.com.chrzanowski.scma.domain.*;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
-import pl.com.chrzanowski.scma.repository.TireRepository;
+import pl.com.chrzanowski.scma.repository.*;
 import pl.com.chrzanowski.scma.service.TireService;
 import pl.com.chrzanowski.scma.service.dto.TireDTO;
 import pl.com.chrzanowski.scma.service.mapper.TireMapper;
@@ -22,6 +22,7 @@ import pl.com.chrzanowski.scma.service.mapper.TireMapper;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,16 @@ public class TireControllerIT {
     private static final TireType FIRST_TIRE_TYPE = TireType.D;
     private static final TireType SECOND_TIRE_TYPE = TireType.D;
     private static final TireType UPDATED_TIRE_TYPE = TireType.R;
+    private static final TireStatus FIRST_TIRE_STATUS = TireStatus.MOUNTED;
+    private static final TireStatus SECOND_TIRE_STATUS = TireStatus.STOKED;
+    private static final TireStatus UPDATED_TIRE_STATUS = TireStatus.DISPOSED;
+    private static final Integer FIRST_PRODUCTION_YEAR = 2021;
+    private static final Integer SECOND_PRODUCTION_YEAR = 2012;
+    private static final Integer UPDATED_PRODUCTION_YEAR = 2022;
+    private static final LocalDate FIRST_PURCHASE_DATE = LocalDate.of(2002, 1, 1);
+    private static final LocalDate SECOND_PURCHASE_DATE = LocalDate.of(2012, 1, 1);
+    private static final LocalDate UPDATED_PURCHASE_DATE = LocalDate.of(2022, 1, 1);
+
 
     @Autowired
     private MockMvc restTireMvc;
@@ -81,14 +92,36 @@ public class TireControllerIT {
     private TireService tireService;
     @Autowired
     private TireMapper tireMapper;
-
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-
+    @Autowired
+    private VehicleRepository vehicleRepository;
+    @Autowired
+    private FuelTypeRepository fuelTypeRepository;
+    @Autowired
+    private VehicleTypeRepository vehicleTypeRepository;
+    @Autowired
+    private VehicleModelRepository vehicleModelRepository;
+    @Autowired
+    private VehicleBrandRepository vehicleBrandRepository;
     private Tire firstTire;
     private Tire secondTire;
     private Tire thirdTire;
+
+    private VehicleBrand firstVehicleBrand;
+    private VehicleBrand secondVehicleBrand;
+    private VehicleBrand updatedVehicleBrand;
+    private VehicleModel firstVehicleModel;
+    private VehicleModel secondVehicleModel;
+    private VehicleModel updatedVehicleModel;
+    private VehicleType firstVehicleType;
+    private VehicleType secondVehicleType;
+    private VehicleType updatedVehicleType;
+    private FuelType firstFuelType;
+    private FuelType secondFuelType;
+    private FuelType updatedFuelType;
+
+    private Vehicle firstVehicle;
+    private Vehicle secondVehicle;
+    private Vehicle updatedVehicle;
 
     public static Tire createEntity(EntityManager em) {
         return new Tire()
@@ -103,6 +136,9 @@ public class TireControllerIT {
                 .setTireSeasonType(FIRST_SEASON_TYPE)
                 .setRunOnFlat(false)
                 .setType(FIRST_TIRE_TYPE)
+                .setTireStatus(FIRST_TIRE_STATUS)
+                .setPurchaseDate(FIRST_PURCHASE_DATE)
+                .setProductionYear(FIRST_PRODUCTION_YEAR)
                 .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
@@ -119,6 +155,9 @@ public class TireControllerIT {
                 .setTireSeasonType(SECOND_SEASON_TYPE)
                 .setRunOnFlat(false)
                 .setType(SECOND_TIRE_TYPE)
+                .setTireStatus(SECOND_TIRE_STATUS)
+                .setPurchaseDate(SECOND_PURCHASE_DATE)
+                .setProductionYear(SECOND_PRODUCTION_YEAR)
                 .setCreateDate(DEFAULT_CREATE_DATE);
     }
 
@@ -135,6 +174,9 @@ public class TireControllerIT {
                 .setTireSeasonType(UPDATED_SEASON_TYPE)
                 .setType(UPDATED_TIRE_TYPE)
                 .setRunOnFlat(true)
+                .setTireStatus(UPDATED_TIRE_STATUS)
+                .setPurchaseDate(UPDATED_PURCHASE_DATE)
+                .setProductionYear(UPDATED_PRODUCTION_YEAR)
                 .setCreateDate(DEFAULT_CREATE_DATE)
                 .setModifyDate(DEFAULT_MODIFY_DATE);
     }
@@ -142,17 +184,48 @@ public class TireControllerIT {
 
     @BeforeEach
     public void initTest() {
+        createGlobalVehicles();
         firstTire = createEntity(em);
+        firstTire.setVehicle(firstVehicle);
         secondTire = createSecondEntity(em);
+        secondTire.setVehicle(secondVehicle);
         thirdTire = createUpdatedEntity(em);
+        thirdTire.setVehicle(updatedVehicle);
+
     }
 
     private void createGlobalTireInDB() {
         em.persist(firstTire);
         em.flush();
     }
+
     private void createSecondGlobalTireInDB() {
         em.persist(secondTire);
+        em.flush();
+    }
+
+    private void createGlobalVehicles() {
+        createGlobalFuelTypes();
+        createGlobalVehicleBrands();
+        createGlobalVehicleModels();
+        createGlobalVehicleTypes();
+        firstVehicle = VehicleControllerIT.createFirstBasicVehicle();
+        firstVehicle.setFuelType(firstFuelType);
+        firstVehicle.setVehicleType(firstVehicleType);
+        firstVehicle.setVehicleModel(firstVehicleModel);
+        em.persist(firstVehicle);
+        em.flush();
+        secondVehicle = VehicleControllerIT.createSecondBasicVehicle();
+        secondVehicle.setFuelType(secondFuelType);
+        secondVehicle.setVehicleType(secondVehicleType);
+        secondVehicle.setVehicleModel(secondVehicleModel);
+        em.persist(secondVehicle);
+        em.flush();
+        updatedVehicle = VehicleControllerIT.createUpdatedBasicVehicle();
+        updatedVehicle.setFuelType(updatedFuelType);
+        updatedVehicle.setVehicleType(updatedVehicleType);
+        updatedVehicle.setVehicleModel(updatedVehicleModel);
+        em.persist(updatedVehicle);
         em.flush();
     }
 
@@ -171,6 +244,32 @@ public class TireControllerIT {
         List<Tire> allTiresAfterTest = tireRepository.findAll();
         int sizeAfterTest = allTiresAfterTest.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
+    }
+    @Test
+    @Transactional
+    public void createTireShouldSwitchOldTireOnVehicleToStatusStoked() throws Exception {
+        tireRepository.deleteAll();
+        createGlobalTireInDB();
+        firstTire.setTireStatus(TireStatus.MOUNTED);
+        tireRepository.saveAndFlush(firstTire);
+
+        secondTire.setTireStatus(TireStatus.STOKED);
+        secondTire.setVehicle(firstVehicle);
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+
+        TireDTO tireDTO = tireMapper.toDto(secondTire);
+        TireDTO tireDTOtoMount = TireDTO.builder(tireDTO).tireStatus(TireStatus.MOUNTED).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTOtoMount))).andExpect(status().isOk());
+
+        List<Tire> allTiresAfterTest = tireRepository.findAll();
+        int sizeAfterTest = allTiresAfterTest.size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
+        assertThat(allTiresAfterTest.get(0).getTireStatus()).isEqualTo(TireStatus.STOKED);
+        assertThat(allTiresAfterTest.get(1).getTireStatus()).isEqualTo(TireStatus.MOUNTED);
     }
 
     @Test
@@ -212,6 +311,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -235,6 +338,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -258,6 +365,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -281,6 +392,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -304,6 +419,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -327,6 +446,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -350,6 +473,10 @@ public class TireControllerIT {
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -373,6 +500,10 @@ public class TireControllerIT {
                 .capacityIndex(FIRST_CAPACITY_INDEX)
                 .type(FIRST_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -396,6 +527,10 @@ public class TireControllerIT {
                 .capacityIndex(FIRST_CAPACITY_INDEX)
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .runOnFlat(false)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -419,6 +554,118 @@ public class TireControllerIT {
                 .capacityIndex(FIRST_CAPACITY_INDEX)
                 .tireSeasonType(FIRST_SEASON_TYPE)
                 .type(FIRST_TIRE_TYPE)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createTireShouldThrowBadRequestForMissingProductionYear() throws Exception {
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .brand(FIRST_BRAND)
+                .model(FIRST_MODEL)
+                .width(FIRST_WIDTH)
+                .profile(FIRST_PROFILE)
+                .diameter(FIRST_DIAMETER)
+                .tireReinforcedIndex(FIRST_REINFORCED_INDEX)
+                .speedIndex(FIRST_SPEED_INDEX)
+                .capacityIndex(FIRST_CAPACITY_INDEX)
+                .tireSeasonType(FIRST_SEASON_TYPE)
+                .type(FIRST_TIRE_TYPE)
+                .runOnFlat(true)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createTireShouldThrowBadRequestForMissingPurchaseDate() throws Exception {
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .brand(FIRST_BRAND)
+                .model(FIRST_MODEL)
+                .width(FIRST_WIDTH)
+                .profile(FIRST_PROFILE)
+                .diameter(FIRST_DIAMETER)
+                .tireReinforcedIndex(FIRST_REINFORCED_INDEX)
+                .speedIndex(FIRST_SPEED_INDEX)
+                .capacityIndex(FIRST_CAPACITY_INDEX)
+                .tireSeasonType(FIRST_SEASON_TYPE)
+                .type(FIRST_TIRE_TYPE)
+                .runOnFlat(true)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .tireStatus(FIRST_TIRE_STATUS)
+                .vehicleId(firstVehicle.getId())
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createTireShouldThrowBadRequestForMissingTireStatus() throws Exception {
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .brand(FIRST_BRAND)
+                .model(FIRST_MODEL)
+                .width(FIRST_WIDTH)
+                .profile(FIRST_PROFILE)
+                .diameter(FIRST_DIAMETER)
+                .tireReinforcedIndex(FIRST_REINFORCED_INDEX)
+                .speedIndex(FIRST_SPEED_INDEX)
+                .capacityIndex(FIRST_CAPACITY_INDEX)
+                .tireSeasonType(FIRST_SEASON_TYPE)
+                .type(FIRST_TIRE_TYPE)
+                .runOnFlat(true)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .vehicleId(firstVehicle.getId())
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    public void createTireShouldThrowBadRequestForMissingVehicleId() throws Exception {
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .brand(FIRST_BRAND)
+                .model(FIRST_MODEL)
+                .width(FIRST_WIDTH)
+                .profile(FIRST_PROFILE)
+                .diameter(FIRST_DIAMETER)
+                .tireReinforcedIndex(FIRST_REINFORCED_INDEX)
+                .speedIndex(FIRST_SPEED_INDEX)
+                .capacityIndex(FIRST_CAPACITY_INDEX)
+                .tireSeasonType(FIRST_SEASON_TYPE)
+                .type(FIRST_TIRE_TYPE)
+                .runOnFlat(true)
+                .productionYear(FIRST_PRODUCTION_YEAR)
+                .purchaseDate(FIRST_PURCHASE_DATE)
+                .tireStatus(FIRST_TIRE_STATUS)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
         restTireMvc.perform(post(API_PATH + "/add")
@@ -444,6 +691,33 @@ public class TireControllerIT {
         int sizeAfterTest = allTiresAfterTest.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
     }
+    @Test
+    @Transactional
+    public void updateTireShouldSwitchAnotherTireToStokedStatus() throws Exception {
+        tireRepository.deleteAll();
+        createGlobalTireInDB();
+        firstTire.setTireStatus(TireStatus.MOUNTED);
+        tireRepository.saveAndFlush(firstTire);
+        createSecondGlobalTireInDB();
+        secondTire.setTireStatus(TireStatus.STOKED);
+        secondTire.setVehicle(firstVehicle);
+        tireRepository.saveAndFlush(secondTire);
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+
+        TireDTO tireDTO = tireMapper.toDto(secondTire);
+        TireDTO updatedTireDTO = TireDTO.builder(tireDTO).tireStatus(TireStatus.MOUNTED).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(updatedTireDTO))).andExpect(status().isOk());
+
+        List<Tire> allTiresAfterTest = tireRepository.findAll();
+        int sizeAfterTest = allTiresAfterTest.size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
+        assertThat(allTiresAfterTest.get(0).getTireStatus()).isEqualTo(TireStatus.STOKED);
+        assertThat(allTiresAfterTest.get(1).getTireStatus()).isEqualTo(TireStatus.MOUNTED);
+    }
 
     @Test
     @Transactional
@@ -465,6 +739,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -494,6 +772,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -523,6 +805,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -552,6 +838,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -581,6 +871,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -610,6 +904,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -639,6 +937,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -668,6 +970,10 @@ public class TireControllerIT {
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -697,6 +1003,10 @@ public class TireControllerIT {
                 .capacityIndex(UPDATED_CAPACITY_INDEX)
                 .type(UPDATED_TIRE_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -726,6 +1036,10 @@ public class TireControllerIT {
                 .capacityIndex(UPDATED_CAPACITY_INDEX)
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -755,6 +1069,142 @@ public class TireControllerIT {
                 .capacityIndex(UPDATED_CAPACITY_INDEX)
                 .tireSeasonType(UPDATED_SEASON_TYPE)
                 .type(UPDATED_TIRE_TYPE)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
+                .modifyDate(DEFAULT_MODIFY_DATE)
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateTireShouldThrowBadRequestForMissingProductionYear() throws Exception {
+        createGlobalTireInDB();
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+        Long id = allTiresBeforeTest.get(0).getId();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .id(id)
+                .brand(UPDATED_BRAND)
+                .model(UPDATED_MODEL)
+                .width(UPDATED_WIDTH)
+                .profile(UPDATED_PROFILE)
+                .diameter(UPDATED_DIAMETER)
+                .tireReinforcedIndex(UPDATED_REINFORCED_INDEX)
+                .speedIndex(UPDATED_SPEED_INDEX)
+                .capacityIndex(UPDATED_CAPACITY_INDEX)
+                .tireSeasonType(UPDATED_SEASON_TYPE)
+                .type(UPDATED_TIRE_TYPE)
+                .runOnFlat(false)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
+                .modifyDate(DEFAULT_MODIFY_DATE)
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateTireShouldThrowBadRequestForMissingPurchaseDate() throws Exception {
+        createGlobalTireInDB();
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+        Long id = allTiresBeforeTest.get(0).getId();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .id(id)
+                .brand(UPDATED_BRAND)
+                .model(UPDATED_MODEL)
+                .width(UPDATED_WIDTH)
+                .profile(UPDATED_PROFILE)
+                .diameter(UPDATED_DIAMETER)
+                .tireReinforcedIndex(UPDATED_REINFORCED_INDEX)
+                .speedIndex(UPDATED_SPEED_INDEX)
+                .capacityIndex(UPDATED_CAPACITY_INDEX)
+                .tireSeasonType(UPDATED_SEASON_TYPE)
+                .type(UPDATED_TIRE_TYPE)
+                .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .tireStatus(UPDATED_TIRE_STATUS)
+                .vehicleId(secondVehicle.getId())
+                .modifyDate(DEFAULT_MODIFY_DATE)
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateTireShouldThrowBadRequestForMissingTireStatus() throws Exception {
+        createGlobalTireInDB();
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+        Long id = allTiresBeforeTest.get(0).getId();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .id(id)
+                .brand(UPDATED_BRAND)
+                .model(UPDATED_MODEL)
+                .width(UPDATED_WIDTH)
+                .profile(UPDATED_PROFILE)
+                .diameter(UPDATED_DIAMETER)
+                .tireReinforcedIndex(UPDATED_REINFORCED_INDEX)
+                .speedIndex(UPDATED_SPEED_INDEX)
+                .capacityIndex(UPDATED_CAPACITY_INDEX)
+                .tireSeasonType(UPDATED_SEASON_TYPE)
+                .type(UPDATED_TIRE_TYPE)
+                .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .vehicleId(secondVehicle.getId())
+                .modifyDate(DEFAULT_MODIFY_DATE)
+                .createDate(DEFAULT_CREATE_DATE).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @Transactional
+    public void updateTireShouldThrowBadRequestForMissingVehicleId() throws Exception {
+        createGlobalTireInDB();
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+        Long id = allTiresBeforeTest.get(0).getId();
+
+        TireDTO tireDTO = TireDTO.builder()
+                .id(id)
+                .brand(UPDATED_BRAND)
+                .model(UPDATED_MODEL)
+                .width(UPDATED_WIDTH)
+                .profile(UPDATED_PROFILE)
+                .diameter(UPDATED_DIAMETER)
+                .tireReinforcedIndex(UPDATED_REINFORCED_INDEX)
+                .speedIndex(UPDATED_SPEED_INDEX)
+                .capacityIndex(UPDATED_CAPACITY_INDEX)
+                .tireSeasonType(UPDATED_SEASON_TYPE)
+                .type(UPDATED_TIRE_TYPE)
+                .runOnFlat(false)
+                .productionYear(UPDATED_PRODUCTION_YEAR)
+                .purchaseDate(UPDATED_PURCHASE_DATE)
+                .tireStatus(UPDATED_TIRE_STATUS)
                 .modifyDate(DEFAULT_MODIFY_DATE)
                 .createDate(DEFAULT_CREATE_DATE).build();
 
@@ -812,7 +1262,10 @@ public class TireControllerIT {
                 .andExpect(jsonPath("$.speedIndex").value(firstTire.getSpeedIndex().toString()))
                 .andExpect(jsonPath("$.capacityIndex").value(firstTire.getCapacityIndex().toString()))
                 .andExpect(jsonPath("$.tireSeasonType").value(firstTire.getTireSeasonType().toString()))
-                .andExpect(jsonPath("$.runOnFlat").value(firstTire.getRunOnFlat()));
+                .andExpect(jsonPath("$.runOnFlat").value(firstTire.getRunOnFlat()))
+                .andExpect(jsonPath("$.tireStatus").value(firstTire.getTireStatus().toString()))
+                .andExpect(jsonPath("$.productionYear").value(firstTire.getProductionYear().intValue()))
+                .andExpect(jsonPath("$.purchaseDate").value(firstTire.getPurchaseDate().toString()));
     }
 
     @Test
@@ -941,15 +1394,70 @@ public class TireControllerIT {
                 .andExpect(jsonPath("$.[*].profile").value(hasItem(firstTire.getProfile())))
                 .andExpect(jsonPath("$.[*].diameter").value(hasItem(firstTire.getDiameter())))
                 .andExpect(jsonPath("$.[*].type").value(hasItem(firstTire.getType().toString())))
-                .andExpect(jsonPath("$.[*].tireReinforcedIndex").value(hasItem(firstTire.getTireReinforcedIndex().toString())))
+                .andExpect(jsonPath("$.[*].tireReinforcedIndex").value(hasItem(firstTire.getTireReinforcedIndex()
+                        .toString())))
                 .andExpect(jsonPath("$.[*].speedIndex").value(hasItem(firstTire.getSpeedIndex().toString())))
                 .andExpect(jsonPath("$.[*].capacityIndex").value(hasItem(firstTire.getCapacityIndex().toString())))
                 .andExpect(jsonPath("$.[*].tireSeasonType").value(hasItem(firstTire.getTireSeasonType().toString())))
-                .andExpect(jsonPath("$.[*].runOnFlat").value(hasItem(firstTire.getRunOnFlat())));
+                .andExpect(jsonPath("$.[*].runOnFlat").value(hasItem(firstTire.getRunOnFlat())))
+                .andExpect(jsonPath("$.[*].tireStatus").value(hasItem(firstTire.getTireStatus().toString())))
+                .andExpect(jsonPath("$.[*].productionYear").value(hasItem(firstTire.getProductionYear().intValue())))
+                .andExpect(jsonPath("$.[*].purchaseDate").value(hasItem(firstTire.getPurchaseDate().toString())));
+
     }
+
     private void defaultTireShouldNotBeFound(String filter) throws Exception {
         restTireMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
+
+    private void createGlobalFuelTypes() {
+        firstFuelType = FuelTypeControllerIT.createEntity(em);
+        fuelTypeRepository.saveAndFlush(firstFuelType);
+
+        secondFuelType = FuelTypeControllerIT.createSecondEntity(em);
+        fuelTypeRepository.saveAndFlush(secondFuelType);
+
+        updatedFuelType = FuelTypeControllerIT.createUpdatedEntity(em);
+        fuelTypeRepository.saveAndFlush(updatedFuelType);
+    }
+
+    private void createGlobalVehicleTypes() {
+        firstVehicleType = VehicleTypeControllerIT.createEntity(em);
+        vehicleTypeRepository.saveAndFlush(firstVehicleType);
+        secondVehicleType = VehicleTypeControllerIT.createSecondEntity(em);
+        vehicleTypeRepository.saveAndFlush(secondVehicleType);
+        updatedVehicleType = VehicleTypeControllerIT.createUpdatedEntity(em);
+        vehicleTypeRepository.saveAndFlush(updatedVehicleType);
+    }
+
+    private void createGlobalVehicleModels() {
+        firstVehicleModel = VehicleModelControllerIT.createEntity(em);
+        firstVehicleModel.setVehicleBrand(firstVehicleBrand);
+        em.persist(firstVehicleModel);
+        em.flush();
+        secondVehicleModel = VehicleModelControllerIT.createSecondEntity(em);
+        secondVehicleModel.setVehicleBrand(secondVehicleBrand);
+        em.persist(secondVehicleModel);
+        em.flush();
+        updatedVehicleModel = VehicleModelControllerIT.createUpdatedEntity(em);
+        updatedVehicleModel.setVehicleBrand(updatedVehicleBrand);
+        em.persist(updatedVehicleModel);
+        em.flush();
+    }
+
+    private void createGlobalVehicleBrands() {
+        firstVehicleBrand = VehicleBrandControllerIT.createEntity(em);
+        em.persist(firstVehicleBrand);
+        em.flush();
+        secondVehicleBrand = VehicleBrandControllerIT.createSecondEntity(em);
+        em.persist(secondVehicleBrand);
+        em.flush();
+        updatedVehicleBrand = VehicleBrandControllerIT.createUpdatedEntity(em);
+        em.persist(updatedVehicleBrand);
+        em.flush();
+    }
+
 }

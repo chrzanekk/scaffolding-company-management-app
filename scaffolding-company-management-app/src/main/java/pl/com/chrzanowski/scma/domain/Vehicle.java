@@ -3,7 +3,7 @@ package pl.com.chrzanowski.scma.domain;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,10 +11,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle")
-public class Vehicle implements Serializable {
+public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "registration_number")
@@ -49,14 +50,17 @@ public class Vehicle implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "vehicle_model")
+    @NotNull
     private VehicleModel vehicleModel;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_type")
+    @NotNull
     private VehicleType vehicleType;
 
     @ManyToOne
     @JoinColumn(name = "fuel_type")
+    @NotNull
     private FuelType fuelType;
 
     public Vehicle(Long id,

@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.dto;
 import pl.com.chrzanowski.scma.domain.enumeration.*;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class TireDTO {
@@ -18,25 +19,32 @@ public class TireDTO {
     private final TireLoadCapacityIndex capacityIndex;
     private final TireSeasonType tireSeasonType;
     private final Boolean runOnFlat;
+    private final Integer productionYear;
+    private final LocalDate purchaseDate;
+    private final TireStatus tireStatus;
     private final Instant createDate;
     private final Instant modifyDate;
     private final Instant removeDate;
-
+    private final Long vehicleId;
 
     public TireDTO(Long id,
                    String brand,
                    String model,
                    Integer width,
                    Integer profile,
-                   Integer diameter, TireType type,
+                   Integer diameter,
+                   TireType type,
                    TireReinforcedIndex tireReinforcedIndex,
                    TireSpeedIndex speedIndex,
                    TireLoadCapacityIndex capacityIndex,
                    TireSeasonType tireSeasonType,
                    Boolean runOnFlat,
+                   Integer productionYear,
+                   LocalDate purchaseDate,
+                   TireStatus tireStatus,
                    Instant createDate,
                    Instant modifyDate,
-                   Instant removeDate) {
+                   Instant removeDate, Long vehicleId) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -49,11 +57,14 @@ public class TireDTO {
         this.capacityIndex = capacityIndex;
         this.tireSeasonType = tireSeasonType;
         this.runOnFlat = runOnFlat;
+        this.productionYear = productionYear;
+        this.purchaseDate = purchaseDate;
+        this.tireStatus = tireStatus;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
+        this.vehicleId = vehicleId;
     }
-
 
     private TireDTO(Builder builder) {
         id = builder.id;
@@ -68,13 +79,41 @@ public class TireDTO {
         capacityIndex = builder.capacityIndex;
         tireSeasonType = builder.tireSeasonType;
         runOnFlat = builder.runOnFlat;
+        productionYear = builder.productionYear;
+        purchaseDate = builder.purchaseDate;
+        tireStatus = builder.tireStatus;
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
+        vehicleId = builder.vehicleId;
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static Builder builder(TireDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.brand = copy.getBrand();
+        builder.model = copy.getModel();
+        builder.width = copy.getWidth();
+        builder.profile = copy.getProfile();
+        builder.diameter = copy.getDiameter();
+        builder.type = copy.getType();
+        builder.tireReinforcedIndex = copy.getTireReinforcedIndex();
+        builder.speedIndex = copy.getSpeedIndex();
+        builder.capacityIndex = copy.getCapacityIndex();
+        builder.tireSeasonType = copy.getTireSeasonType();
+        builder.runOnFlat = copy.getRunOnFlat();
+        builder.productionYear = copy.getProductionYear();
+        builder.purchaseDate = copy.getPurchaseDate();
+        builder.tireStatus = copy.getTireStatus();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        builder.removeDate = copy.getRemoveDate();
+        builder.vehicleId = copy.getVehicleId();
+        return builder;
     }
 
     public Long getId() {
@@ -93,12 +132,12 @@ public class TireDTO {
         return width;
     }
 
-    public Integer getDiameter() {
-        return diameter;
-    }
-
     public Integer getProfile() {
         return profile;
+    }
+
+    public Integer getDiameter() {
+        return diameter;
     }
 
     public TireType getType() {
@@ -125,6 +164,18 @@ public class TireDTO {
         return runOnFlat;
     }
 
+    public Integer getProductionYear() {
+        return productionYear;
+    }
+
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public TireStatus getTireStatus() {
+        return tireStatus;
+    }
+
     public Instant getCreateDate() {
         return createDate;
     }
@@ -135,6 +186,10 @@ public class TireDTO {
 
     public Instant getRemoveDate() {
         return removeDate;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
     }
 
     @Override
@@ -156,9 +211,15 @@ public class TireDTO {
         if (capacityIndex != tireDTO.capacityIndex) return false;
         if (tireSeasonType != tireDTO.tireSeasonType) return false;
         if (!Objects.equals(runOnFlat, tireDTO.runOnFlat)) return false;
+        if (!Objects.equals(productionYear, tireDTO.productionYear))
+            return false;
+        if (!Objects.equals(purchaseDate, tireDTO.purchaseDate))
+            return false;
+        if (tireStatus != tireDTO.tireStatus) return false;
         if (!Objects.equals(createDate, tireDTO.createDate)) return false;
         if (!Objects.equals(modifyDate, tireDTO.modifyDate)) return false;
-        return Objects.equals(removeDate, tireDTO.removeDate);
+        if (!Objects.equals(removeDate, tireDTO.removeDate)) return false;
+        return Objects.equals(vehicleId, tireDTO.vehicleId);
     }
 
     @Override
@@ -175,9 +236,13 @@ public class TireDTO {
         result = 31 * result + (capacityIndex != null ? capacityIndex.hashCode() : 0);
         result = 31 * result + (tireSeasonType != null ? tireSeasonType.hashCode() : 0);
         result = 31 * result + (runOnFlat != null ? runOnFlat.hashCode() : 0);
+        result = 31 * result + (productionYear != null ? productionYear.hashCode() : 0);
+        result = 31 * result + (purchaseDate != null ? purchaseDate.hashCode() : 0);
+        result = 31 * result + (tireStatus != null ? tireStatus.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
+        result = 31 * result + (vehicleId != null ? vehicleId.hashCode() : 0);
         return result;
     }
 
@@ -196,9 +261,13 @@ public class TireDTO {
                 ", capacityIndex=" + capacityIndex +
                 ", tireSeasonType=" + tireSeasonType +
                 ", runOnFlat=" + runOnFlat +
+                ", productionYear=" + productionYear +
+                ", purchaseDate=" + purchaseDate +
+                ", tireStatus=" + tireStatus +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
+                ", vehicleId=" + vehicleId +
                 '}';
     }
 
@@ -216,9 +285,13 @@ public class TireDTO {
         private TireLoadCapacityIndex capacityIndex;
         private TireSeasonType tireSeasonType;
         private Boolean runOnFlat;
+        private Integer productionYear;
+        private LocalDate purchaseDate;
+        private TireStatus tireStatus;
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
+        private Long vehicleId;
 
         private Builder() {
         }
@@ -283,6 +356,21 @@ public class TireDTO {
             return this;
         }
 
+        public Builder productionYear(Integer productionYear) {
+            this.productionYear = productionYear;
+            return this;
+        }
+
+        public Builder purchaseDate(LocalDate purchaseDate) {
+            this.purchaseDate = purchaseDate;
+            return this;
+        }
+
+        public Builder tireStatus(TireStatus tireStatus) {
+            this.tireStatus = tireStatus;
+            return this;
+        }
+
         public Builder createDate(Instant createDate) {
             this.createDate = createDate;
             return this;
@@ -295,6 +383,11 @@ public class TireDTO {
 
         public Builder removeDate(Instant removeDate) {
             this.removeDate = removeDate;
+            return this;
+        }
+
+        public Builder vehicleId(Long vehicleId) {
+            this.vehicleId = vehicleId;
             return this;
         }
 

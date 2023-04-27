@@ -4,7 +4,6 @@ package pl.com.chrzanowski.scma.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "service_action_type")
-public class ServiceActionType implements Serializable {
+public class ServiceActionType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
