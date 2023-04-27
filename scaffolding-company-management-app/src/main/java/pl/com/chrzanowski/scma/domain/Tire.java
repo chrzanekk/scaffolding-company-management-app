@@ -72,13 +72,11 @@ public class Tire {
 
     @Column(name = "production_year")
     @NotNull
-    @NotBlank
     private Integer productionYear;
 
 
     @Column(name = "purchase_date")
     @NotNull
-    @NotBlank
     private LocalDate purchaseDate;
 
     @ManyToOne
