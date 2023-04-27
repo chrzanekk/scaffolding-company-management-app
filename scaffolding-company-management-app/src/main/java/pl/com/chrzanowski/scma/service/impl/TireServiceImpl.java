@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Tire;
+import pl.com.chrzanowski.scma.domain.enumeration.TireStatus;
 import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.repository.TireRepository;
 import pl.com.chrzanowski.scma.service.TireService;
@@ -17,6 +18,7 @@ import pl.com.chrzanowski.scma.service.mapper.TireMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
 import pl.com.chrzanowski.scma.util.FieldValidator;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,24 +41,10 @@ public class TireServiceImpl implements TireService {
     public TireDTO save(TireDTO tireDTO) {
         log.debug("Save tire: {}", tireDTO);
         validateTireDTO(tireDTO);
-        TireDTO tireDTOtoSave = TireDTO.builder()
-                .brand(tireDTO.getBrand())
-                .model(tireDTO.getModel())
-                .width(tireDTO.getWidth())
-                .profile(tireDTO.getProfile())
-                .diameter(tireDTO.getDiameter())
-                .tireReinforcedIndex(tireDTO.getTireReinforcedIndex())
-                .speedIndex(tireDTO.getSpeedIndex())
-                .capacityIndex(tireDTO.getCapacityIndex())
-                .tireSeasonType(tireDTO.getTireSeasonType())
-                .type(tireDTO.getType())
-                .runOnFlat(tireDTO.getRunOnFlat())
-                .productionYear(tireDTO.getProductionYear())
-                .purchaseDate(tireDTO.getPurchaseDate())
-                .tireStatus(tireDTO.getTireStatus())
-                .vehicleId(tireDTO.getVehicleId())
+        TireDTO tireDTOtoSave = TireDTO.builder(tireDTO)
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(tireDTO.getCreateDate())).build();
         Tire tireToSave = tireMapper.toEntity(tireDTOtoSave);
+        switchTireStatusIfNeeded(tireDTOtoSave);
         Tire tire = tireRepository.save(tireToSave);
         return tireMapper.toDto(tire);
     }
@@ -66,27 +54,32 @@ public class TireServiceImpl implements TireService {
         log.debug("Update tire: {}", tireDTO);
         validateTireDTO(tireDTO);
         FieldValidator.validateObject(tireDTO.getId(), "id");
-        TireDTO tireDTOtoUpdate = TireDTO.builder()
-                .id(tireDTO.getId())
-                .brand(tireDTO.getBrand())
-                .model(tireDTO.getModel())
-                .width(tireDTO.getWidth())
-                .profile(tireDTO.getProfile())
-                .diameter(tireDTO.getDiameter())
-                .tireReinforcedIndex(tireDTO.getTireReinforcedIndex())
-                .speedIndex(tireDTO.getSpeedIndex())
-                .capacityIndex(tireDTO.getCapacityIndex())
-                .tireSeasonType(tireDTO.getTireSeasonType())
-                .type(tireDTO.getType())
-                .runOnFlat(tireDTO.getRunOnFlat())
-                .productionYear(tireDTO.getProductionYear())
-                .purchaseDate(tireDTO.getPurchaseDate())
-                .tireStatus(tireDTO.getTireStatus())
-                .vehicleId(tireDTO.getVehicleId())
-                .createDate(tireDTO.getCreateDate())
+        TireDTO tireDTOtoUpdate = TireDTO.builder(tireDTO)
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(tireDTO.getModifyDate())).build();
+        switchTireStatusIfNeeded(tireDTOtoUpdate);
         Tire tire = tireRepository.save(tireMapper.toEntity(tireDTOtoUpdate));
         return tireMapper.toDto(tire);
+    }
+
+    /**
+     * Method switch tire status on given vehicle. Only one set of tires should be mounted at one time
+     *
+     * @param tireDTOtoUpdate
+     */
+    private void switchTireStatusIfNeeded(TireDTO tireDTOtoUpdate) {
+        TireDTO tireInDB =
+                tireMapper.toDto(tireRepository.findTireByVehicleIdAndStatusMounted(tireDTOtoUpdate.getVehicleId()));
+        if (tireInDB != null && isTireWillBeMounted(tireDTOtoUpdate)) {
+            log.debug("Switching tire status to STOKED {}", tireInDB);
+            TireDTO tireToUpdate = TireDTO.builder(tireInDB)
+                    .tireStatus(TireStatus.STOKED)
+                    .modifyDate(Instant.now()).build();
+            tireRepository.save(tireMapper.toEntity(tireToUpdate));
+        }
+    }
+
+    private static boolean isTireWillBeMounted(TireDTO tireDTOtoUpdate) {
+        return tireDTOtoUpdate.getTireStatus().equals(TireStatus.MOUNTED);
     }
 
     @Override
@@ -100,12 +93,12 @@ public class TireServiceImpl implements TireService {
     public Page<TireDTO> findByFilterAndPage(TireFilter filter, Pageable pageable) {
         log.debug("Find all tires by filter and page: {}", filter);
         Specification<Tire> spec = TireSpecification.create(filter);
-        return tireRepository.findAll(spec,pageable).map(tireMapper::toDto);
+        return tireRepository.findAll(spec, pageable).map(tireMapper::toDto);
     }
 
     @Override
     public TireDTO findById(Long id) {
-        log.debug("Find tire by id: {}",id);
+        log.debug("Find tire by id: {}", id);
         FieldValidator.validateObject(id, "id");
         Optional<Tire> vehicleTireOptional = tireRepository.findById(id);
         return tireMapper.toDto(vehicleTireOptional.orElseThrow(() -> new ObjectNotFoundException("Tire not " +

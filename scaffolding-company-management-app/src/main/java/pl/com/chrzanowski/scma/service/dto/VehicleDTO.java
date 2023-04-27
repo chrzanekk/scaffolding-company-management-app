@@ -96,6 +96,30 @@ public class VehicleDTO {
         return new Builder();
     }
 
+    public static Builder builder(VehicleDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.brandId = copy.getBrandId();
+        builder.brandName = copy.getBrandName();
+        builder.modelId = copy.getModelId();
+        builder.modelName = copy.getModelName();
+        builder.registrationNumber = copy.getRegistrationNumber();
+        builder.vin = copy.getVin();
+        builder.productionYear = copy.getProductionYear();
+        builder.firstRegistrationDate = copy.getFirstRegistrationDate();
+        builder.freePlacesForTechInspection = copy.getFreePlacesForTechInspection();
+        builder.fuelTypeId = copy.getFuelTypeId();
+        builder.fuelTypeName = copy.getFuelTypeName();
+        builder.vehicleTypeId = copy.getVehicleTypeId();
+        builder.vehicleTypeName = copy.getVehicleTypeName();
+        builder.length = copy.getLength();
+        builder.width = copy.getWidth();
+        builder.height = copy.getHeight();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }

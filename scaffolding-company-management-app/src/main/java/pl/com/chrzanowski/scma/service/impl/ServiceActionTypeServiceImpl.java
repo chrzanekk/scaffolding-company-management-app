@@ -41,7 +41,7 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
         log.debug("Save service action type: {}", serviceActionTypeDTO);
         validateServiceActionTypeDTO(serviceActionTypeDTO);
         ServiceActionTypeDTO serviceActionTypeDTOtoSave =
-                ServiceActionTypeDTO.builder().name(serviceActionTypeDTO.getName())
+                ServiceActionTypeDTO.builder(serviceActionTypeDTO)
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getCreateDate())).build();
         ServiceActionType serviceActionType =
                 serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTOtoSave));
@@ -54,8 +54,9 @@ public class ServiceActionTypeServiceImpl implements ServiceActionTypeService {
         validateServiceActionTypeDTO(serviceActionTypeDTO);
         FieldValidator.validateObject(serviceActionTypeDTO.getId(), "ServiceActionTypeId");
         ServiceActionTypeDTO serviceActionTypeDTOtoUpdate =
-                ServiceActionTypeDTO.builder().id(serviceActionTypeDTO.getId()).name(serviceActionTypeDTO.getName())
-                        .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getCreateDate())).modifyDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getModifyDate())).build();
+                ServiceActionTypeDTO.builder(serviceActionTypeDTO)
+                        .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getCreateDate()))
+                        .modifyDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionTypeDTO.getModifyDate())).build();
         ServiceActionType serviceActionType =
                 serviceActionTypeRepository.save(serviceActionTypeMapper.toEntity(serviceActionTypeDTOtoUpdate));
         return serviceActionTypeMapper.toDto(serviceActionType);

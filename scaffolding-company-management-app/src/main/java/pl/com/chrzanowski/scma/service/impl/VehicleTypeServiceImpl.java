@@ -41,7 +41,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         log.debug("Save vehicle type: {}", vehicleTypeDTO);
         validateVehicleTypeDTO(vehicleTypeDTO);
         VehicleTypeDTO vehicleTypeDTOToSave =
-                VehicleTypeDTO.builder().name(vehicleTypeDTO.getName())
+                VehicleTypeDTO.builder(vehicleTypeDTO)
                         .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getCreateDate())).build();
         VehicleType vehicleType = vehicleTypeRepository.save(vehicleTypeMapper.toEntity(vehicleTypeDTOToSave));
         return vehicleTypeMapper.toDto(vehicleType);
@@ -53,8 +53,7 @@ public class VehicleTypeServiceImpl implements VehicleTypeService {
         validateVehicleTypeDTO(vehicleTypeDTO);
         FieldValidator.validateObject(vehicleTypeDTO.getId(), "vehicleTypeId");
         VehicleTypeDTO vehicleTypeDTOToUpdate =
-                VehicleTypeDTO.builder().id(vehicleTypeDTO.getId()).name(vehicleTypeDTO.getName())
-                        .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getCreateDate()))
+                VehicleTypeDTO.builder(vehicleTypeDTO)
                         .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleTypeDTO.getModifyDate())).build();
         VehicleType vehicleType = vehicleTypeRepository.save(vehicleTypeMapper.toEntity(vehicleTypeDTOToUpdate));
         return vehicleTypeMapper.toDto(vehicleType);

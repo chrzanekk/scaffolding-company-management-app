@@ -45,6 +45,24 @@ public class WorkshopDTO {
         return new Builder();
     }
 
+    public static Builder builder(WorkshopDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.name = copy.getName();
+        builder.taxNumber = copy.getTaxNumber();
+        builder.street = copy.getStreet();
+        builder.buildingNo = copy.getBuildingNo();
+        builder.apartmentNo = copy.getApartmentNo();
+        builder.postalCode = copy.getPostalCode();
+        builder.city = copy.getCity();
+        builder.country = copy.getCountry();
+        builder.serviceActionTypes = copy.getServiceActionTypes();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        builder.removeDate = copy.getRemoveDate();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }

@@ -92,6 +92,30 @@ public class TireDTO {
         return new Builder();
     }
 
+    public static Builder builder(TireDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.brand = copy.getBrand();
+        builder.model = copy.getModel();
+        builder.width = copy.getWidth();
+        builder.profile = copy.getProfile();
+        builder.diameter = copy.getDiameter();
+        builder.type = copy.getType();
+        builder.tireReinforcedIndex = copy.getTireReinforcedIndex();
+        builder.speedIndex = copy.getSpeedIndex();
+        builder.capacityIndex = copy.getCapacityIndex();
+        builder.tireSeasonType = copy.getTireSeasonType();
+        builder.runOnFlat = copy.getRunOnFlat();
+        builder.productionYear = copy.getProductionYear();
+        builder.purchaseDate = copy.getPurchaseDate();
+        builder.tireStatus = copy.getTireStatus();
+        builder.createDate = copy.getCreateDate();
+        builder.modifyDate = copy.getModifyDate();
+        builder.removeDate = copy.getRemoveDate();
+        builder.vehicleId = copy.getVehicleId();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }

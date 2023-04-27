@@ -41,23 +41,7 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleDTO save(VehicleDTO vehicleDTO) {
         log.debug("Save vehicle: {}", vehicleDTO);
         validateVehicleDTO(vehicleDTO);
-        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
-                .brandId(vehicleDTO.getBrandId())
-                .brandName(vehicleDTO.getBrandName())
-                .modelId(vehicleDTO.getModelId())
-                .modelName(vehicleDTO.getModelName())
-                .registrationNumber(vehicleDTO.getRegistrationNumber())
-                .vin(vehicleDTO.getVin())
-                .productionYear(vehicleDTO.getProductionYear())
-                .firstRegistrationDate(vehicleDTO.getFirstRegistrationDate())
-                .freePlacesForTechInspection(vehicleDTO.getFreePlacesForTechInspection())
-                .fuelTypeId(vehicleDTO.getFuelTypeId())
-                .fuelTypeName(vehicleDTO.getFuelTypeName())
-                .vehicleTypeId(vehicleDTO.getVehicleTypeId())
-                .vehicleTypeName(vehicleDTO.getVehicleTypeName())
-                .length(vehicleDTO.getLength())
-                .width(vehicleDTO.getWidth())
-                .height(vehicleDTO.getHeight())
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder(vehicleDTO)
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(vehicleDTO.getCreateDate())).build();
         Vehicle vehicle = vehicleRepository.save(vehicleMapper.toEntity(vehicleDTO));
         return vehicleMapper.toDto(vehicle);
@@ -68,24 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
         log.debug("Update vehicle: {}", vehicleDTO);
         validateVehicleDTO(vehicleDTO);
         FieldValidator.validateObject(vehicleDTO.getId(), "vehicleId");
-        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder()
-                .brandId(vehicleDTO.getBrandId())
-                .brandName(vehicleDTO.getBrandName())
-                .modelId(vehicleDTO.getModelId())
-                .modelName(vehicleDTO.getModelName())
-                .registrationNumber(vehicleDTO.getRegistrationNumber())
-                .vin(vehicleDTO.getVin())
-                .productionYear(vehicleDTO.getProductionYear())
-                .firstRegistrationDate(vehicleDTO.getFirstRegistrationDate())
-                .freePlacesForTechInspection(vehicleDTO.getFreePlacesForTechInspection())
-                .fuelTypeId(vehicleDTO.getFuelTypeId())
-                .fuelTypeName(vehicleDTO.getFuelTypeName())
-                .vehicleTypeId(vehicleDTO.getVehicleTypeId())
-                .vehicleTypeName(vehicleDTO.getVehicleTypeName())
-                .length(vehicleDTO.getLength())
-                .width(vehicleDTO.getWidth())
-                .height(vehicleDTO.getHeight())
-                .createDate(vehicleDTO.getCreateDate())
+        VehicleDTO vehicleDTOtoSave = VehicleDTO.builder(vehicleDTO)
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(vehicleDTO.getModifyDate())).build();
         Vehicle vehicle = vehicleRepository.save(vehicleMapper.toEntity(vehicleDTO));
         return vehicleMapper.toDto(vehicle);

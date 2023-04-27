@@ -40,16 +40,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public WorkshopDTO save(WorkshopDTO workshopDTO) {
         log.debug("Save workshop: {}", workshopDTO);
         validateWorkshopDTO(workshopDTO);
-        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder()
-                .name(workshopDTO.getName())
-                .taxNumber(workshopDTO.getTaxNumber())
-                .street(workshopDTO.getStreet())
-                .buildingNo(workshopDTO.getBuildingNo())
-                .apartmentNo(workshopDTO.getApartmentNo())
-                .postalCode(workshopDTO.getPostalCode())
-                .city(workshopDTO.getCity())
-                .country(workshopDTO.getCountry())
-                .serviceActionTypes(workshopDTO.getServiceActionTypes())
+        WorkshopDTO workshopDTOtoSave = WorkshopDTO.builder(workshopDTO)
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getCreateDate())).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoSave));
         return workshopMapper.toDto(workshop);
@@ -60,18 +51,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         log.debug("Update workshop: {}", workshopDTO);
         validateWorkshopDTO(workshopDTO);
         FieldValidator.validateObject(workshopDTO.getId(), "WorkshopID");
-        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder()
-                .id(workshopDTO.getId())
-                .name(workshopDTO.getName())
-                .taxNumber(workshopDTO.getTaxNumber())
-                .street(workshopDTO.getStreet())
-                .buildingNo(workshopDTO.getBuildingNo())
-                .apartmentNo(workshopDTO.getApartmentNo())
-                .postalCode(workshopDTO.getPostalCode())
-                .city(workshopDTO.getCity())
-                .country(workshopDTO.getCountry())
-                .serviceActionTypes(workshopDTO.getServiceActionTypes())
-                .createDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getCreateDate()))
+        WorkshopDTO workshopDTOtoUpdate = WorkshopDTO.builder(workshopDTO)
                 .modifyDate(DateTimeUtil.setDateTimeIfNotExists(workshopDTO.getModifyDate())).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoUpdate));
         return workshopMapper.toDto(workshop);

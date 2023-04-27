@@ -198,10 +198,12 @@ public class TireControllerIT {
         em.persist(firstTire);
         em.flush();
     }
+
     private void createSecondGlobalTireInDB() {
         em.persist(secondTire);
         em.flush();
     }
+
     private void createGlobalVehicles() {
         createGlobalFuelTypes();
         createGlobalVehicleBrands();
@@ -242,6 +244,32 @@ public class TireControllerIT {
         List<Tire> allTiresAfterTest = tireRepository.findAll();
         int sizeAfterTest = allTiresAfterTest.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
+    }
+    @Test
+    @Transactional
+    public void createTireShouldSwitchOldTireOnVehicleToStatusStoked() throws Exception {
+        tireRepository.deleteAll();
+        createGlobalTireInDB();
+        firstTire.setTireStatus(TireStatus.MOUNTED);
+        tireRepository.saveAndFlush(firstTire);
+
+        secondTire.setTireStatus(TireStatus.STOKED);
+        secondTire.setVehicle(firstVehicle);
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+
+        TireDTO tireDTO = tireMapper.toDto(secondTire);
+        TireDTO tireDTOtoMount = TireDTO.builder(tireDTO).tireStatus(TireStatus.MOUNTED).build();
+
+        restTireMvc.perform(post(API_PATH + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(tireDTOtoMount))).andExpect(status().isOk());
+
+        List<Tire> allTiresAfterTest = tireRepository.findAll();
+        int sizeAfterTest = allTiresAfterTest.size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest + 1);
+        assertThat(allTiresAfterTest.get(0).getTireStatus()).isEqualTo(TireStatus.STOKED);
+        assertThat(allTiresAfterTest.get(1).getTireStatus()).isEqualTo(TireStatus.MOUNTED);
     }
 
     @Test
@@ -536,6 +564,7 @@ public class TireControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
     }
+
     @Test
     @Transactional
     public void createTireShouldThrowBadRequestForMissingProductionYear() throws Exception {
@@ -562,6 +591,7 @@ public class TireControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
     }
+
     @Test
     @Transactional
     public void createTireShouldThrowBadRequestForMissingPurchaseDate() throws Exception {
@@ -588,6 +618,7 @@ public class TireControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
     }
+
     @Test
     @Transactional
     public void createTireShouldThrowBadRequestForMissingTireStatus() throws Exception {
@@ -614,6 +645,7 @@ public class TireControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
     }
+
     @Test
     @Transactional
     public void createTireShouldThrowBadRequestForMissingVehicleId() throws Exception {
@@ -658,6 +690,33 @@ public class TireControllerIT {
         List<Tire> allTiresAfterTest = tireRepository.findAll();
         int sizeAfterTest = allTiresAfterTest.size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
+    }
+    @Test
+    @Transactional
+    public void updateTireShouldSwitchAnotherTireToStokedStatus() throws Exception {
+        tireRepository.deleteAll();
+        createGlobalTireInDB();
+        firstTire.setTireStatus(TireStatus.MOUNTED);
+        tireRepository.saveAndFlush(firstTire);
+        createSecondGlobalTireInDB();
+        secondTire.setTireStatus(TireStatus.STOKED);
+        secondTire.setVehicle(firstVehicle);
+        tireRepository.saveAndFlush(secondTire);
+        List<Tire> allTiresBeforeTest = tireRepository.findAll();
+        int sizeBeforeTest = allTiresBeforeTest.size();
+
+        TireDTO tireDTO = tireMapper.toDto(secondTire);
+        TireDTO updatedTireDTO = TireDTO.builder(tireDTO).tireStatus(TireStatus.MOUNTED).build();
+
+        restTireMvc.perform(put(API_PATH + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(updatedTireDTO))).andExpect(status().isOk());
+
+        List<Tire> allTiresAfterTest = tireRepository.findAll();
+        int sizeAfterTest = allTiresAfterTest.size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
+        assertThat(allTiresAfterTest.get(0).getTireStatus()).isEqualTo(TireStatus.STOKED);
+        assertThat(allTiresAfterTest.get(1).getTireStatus()).isEqualTo(TireStatus.MOUNTED);
     }
 
     @Test
@@ -1055,6 +1114,7 @@ public class TireControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
 
     }
+
     @Test
     @Transactional
     public void updateTireShouldThrowBadRequestForMissingPurchaseDate() throws Exception {
@@ -1087,6 +1147,7 @@ public class TireControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
 
     }
+
     @Test
     @Transactional
     public void updateTireShouldThrowBadRequestForMissingTireStatus() throws Exception {
@@ -1119,6 +1180,7 @@ public class TireControllerIT {
                 .content(TestUtil.convertObjectToJsonBytes(tireDTO))).andExpect(status().isBadRequest());
 
     }
+
     @Test
     @Transactional
     public void updateTireShouldThrowBadRequestForMissingVehicleId() throws Exception {
@@ -1332,7 +1394,8 @@ public class TireControllerIT {
                 .andExpect(jsonPath("$.[*].profile").value(hasItem(firstTire.getProfile())))
                 .andExpect(jsonPath("$.[*].diameter").value(hasItem(firstTire.getDiameter())))
                 .andExpect(jsonPath("$.[*].type").value(hasItem(firstTire.getType().toString())))
-                .andExpect(jsonPath("$.[*].tireReinforcedIndex").value(hasItem(firstTire.getTireReinforcedIndex().toString())))
+                .andExpect(jsonPath("$.[*].tireReinforcedIndex").value(hasItem(firstTire.getTireReinforcedIndex()
+                        .toString())))
                 .andExpect(jsonPath("$.[*].speedIndex").value(hasItem(firstTire.getSpeedIndex().toString())))
                 .andExpect(jsonPath("$.[*].capacityIndex").value(hasItem(firstTire.getCapacityIndex().toString())))
                 .andExpect(jsonPath("$.[*].tireSeasonType").value(hasItem(firstTire.getTireSeasonType().toString())))
@@ -1342,6 +1405,7 @@ public class TireControllerIT {
                 .andExpect(jsonPath("$.[*].purchaseDate").value(hasItem(firstTire.getPurchaseDate().toString())));
 
     }
+
     private void defaultTireShouldNotBeFound(String filter) throws Exception {
         restTireMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("$").isArray())
@@ -1383,6 +1447,7 @@ public class TireControllerIT {
         em.persist(updatedVehicleModel);
         em.flush();
     }
+
     private void createGlobalVehicleBrands() {
         firstVehicleBrand = VehicleBrandControllerIT.createEntity(em);
         em.persist(firstVehicleBrand);

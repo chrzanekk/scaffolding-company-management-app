@@ -19,6 +19,17 @@ public class RoleDTO {
         setName(builder.name);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builder(RoleDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.name = copy.getName();
+        return builder;
+    }
+
     public long getId() {
         return id;
     }
