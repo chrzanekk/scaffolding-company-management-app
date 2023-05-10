@@ -23,6 +23,9 @@ public class ServiceActionDTO {
     private final Instant createDate;
     private final Instant modifyDate;
     private final Instant removeDate;
+    private final BigDecimal summaryGrossValue;
+    private final BigDecimal summaryTaxValue;
+    private final BigDecimal summaryNetValue;
 
 
     public ServiceActionDTO(Long id,
@@ -39,7 +42,10 @@ public class ServiceActionDTO {
                             Set<ServiceActionTypeDTO> serviceActionTypes,
                             Instant createDate,
                             Instant modifyDate,
-                            Instant removeDate) {
+                            Instant removeDate,
+                            BigDecimal summaryGrossValue,
+                            BigDecimal summaryTaxValue,
+                            BigDecimal summaryNetValue) {
         this.id = id;
         this.carMileage = carMileage;
         this.invoiceNumber = invoiceNumber;
@@ -55,6 +61,9 @@ public class ServiceActionDTO {
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
+        this.summaryGrossValue = summaryGrossValue;
+        this.summaryTaxValue = summaryTaxValue;
+        this.summaryNetValue = summaryNetValue;
     }
 
     private ServiceActionDTO(Builder builder) {
@@ -73,6 +82,9 @@ public class ServiceActionDTO {
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
+        summaryGrossValue = builder.summaryGrossValue;
+        summaryTaxValue = builder.summaryTaxValue;
+        summaryNetValue = builder.summaryNetValue;
     }
 
     public static Builder builder() {
@@ -96,6 +108,9 @@ public class ServiceActionDTO {
         builder.createDate = copy.getCreateDate();
         builder.modifyDate = copy.getModifyDate();
         builder.removeDate = copy.getRemoveDate();
+        builder.summaryGrossValue = copy.getSummaryGrossValue();
+        builder.summaryTaxValue = copy.getSummaryTaxValue();
+        builder.summaryNetValue = copy.getSummaryNetValue();
         return builder;
     }
 
@@ -159,6 +174,18 @@ public class ServiceActionDTO {
         return removeDate;
     }
 
+    public BigDecimal getSummaryGrossValue() {
+        return summaryGrossValue;
+    }
+
+    public BigDecimal getSummaryTaxValue() {
+        return summaryTaxValue;
+    }
+
+    public BigDecimal getSummaryNetValue() {
+        return summaryNetValue;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -182,7 +209,12 @@ public class ServiceActionDTO {
             return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
-        return Objects.equals(removeDate, that.removeDate);
+        if (!Objects.equals(removeDate, that.removeDate)) return false;
+        if (!Objects.equals(summaryGrossValue, that.summaryGrossValue))
+            return false;
+        if (!Objects.equals(summaryTaxValue, that.summaryTaxValue))
+            return false;
+        return Objects.equals(summaryNetValue, that.summaryNetValue);
     }
 
     @Override
@@ -202,6 +234,9 @@ public class ServiceActionDTO {
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
+        result = 31 * result + (summaryGrossValue != null ? summaryGrossValue.hashCode() : 0);
+        result = 31 * result + (summaryTaxValue != null ? summaryTaxValue.hashCode() : 0);
+        result = 31 * result + (summaryNetValue != null ? summaryNetValue.hashCode() : 0);
         return result;
     }
 
@@ -223,6 +258,9 @@ public class ServiceActionDTO {
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
+                ", summaryGrossValue=" + summaryGrossValue +
+                ", summaryTaxValue=" + summaryTaxValue +
+                ", summaryNetValue=" + summaryNetValue +
                 '}';
     }
 
@@ -243,6 +281,9 @@ public class ServiceActionDTO {
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
+        private BigDecimal summaryGrossValue;
+        private BigDecimal summaryTaxValue;
+        private BigDecimal summaryNetValue;
 
         private Builder() {
         }
@@ -319,6 +360,21 @@ public class ServiceActionDTO {
 
         public Builder removeDate(Instant removeDate) {
             this.removeDate = removeDate;
+            return this;
+        }
+
+        public Builder summaryGrossValue(BigDecimal summaryGrossValue) {
+            this.summaryGrossValue = summaryGrossValue;
+            return this;
+        }
+
+        public Builder summaryTaxValue(BigDecimal summaryTaxValue) {
+            this.summaryTaxValue = summaryTaxValue;
+            return this;
+        }
+
+        public Builder summaryNetValue(BigDecimal summaryNetValue) {
+            this.summaryNetValue = summaryNetValue;
             return this;
         }
 

@@ -28,6 +28,10 @@ public class ServiceActionFilter {
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
 
+    private BigDecimal summaryGrossValue;
+    private BigDecimal summaryTaxValue;
+    private BigDecimal summaryNetValue;
+
     public ServiceActionFilter(Long id,
                                Integer carMileageStartsWith,
                                Integer carMileageEndWith,
@@ -48,7 +52,10 @@ public class ServiceActionFilter {
                                Instant createDateStartWith,
                                Instant createDateEndWith,
                                Instant modifyDateStartWith,
-                               Instant modifyDateEndWith) {
+                               Instant modifyDateEndWith,
+                               BigDecimal summaryGrossValue,
+                               BigDecimal summaryNetValue,
+                               BigDecimal summaryTaxValue) {
         this.id = id;
         this.carMileageStartsWith = carMileageStartsWith;
         this.carMileageEndWith = carMileageEndWith;
@@ -70,6 +77,9 @@ public class ServiceActionFilter {
         this.createDateEndWith = createDateEndWith;
         this.modifyDateStartWith = modifyDateStartWith;
         this.modifyDateEndWith = modifyDateEndWith;
+        this.summaryGrossValue = summaryGrossValue;
+        this.summaryNetValue = summaryNetValue;
+        this.summaryTaxValue = summaryTaxValue;
     }
 
     public ServiceActionFilter() {
@@ -97,6 +107,9 @@ public class ServiceActionFilter {
         createDateEndWith = builder.createDateEndWith;
         modifyDateStartWith = builder.modifyDateStartWith;
         modifyDateEndWith = builder.modifyDateEndWith;
+        summaryGrossValue = builder.summaryGrossValue;
+        summaryTaxValue = builder.summaryTaxValue;
+        summaryNetValue = builder.summaryNetValue;
     }
 
     public static Builder builder() {
@@ -126,8 +139,12 @@ public class ServiceActionFilter {
         builder.createDateEndWith = copy.getCreateDateEndWith();
         builder.modifyDateStartWith = copy.getModifyDateStartWith();
         builder.modifyDateEndWith = copy.getModifyDateEndWith();
+        builder.summaryGrossValue = copy.getSummaryGrossValue();
+        builder.summaryTaxValue = copy.getSummaryTaxValue();
+        builder.summaryNetValue = copy.getSummaryNetValue();
         return builder;
     }
+
 
     public Long getId() {
         return id;
@@ -213,6 +230,18 @@ public class ServiceActionFilter {
         return modifyDateEndWith;
     }
 
+    public BigDecimal getSummaryGrossValue() {
+        return summaryGrossValue;
+    }
+
+    public BigDecimal getSummaryTaxValue() {
+        return summaryTaxValue;
+    }
+
+    public BigDecimal getSummaryNetValue() {
+        return summaryNetValue;
+    }
+
 
     public static final class Builder {
         private Long id;
@@ -236,6 +265,9 @@ public class ServiceActionFilter {
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
         private Instant modifyDateEndWith;
+        private BigDecimal summaryGrossValue;
+        private BigDecimal summaryTaxValue;
+        private BigDecimal summaryNetValue;
 
         private Builder() {
         }
@@ -342,6 +374,21 @@ public class ServiceActionFilter {
 
         public Builder modifyDateEndWith(Instant modifyDateEndWith) {
             this.modifyDateEndWith = modifyDateEndWith;
+            return this;
+        }
+
+        public Builder summaryGrossValue(BigDecimal summaryGrossValue) {
+            this.summaryGrossValue = summaryGrossValue;
+            return this;
+        }
+
+        public Builder summaryTaxValue(BigDecimal summaryTaxValue) {
+            this.summaryTaxValue = summaryTaxValue;
+            return this;
+        }
+
+        public Builder summaryNetValue(BigDecimal summaryNetValue) {
+            this.summaryNetValue = summaryNetValue;
             return this;
         }
 

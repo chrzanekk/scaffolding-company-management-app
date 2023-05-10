@@ -9,5 +9,4 @@ import pl.com.chrzanowski.scma.domain.ServiceAction;
 public interface ServiceActionRepository extends JpaRepository<ServiceAction, Long>, JpaSpecificationExecutor<ServiceAction> {
 
     void deleteServiceActionById(Long id);
-
 }
