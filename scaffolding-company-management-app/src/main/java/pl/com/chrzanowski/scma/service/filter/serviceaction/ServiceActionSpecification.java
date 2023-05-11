@@ -26,9 +26,7 @@ public class ServiceActionSpecification {
     private static final String DESCRIPTION = "description";
     private static final String CREATE_DATE = "createDate";
     private static final String MODIFY_DATE = "modifyDate";
-    private static final String SUMMARY_GROSS_VALUE = "summaryGrossValue";
-    private static final String SUMMARY_TAX_VALUE = "summaryTaxValue";
-    private static final String SUMMARY_NET_VALUE = "summaryNetValue";
+
 
 
     public static Specification<ServiceAction> createSpecification(ServiceActionFilter serviceActionFilter) {
@@ -124,15 +122,6 @@ public class ServiceActionSpecification {
             if (serviceActionFilter.getWorkshopName() != null) {
                 specification = specification.and(hasWorkshopName(serviceActionFilter.getWorkshopName()));
             }
-            if (serviceActionFilter.getSummaryGrossValue() != null) {
-                specification = specification.and()
-            }
-            if (serviceActionFilter.getSummaryNetValue() != null) {
-                specification = specification.and()
-            }
-            if (serviceActionFilter.getSummaryTaxValue() != null) {
-                specification = specification.and()
-            }
         }
         return specification;
     }
@@ -193,9 +182,5 @@ public class ServiceActionSpecification {
             Join<Workshop, ServiceAction> workshopServiceActionJoin = root.join(WORKSHOP_NAME);
             return criteriaBuilder.like(workshopServiceActionJoin.get(NAME), "%" + name + "%");
         };
-    }
-
-    private static Specification<ServiceAction> hasSumValue(BigDecimal value, String fieldName) {
-        return ;
     }
 }

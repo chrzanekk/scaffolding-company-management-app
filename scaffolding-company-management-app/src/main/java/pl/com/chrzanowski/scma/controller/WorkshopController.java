@@ -71,10 +71,10 @@ public class WorkshopController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<WorkshopDTO> addWorkshop(@RequestBody WorkshopDTO WorkshopDTO) {
-        log.debug("REST request to add new workshop: {}", WorkshopDTO);
+    public ResponseEntity<WorkshopDTO> addWorkshop(@RequestBody WorkshopDTO workshopDTO) {
+        log.debug("REST request to add new workshop: {}", workshopDTO);
         try {
-            WorkshopDTO newWorkshopDTO = workshopService.save(WorkshopDTO);
+            WorkshopDTO newWorkshopDTO = workshopService.save(workshopDTO);
             return ResponseEntity.ok().body(newWorkshopDTO);
         } catch (EmptyValueException e) {
             throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
