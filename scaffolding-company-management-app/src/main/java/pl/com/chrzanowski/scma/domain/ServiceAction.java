@@ -24,10 +24,8 @@ public class ServiceAction {
     @NotNull
     private String invoiceNumber;
     @Column(name = "invoice_groos_value")
-    @NotNull
     private BigDecimal grossValue;
     @Column(name = "tax_value")
-    @NotNull
     private BigDecimal taxValue;
     @Column(name = "invoice_net_value")
     @NotNull

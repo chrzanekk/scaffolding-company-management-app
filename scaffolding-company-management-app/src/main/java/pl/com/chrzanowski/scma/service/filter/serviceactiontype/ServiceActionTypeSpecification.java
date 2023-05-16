@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.filter.serviceactiontype;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.ServiceActionType;
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
 
 import java.time.Instant;
 
@@ -11,6 +12,7 @@ public class ServiceActionTypeSpecification {
 
     public static final String ID = "id";
     public static final String NAME = "name";
+    public static final String TYPE_OF_SERVICE = "typeOfService";
     public static final String CREATE_DATE = "createDate";
     public static final String MODIFY_DATE = "modifyDate";
 
@@ -22,6 +24,9 @@ public class ServiceActionTypeSpecification {
             }
             if (serviceActionTypeFilter.getName() != null) {
                 specification = specification.and(hasName(serviceActionTypeFilter.getName()));
+            }
+            if (serviceActionTypeFilter.getTypeOfService() != null) {
+                specification = specification.and(hasTypeOfService(serviceActionTypeFilter.getTypeOfService()));
             }
             if (serviceActionTypeFilter.getCreateDateStartWith() != null) {
                 specification = specification.and(hasCreateDateStartWith(serviceActionTypeFilter.getCreateDateStartWith()));
@@ -47,6 +52,10 @@ public class ServiceActionTypeSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get(NAME), "%" + name + "%");
     }
 
+    private static Specification<ServiceActionType> hasTypeOfService(TypeOfService typeOfService) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get(TYPE_OF_SERVICE), typeOfService);
+    }
+
     private static Specification<ServiceActionType> hasCreateDateStartWith(Instant createDate) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(CREATE_DATE),
                 createDate);
@@ -66,5 +75,4 @@ public class ServiceActionTypeSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(MODIFY_DATE),
                 modifyDate);
     }
-
 }

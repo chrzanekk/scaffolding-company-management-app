@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.scma.domain;
 
 
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,11 @@ public class ServiceActionType {
     @NotBlank
     private String name;
 
+    @Column(name = "type_of_service")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TypeOfService typeOfService;
+
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -42,6 +49,7 @@ public class ServiceActionType {
 
     public ServiceActionType(Long id,
                              String name,
+                             TypeOfService typeOfService,
                              Instant createDate,
                              Instant modifyDate,
                              Instant removeDate,
@@ -49,6 +57,7 @@ public class ServiceActionType {
                              Set<ServiceAction> serviceActions) {
         this.id = id;
         this.name = name;
+        this.typeOfService = typeOfService;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
@@ -82,6 +91,10 @@ public class ServiceActionType {
 
     public Set<ServiceAction> getServiceActions() {
         return serviceActions;
+    }
+
+    public TypeOfService getTypeOfService() {
+        return typeOfService;
     }
 
     public ServiceActionType setId(Long id) {
@@ -119,6 +132,11 @@ public class ServiceActionType {
         return this;
     }
 
+    public ServiceActionType setTypeOfService(TypeOfService typeOfService) {
+        this.typeOfService = typeOfService;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,6 +146,7 @@ public class ServiceActionType {
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
+        if (typeOfService != that.typeOfService) return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
         if (!Objects.equals(removeDate, that.removeDate)) return false;
@@ -139,6 +158,7 @@ public class ServiceActionType {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (typeOfService != null ? typeOfService.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -152,6 +172,7 @@ public class ServiceActionType {
         return "ServiceActionType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", typeOfService=" + typeOfService +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +

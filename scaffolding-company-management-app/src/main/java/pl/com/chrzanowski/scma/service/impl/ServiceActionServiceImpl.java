@@ -17,6 +17,7 @@ import pl.com.chrzanowski.scma.service.filter.serviceaction.ServiceActionFilter;
 import pl.com.chrzanowski.scma.service.filter.serviceaction.ServiceActionSpecification;
 import pl.com.chrzanowski.scma.service.mapper.ServiceActionMapper;
 import pl.com.chrzanowski.scma.util.DateTimeUtil;
+import pl.com.chrzanowski.scma.util.TaxCalculationUtil;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -43,10 +44,12 @@ public class ServiceActionServiceImpl implements ServiceActionService {
     @Override
     public ServiceActionDTO save(ServiceActionDTO serviceActionDTO) {
         log.debug("Save service action: {}", serviceActionDTO);
-        ServiceActionDTO serviceActionDTOtoUpdate = ServiceActionDTO.builder(serviceActionDTO)
+        ServiceActionDTO serviceActionDTOtoSave = ServiceActionDTO.builder(serviceActionDTO)
+                .taxValue(TaxCalculationUtil.calculateTaxValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
+                .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(),serviceActionDTO.getTaxRate()))
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionDTO.getCreateDate())).build();
         ServiceAction serviceAction =
-                serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoUpdate));
+                serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoSave));
         return serviceActionMapper.toDto(serviceAction);
     }
 
@@ -54,7 +57,10 @@ public class ServiceActionServiceImpl implements ServiceActionService {
     public ServiceActionDTO update(ServiceActionDTO serviceActionDTO) {
         log.debug("Update service action: {}", serviceActionDTO);
         if (serviceActionDTO.getId() != null) {
+            validateOilServiceType(serviceActionDTO);
             ServiceActionDTO serviceActionDTOtoUpdate = ServiceActionDTO.builder(serviceActionDTO)
+                    .taxValue(TaxCalculationUtil.calculateTaxValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
+                    .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(),serviceActionDTO.getTaxRate()))
                     .modifyDate(Instant.now()).build();
             ServiceAction serviceAction =
                     serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoUpdate));
@@ -62,6 +68,11 @@ public class ServiceActionServiceImpl implements ServiceActionService {
         } else {
             throw new ObjectNotFoundException("Id not found");
         }
+    }
+
+    //todo implement logic to check last oil service action in DB and check if whether service action not earlier
+    // than 7 days
+    private void validateOilServiceType(ServiceActionDTO serviceActionDTO) {
     }
 
     @Override

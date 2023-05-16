@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.service.filter.serviceactiontype;
 
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
+
 import java.time.Instant;
 import java.util.Objects;
 
@@ -7,6 +9,7 @@ public class ServiceActionTypeFilter {
 
     private Long id;
     private String name;
+    private TypeOfService typeOfService;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
@@ -16,16 +19,29 @@ public class ServiceActionTypeFilter {
     }
 
     private ServiceActionTypeFilter(Builder builder) {
-        id = builder.id;
-        name = builder.name;
-        createDateStartWith = builder.createDateStartWith;
-        createDateEndWith = builder.createDateEndWith;
-        modifyDateStartWith = builder.modifyDateStartWith;
-        modifyDateEndWith = builder.modifyDateEndWith;
+        setId(builder.id);
+        setName(builder.name);
+        setTypeOfService(builder.typeOfService);
+        setCreateDateStartWith(builder.createDateStartWith);
+        setCreateDateEndWith(builder.createDateEndWith);
+        setModifyDateStartWith(builder.modifyDateStartWith);
+        setModifyDateEndWith(builder.modifyDateEndWith);
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static Builder builder(ServiceActionTypeFilter copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.name = copy.getName();
+        builder.typeOfService = copy.getTypeOfService();
+        builder.createDateStartWith = copy.getCreateDateStartWith();
+        builder.createDateEndWith = copy.getCreateDateEndWith();
+        builder.modifyDateStartWith = copy.getModifyDateStartWith();
+        builder.modifyDateEndWith = copy.getModifyDateEndWith();
+        return builder;
     }
 
     public Long getId() {
@@ -34,6 +50,10 @@ public class ServiceActionTypeFilter {
 
     public String getName() {
         return name;
+    }
+
+    public TypeOfService getTypeOfService() {
+        return typeOfService;
     }
 
     public Instant getCreateDateStartWith() {
@@ -59,6 +79,11 @@ public class ServiceActionTypeFilter {
 
     public ServiceActionTypeFilter setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public ServiceActionTypeFilter setTypeOfService(TypeOfService typeOfService) {
+        this.typeOfService = typeOfService;
         return this;
     }
 
@@ -91,6 +116,7 @@ public class ServiceActionTypeFilter {
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
+        if (typeOfService != that.typeOfService) return false;
         if (!Objects.equals(createDateStartWith, that.createDateStartWith))
             return false;
         if (!Objects.equals(createDateEndWith, that.createDateEndWith))
@@ -104,6 +130,7 @@ public class ServiceActionTypeFilter {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (typeOfService != null ? typeOfService.hashCode() : 0);
         result = 31 * result + (createDateStartWith != null ? createDateStartWith.hashCode() : 0);
         result = 31 * result + (createDateEndWith != null ? createDateEndWith.hashCode() : 0);
         result = 31 * result + (modifyDateStartWith != null ? modifyDateStartWith.hashCode() : 0);
@@ -116,6 +143,7 @@ public class ServiceActionTypeFilter {
         return "ServiceActionTypeFilter{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", typeOfService=" + typeOfService +
                 ", createDateStartWith=" + createDateStartWith +
                 ", createDateEndWith=" + createDateEndWith +
                 ", modifyDateStartWith=" + modifyDateStartWith +
@@ -127,6 +155,7 @@ public class ServiceActionTypeFilter {
     public static final class Builder {
         private Long id;
         private String name;
+        private TypeOfService typeOfService;
         private Instant createDateStartWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
@@ -142,6 +171,11 @@ public class ServiceActionTypeFilter {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder typeOfService(TypeOfService typeOfService) {
+            this.typeOfService = typeOfService;
             return this;
         }
 
