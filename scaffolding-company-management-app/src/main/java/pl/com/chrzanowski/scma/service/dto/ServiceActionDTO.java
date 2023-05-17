@@ -21,12 +21,15 @@ public class ServiceActionDTO {
     private final String workshopName;
     private final Set<ServiceActionTypeDTO> serviceActionTypes;
     private final Long vehicleId;
+    private final String vehicleRegistrationNumber;
     private final Instant createDate;
     private final Instant modifyDate;
     private final Instant removeDate;
     private final BigDecimal summaryGrossValue;
     private final BigDecimal summaryTaxValue;
     private final BigDecimal summaryNetValue;
+
+
 
     public ServiceActionDTO(Long id,
                             Integer carMileage,
@@ -41,6 +44,7 @@ public class ServiceActionDTO {
                             String workshopName,
                             Set<ServiceActionTypeDTO> serviceActionTypes,
                             Long vehicleId,
+                            String vehicleRegistrationNumber,
                             Instant createDate,
                             Instant modifyDate,
                             Instant removeDate,
@@ -60,6 +64,7 @@ public class ServiceActionDTO {
         this.workshopName = workshopName;
         this.serviceActionTypes = serviceActionTypes;
         this.vehicleId = vehicleId;
+        this.vehicleRegistrationNumber = vehicleRegistrationNumber;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
@@ -82,6 +87,7 @@ public class ServiceActionDTO {
         workshopName = builder.workshopName;
         serviceActionTypes = builder.serviceActionTypes;
         vehicleId = builder.vehicleId;
+        vehicleRegistrationNumber = builder.vehicleRegistrationNumber;
         createDate = builder.createDate;
         modifyDate = builder.modifyDate;
         removeDate = builder.removeDate;
@@ -109,6 +115,7 @@ public class ServiceActionDTO {
         builder.workshopName = copy.getWorkshopName();
         builder.serviceActionTypes = copy.getServiceActionTypes();
         builder.vehicleId = copy.getVehicleId();
+        builder.vehicleRegistrationNumber = copy.getVehicleRegistrationNumber();
         builder.createDate = copy.getCreateDate();
         builder.modifyDate = copy.getModifyDate();
         builder.removeDate = copy.getRemoveDate();
@@ -170,6 +177,10 @@ public class ServiceActionDTO {
         return vehicleId;
     }
 
+    public String getVehicleRegistrationNumber() {
+        return vehicleRegistrationNumber;
+    }
+
     public Instant getCreateDate() {
         return createDate;
     }
@@ -216,6 +227,8 @@ public class ServiceActionDTO {
         if (!Objects.equals(serviceActionTypes, that.serviceActionTypes))
             return false;
         if (!Objects.equals(vehicleId, that.vehicleId)) return false;
+        if (!Objects.equals(vehicleRegistrationNumber, that.vehicleRegistrationNumber))
+            return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
         if (!Objects.equals(removeDate, that.removeDate)) return false;
@@ -241,6 +254,7 @@ public class ServiceActionDTO {
         result = 31 * result + (workshopName != null ? workshopName.hashCode() : 0);
         result = 31 * result + (serviceActionTypes != null ? serviceActionTypes.hashCode() : 0);
         result = 31 * result + (vehicleId != null ? vehicleId.hashCode() : 0);
+        result = 31 * result + (vehicleRegistrationNumber != null ? vehicleRegistrationNumber.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -266,6 +280,7 @@ public class ServiceActionDTO {
                 ", workshopName='" + workshopName + '\'' +
                 ", serviceActionTypes=" + serviceActionTypes +
                 ", vehicleId=" + vehicleId +
+                ", vehicleRegistrationNumber='" + vehicleRegistrationNumber + '\'' +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
@@ -290,6 +305,7 @@ public class ServiceActionDTO {
         private String workshopName;
         private Set<ServiceActionTypeDTO> serviceActionTypes;
         private Long vehicleId;
+        private String vehicleRegistrationNumber;
         private Instant createDate;
         private Instant modifyDate;
         private Instant removeDate;
@@ -362,6 +378,11 @@ public class ServiceActionDTO {
 
         public Builder vehicleId(Long vehicleId) {
             this.vehicleId = vehicleId;
+            return this;
+        }
+
+        public Builder vehicleRegistrationNumber(String vehicleRegistrationNumber) {
+            this.vehicleRegistrationNumber = vehicleRegistrationNumber;
             return this;
         }
 

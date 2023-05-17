@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -63,11 +65,16 @@ public class Vehicle {
     @NotNull
     private FuelType fuelType;
 
+    @OneToMany(cascade = CascadeType.ALL,
+    mappedBy = "vehicle")
+    List<ServiceAction> serviceActions = new ArrayList<>();
+
     public Vehicle(Long id,
                    String registrationNumber,
                    String vin,
                    Short productionYear,
                    LocalDate firstRegistrationDate,
+                   Short freePlacesForTechInspection,
                    BigDecimal length,
                    BigDecimal width,
                    BigDecimal height,
@@ -75,12 +82,14 @@ public class Vehicle {
                    Instant modifyDate,
                    VehicleModel vehicleModel,
                    VehicleType vehicleType,
-                   FuelType fuelType) {
+                   FuelType fuelType,
+                   List<ServiceAction> serviceActions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.vin = vin;
         this.productionYear = productionYear;
         this.firstRegistrationDate = firstRegistrationDate;
+        this.freePlacesForTechInspection = freePlacesForTechInspection;
         this.length = length;
         this.width = width;
         this.height = height;
@@ -89,6 +98,7 @@ public class Vehicle {
         this.vehicleModel = vehicleModel;
         this.vehicleType = vehicleType;
         this.fuelType = fuelType;
+        this.serviceActions = serviceActions;
     }
 
     public Vehicle() {
@@ -148,6 +158,10 @@ public class Vehicle {
 
     public FuelType getFuelType() {
         return fuelType;
+    }
+
+    public List<ServiceAction> getServiceActions() {
+        return serviceActions;
     }
 
     public Vehicle setId(Long id) {
@@ -221,6 +235,11 @@ public class Vehicle {
         return this;
     }
 
+    public Vehicle setServiceActions(List<ServiceAction> serviceActions) {
+        this.serviceActions = serviceActions;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -236,6 +255,8 @@ public class Vehicle {
             return false;
         if (!Objects.equals(firstRegistrationDate, vehicle.firstRegistrationDate))
             return false;
+        if (!Objects.equals(freePlacesForTechInspection, vehicle.freePlacesForTechInspection))
+            return false;
         if (!Objects.equals(length, vehicle.length)) return false;
         if (!Objects.equals(width, vehicle.width)) return false;
         if (!Objects.equals(height, vehicle.height)) return false;
@@ -244,7 +265,8 @@ public class Vehicle {
         if (!Objects.equals(vehicleModel, vehicle.vehicleModel))
             return false;
         if (!Objects.equals(vehicleType, vehicle.vehicleType)) return false;
-        return Objects.equals(fuelType, vehicle.fuelType);
+        if (!Objects.equals(fuelType, vehicle.fuelType)) return false;
+        return Objects.equals(serviceActions, vehicle.serviceActions);
     }
 
     @Override
@@ -254,6 +276,7 @@ public class Vehicle {
         result = 31 * result + (vin != null ? vin.hashCode() : 0);
         result = 31 * result + (productionYear != null ? productionYear.hashCode() : 0);
         result = 31 * result + (firstRegistrationDate != null ? firstRegistrationDate.hashCode() : 0);
+        result = 31 * result + (freePlacesForTechInspection != null ? freePlacesForTechInspection.hashCode() : 0);
         result = 31 * result + (length != null ? length.hashCode() : 0);
         result = 31 * result + (width != null ? width.hashCode() : 0);
         result = 31 * result + (height != null ? height.hashCode() : 0);
@@ -262,6 +285,7 @@ public class Vehicle {
         result = 31 * result + (vehicleModel != null ? vehicleModel.hashCode() : 0);
         result = 31 * result + (vehicleType != null ? vehicleType.hashCode() : 0);
         result = 31 * result + (fuelType != null ? fuelType.hashCode() : 0);
+        result = 31 * result + (serviceActions != null ? serviceActions.hashCode() : 0);
         return result;
     }
 
@@ -273,6 +297,7 @@ public class Vehicle {
                 ", vin='" + vin + '\'' +
                 ", productionYear=" + productionYear +
                 ", firstRegistrationDate=" + firstRegistrationDate +
+                ", freePlacesForTechInspection=" + freePlacesForTechInspection +
                 ", length=" + length +
                 ", width=" + width +
                 ", height=" + height +
@@ -281,6 +306,7 @@ public class Vehicle {
                 ", vehicleModel=" + vehicleModel +
                 ", vehicleType=" + vehicleType +
                 ", fuelType=" + fuelType +
+                ", serviceActions=" + serviceActions +
                 '}';
     }
 }

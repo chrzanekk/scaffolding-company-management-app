@@ -23,11 +23,12 @@ public class ServiceActionFilter {
     private String description;
     private Long workshopId;
     private String workshopName;
+    private Long vehicleId;
+    private String vehicleRegistrationNumber;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
-
 
     public ServiceActionFilter(Long id,
                                Integer carMileageStartsWith,
@@ -46,6 +47,8 @@ public class ServiceActionFilter {
                                String description,
                                Long workshopId,
                                String workshopName,
+                               Long vehicleId,
+                               String vehicleRegistrationNumber,
                                Instant createDateStartWith,
                                Instant createDateEndWith,
                                Instant modifyDateStartWith,
@@ -67,37 +70,38 @@ public class ServiceActionFilter {
         this.description = description;
         this.workshopId = workshopId;
         this.workshopName = workshopName;
+        this.vehicleId = vehicleId;
+        this.vehicleRegistrationNumber = vehicleRegistrationNumber;
         this.createDateStartWith = createDateStartWith;
         this.createDateEndWith = createDateEndWith;
         this.modifyDateStartWith = modifyDateStartWith;
         this.modifyDateEndWith = modifyDateEndWith;
     }
 
-    public ServiceActionFilter() {
-    }
-
     private ServiceActionFilter(Builder builder) {
-        id = builder.id;
-        carMileageStartsWith = builder.carMileageStartsWith;
-        carMileageEndWith = builder.carMileageEndWith;
-        invoiceNumber = builder.invoiceNumber;
-        grossValueStartsWith = builder.grossValueStartsWith;
-        grossValueEndWith = builder.grossValueEndWith;
-        taxValueStartsWith = builder.taxValueStartsWith;
-        taxValueEndWith = builder.taxValueEndWith;
-        netValueStartsWith = builder.netValueStartsWith;
-        netValueEndWith = builder.netValueEndWith;
-        taxRateStartsWith = builder.taxRateStartsWith;
-        taxRateEndWith = builder.taxRateEndWith;
-        serviceDateStartsWith = builder.serviceDateStartsWith;
-        serviceDateEndWith = builder.serviceDateEndWith;
-        description = builder.description;
-        workshopId = builder.workshopId;
-        workshopName = builder.workshopName;
-        createDateStartWith = builder.createDateStartWith;
-        createDateEndWith = builder.createDateEndWith;
-        modifyDateStartWith = builder.modifyDateStartWith;
-        modifyDateEndWith = builder.modifyDateEndWith;
+        setId(builder.id);
+        setCarMileageStartsWith(builder.carMileageStartsWith);
+        setCarMileageEndWith(builder.carMileageEndWith);
+        setInvoiceNumber(builder.invoiceNumber);
+        setGrossValueStartsWith(builder.grossValueStartsWith);
+        setGrossValueEndWith(builder.grossValueEndWith);
+        setTaxValueStartsWith(builder.taxValueStartsWith);
+        setTaxValueEndWith(builder.taxValueEndWith);
+        setNetValueStartsWith(builder.netValueStartsWith);
+        setNetValueEndWith(builder.netValueEndWith);
+        setTaxRateStartsWith(builder.taxRateStartsWith);
+        setTaxRateEndWith(builder.taxRateEndWith);
+        setServiceDateStartsWith(builder.serviceDateStartsWith);
+        setServiceDateEndWith(builder.serviceDateEndWith);
+        setDescription(builder.description);
+        setWorkshopId(builder.workshopId);
+        setWorkshopName(builder.workshopName);
+        setVehicleId(builder.vehicleId);
+        setVehicleRegistrationNumber(builder.vehicleRegistrationNumber);
+        setCreateDateStartWith(builder.createDateStartWith);
+        setCreateDateEndWith(builder.createDateEndWith);
+        setModifyDateStartWith(builder.modifyDateStartWith);
+        setModifyDateEndWith(builder.modifyDateEndWith);
     }
 
     public static Builder builder() {
@@ -123,6 +127,8 @@ public class ServiceActionFilter {
         builder.description = copy.getDescription();
         builder.workshopId = copy.getWorkshopId();
         builder.workshopName = copy.getWorkshopName();
+        builder.vehicleId = copy.getVehicleId();
+        builder.vehicleRegistrationNumber = copy.getVehicleRegistrationNumber();
         builder.createDateStartWith = copy.getCreateDateStartWith();
         builder.createDateEndWith = copy.getCreateDateEndWith();
         builder.modifyDateStartWith = copy.getModifyDateStartWith();
@@ -130,89 +136,211 @@ public class ServiceActionFilter {
         return builder;
     }
 
-
     public Long getId() {
         return id;
+    }
+
+    public ServiceActionFilter setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public Integer getCarMileageStartsWith() {
         return carMileageStartsWith;
     }
 
+    public ServiceActionFilter setCarMileageStartsWith(Integer carMileageStartsWith) {
+        this.carMileageStartsWith = carMileageStartsWith;
+        return this;
+    }
+
     public Integer getCarMileageEndWith() {
         return carMileageEndWith;
+    }
+
+    public ServiceActionFilter setCarMileageEndWith(Integer carMileageEndWith) {
+        this.carMileageEndWith = carMileageEndWith;
+        return this;
     }
 
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
 
+    public ServiceActionFilter setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+        return this;
+    }
+
     public BigDecimal getGrossValueStartsWith() {
         return grossValueStartsWith;
+    }
+
+    public ServiceActionFilter setGrossValueStartsWith(BigDecimal grossValueStartsWith) {
+        this.grossValueStartsWith = grossValueStartsWith;
+        return this;
     }
 
     public BigDecimal getGrossValueEndWith() {
         return grossValueEndWith;
     }
 
+    public ServiceActionFilter setGrossValueEndWith(BigDecimal grossValueEndWith) {
+        this.grossValueEndWith = grossValueEndWith;
+        return this;
+    }
+
     public BigDecimal getTaxValueStartsWith() {
         return taxValueStartsWith;
+    }
+
+    public ServiceActionFilter setTaxValueStartsWith(BigDecimal taxValueStartsWith) {
+        this.taxValueStartsWith = taxValueStartsWith;
+        return this;
     }
 
     public BigDecimal getTaxValueEndWith() {
         return taxValueEndWith;
     }
 
+    public ServiceActionFilter setTaxValueEndWith(BigDecimal taxValueEndWith) {
+        this.taxValueEndWith = taxValueEndWith;
+        return this;
+    }
+
     public BigDecimal getNetValueStartsWith() {
         return netValueStartsWith;
+    }
+
+    public ServiceActionFilter setNetValueStartsWith(BigDecimal netValueStartsWith) {
+        this.netValueStartsWith = netValueStartsWith;
+        return this;
     }
 
     public BigDecimal getNetValueEndWith() {
         return netValueEndWith;
     }
 
+    public ServiceActionFilter setNetValueEndWith(BigDecimal netValueEndWith) {
+        this.netValueEndWith = netValueEndWith;
+        return this;
+    }
+
     public BigDecimal getTaxRateStartsWith() {
         return taxRateStartsWith;
+    }
+
+    public ServiceActionFilter setTaxRateStartsWith(BigDecimal taxRateStartsWith) {
+        this.taxRateStartsWith = taxRateStartsWith;
+        return this;
     }
 
     public BigDecimal getTaxRateEndWith() {
         return taxRateEndWith;
     }
 
+    public ServiceActionFilter setTaxRateEndWith(BigDecimal taxRateEndWith) {
+        this.taxRateEndWith = taxRateEndWith;
+        return this;
+    }
+
     public LocalDate getServiceDateStartsWith() {
         return serviceDateStartsWith;
+    }
+
+    public ServiceActionFilter setServiceDateStartsWith(LocalDate serviceDateStartsWith) {
+        this.serviceDateStartsWith = serviceDateStartsWith;
+        return this;
     }
 
     public LocalDate getServiceDateEndWith() {
         return serviceDateEndWith;
     }
 
+    public ServiceActionFilter setServiceDateEndWith(LocalDate serviceDateEndWith) {
+        this.serviceDateEndWith = serviceDateEndWith;
+        return this;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public ServiceActionFilter setDescription(String description) {
+        this.description = description;
+        return this;
     }
 
     public Long getWorkshopId() {
         return workshopId;
     }
 
+    public ServiceActionFilter setWorkshopId(Long workshopId) {
+        this.workshopId = workshopId;
+        return this;
+    }
+
     public String getWorkshopName() {
         return workshopName;
+    }
+
+    public ServiceActionFilter setWorkshopName(String workshopName) {
+        this.workshopName = workshopName;
+        return this;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public ServiceActionFilter setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+        return this;
+    }
+
+    public String getVehicleRegistrationNumber() {
+        return vehicleRegistrationNumber;
+    }
+
+    public ServiceActionFilter setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+        this.vehicleRegistrationNumber = vehicleRegistrationNumber;
+        return this;
     }
 
     public Instant getCreateDateStartWith() {
         return createDateStartWith;
     }
 
+    public ServiceActionFilter setCreateDateStartWith(Instant createDateStartWith) {
+        this.createDateStartWith = createDateStartWith;
+        return this;
+    }
+
     public Instant getCreateDateEndWith() {
         return createDateEndWith;
+    }
+
+    public ServiceActionFilter setCreateDateEndWith(Instant createDateEndWith) {
+        this.createDateEndWith = createDateEndWith;
+        return this;
     }
 
     public Instant getModifyDateStartWith() {
         return modifyDateStartWith;
     }
 
+    public ServiceActionFilter setModifyDateStartWith(Instant modifyDateStartWith) {
+        this.modifyDateStartWith = modifyDateStartWith;
+        return this;
+    }
+
     public Instant getModifyDateEndWith() {
         return modifyDateEndWith;
+    }
+
+    public ServiceActionFilter setModifyDateEndWith(Instant modifyDateEndWith) {
+        this.modifyDateEndWith = modifyDateEndWith;
+        return this;
     }
 
 
@@ -234,6 +362,8 @@ public class ServiceActionFilter {
         private String description;
         private Long workshopId;
         private String workshopName;
+        private Long vehicleId;
+        private String vehicleRegistrationNumber;
         private Instant createDateStartWith;
         private Instant createDateEndWith;
         private Instant modifyDateStartWith;
@@ -327,6 +457,16 @@ public class ServiceActionFilter {
             return this;
         }
 
+        public Builder vehicleId(Long vehicleId) {
+            this.vehicleId = vehicleId;
+            return this;
+        }
+
+        public Builder vehicleRegistrationNumber(String vehicleRegistrationNumber) {
+            this.vehicleRegistrationNumber = vehicleRegistrationNumber;
+            return this;
+        }
+
         public Builder createDateStartWith(Instant createDateStartWith) {
             this.createDateStartWith = createDateStartWith;
             return this;
@@ -346,7 +486,6 @@ public class ServiceActionFilter {
             this.modifyDateEndWith = modifyDateEndWith;
             return this;
         }
-
 
         public ServiceActionFilter build() {
             return new ServiceActionFilter(this);

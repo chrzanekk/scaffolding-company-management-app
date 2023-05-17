@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.service.filter.serviceaction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.scma.domain.ServiceAction;
+import pl.com.chrzanowski.scma.domain.Vehicle;
 import pl.com.chrzanowski.scma.domain.Workshop;
 
 import javax.persistence.criteria.Join;
@@ -20,13 +21,16 @@ public class ServiceActionSpecification {
     private static final String TAX_VALUE = "taxValue";
     private static final String NET_VALUE = "netValue";
     private static final String TAX_RATE = "taxRate";
+    private static final String WORKSHOP = "workshop";
+    private static final String VEHICLE = "vehicle";
     private static final String WORKSHOP_ID = "workshopId";
     private static final String WORKSHOP_NAME = "workshopName";
+    private static final String VEHICLE_ID = "vehicleId";
+    private static final String VEHICLE_REGISTRATION_NUMBER = "vehicleRegistrationNumber";
     private static final String SERVICE_DATE = "serviceDate";
     private static final String DESCRIPTION = "description";
     private static final String CREATE_DATE = "createDate";
     private static final String MODIFY_DATE = "modifyDate";
-
 
 
     public static Specification<ServiceAction> createSpecification(ServiceActionFilter serviceActionFilter) {
@@ -122,6 +126,13 @@ public class ServiceActionSpecification {
             if (serviceActionFilter.getWorkshopName() != null) {
                 specification = specification.and(hasWorkshopName(serviceActionFilter.getWorkshopName()));
             }
+            if (serviceActionFilter.getVehicleId() != null) {
+                specification = specification.and(hasVehicleId(serviceActionFilter.getVehicleId()));
+            }
+            if (serviceActionFilter.getVehicleRegistrationNumber() != null) {
+                specification =
+                        specification.and(hasVehicleRegistrationNumber(serviceActionFilter.getVehicleRegistrationNumber()));
+            }
         }
         return specification;
     }
@@ -172,15 +183,31 @@ public class ServiceActionSpecification {
 
     private static Specification<ServiceAction> hasWorkshopId(Long id) {
         return (root, query, criteriaBuilder) -> {
-            Join<Workshop, ServiceAction> workshopServiceActionJoin = root.join(WORKSHOP_ID);
+            Join<Workshop, ServiceAction> workshopServiceActionJoin = root.join(WORKSHOP);
             return criteriaBuilder.equal(workshopServiceActionJoin.get(ID), id);
         };
     }
 
     private static Specification<ServiceAction> hasWorkshopName(String name) {
         return (root, query, criteriaBuilder) -> {
-            Join<Workshop, ServiceAction> workshopServiceActionJoin = root.join(WORKSHOP_NAME);
+            Join<Workshop, ServiceAction> workshopServiceActionJoin = root.join(WORKSHOP);
             return criteriaBuilder.like(workshopServiceActionJoin.get(NAME), "%" + name + "%");
         };
+    }
+
+    private static Specification<ServiceAction> hasVehicleId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Vehicle, ServiceAction> vehicleServiceActionJoin =
+                    root.join(VEHICLE);
+            return criteriaBuilder.equal(vehicleServiceActionJoin.get(ID), id);
+        };
+    }
+
+    private static Specification<ServiceAction> hasVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+        return ((root, query, criteriaBuilder) -> {
+            Join<Vehicle, ServiceAction> vehicleServiceActionJoin = root.join(VEHICLE);
+            return criteriaBuilder.like(vehicleServiceActionJoin.get(VEHICLE_REGISTRATION_NUMBER),
+                    "%" + vehicleRegistrationNumber + "%");
+        });
     }
 }
