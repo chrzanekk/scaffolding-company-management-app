@@ -8,10 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.ServiceAction;
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
 import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.scma.exception.ServiceActionException;
 import pl.com.chrzanowski.scma.repository.ServiceActionRepository;
 import pl.com.chrzanowski.scma.service.ServiceActionService;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionDTO;
+import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
 import pl.com.chrzanowski.scma.service.dto.SummaryValueServiceActionDTO;
 import pl.com.chrzanowski.scma.service.filter.serviceaction.ServiceActionFilter;
 import pl.com.chrzanowski.scma.service.filter.serviceaction.ServiceActionSpecification;
@@ -21,8 +24,12 @@ import pl.com.chrzanowski.scma.util.TaxCalculationUtil;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceActionServiceImpl implements ServiceActionService {
@@ -44,9 +51,10 @@ public class ServiceActionServiceImpl implements ServiceActionService {
     @Override
     public ServiceActionDTO save(ServiceActionDTO serviceActionDTO) {
         log.debug("Save service action: {}", serviceActionDTO);
+        validateOilServiceType(serviceActionDTO);
         ServiceActionDTO serviceActionDTOtoSave = ServiceActionDTO.builder(serviceActionDTO)
                 .taxValue(TaxCalculationUtil.calculateTaxValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
-                .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(),serviceActionDTO.getTaxRate()))
+                .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
                 .createDate(DateTimeUtil.setDateTimeIfNotExists(serviceActionDTO.getCreateDate())).build();
         ServiceAction serviceAction =
                 serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoSave));
@@ -60,7 +68,7 @@ public class ServiceActionServiceImpl implements ServiceActionService {
             validateOilServiceType(serviceActionDTO);
             ServiceActionDTO serviceActionDTOtoUpdate = ServiceActionDTO.builder(serviceActionDTO)
                     .taxValue(TaxCalculationUtil.calculateTaxValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
-                    .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(),serviceActionDTO.getTaxRate()))
+                    .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
                     .modifyDate(Instant.now()).build();
             ServiceAction serviceAction =
                     serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoUpdate));
@@ -70,10 +78,34 @@ public class ServiceActionServiceImpl implements ServiceActionService {
         }
     }
 
-    //todo implement logic to check last oil service action in DB and check if whether service action not earlier
-    // than 7 days
+
     private void validateOilServiceType(ServiceActionDTO serviceActionDTO) {
+        LocalDate sevenDaysBeforeNow = LocalDate.now().minusDays(7L);
+        List<ServiceActionDTO> allServiceActionsForLastSevenDays =
+                serviceActionMapper.toDto(serviceActionRepository.findServiceActionByVehicleIdEqualsAndServiceDateGreaterThanEqual(serviceActionDTO.getVehicleId(), sevenDaysBeforeNow));
+        validateOilServiceActionInPastSevenDays(allServiceActionsForLastSevenDays);
     }
+
+    private void validateOilServiceActionInPastSevenDays(List<ServiceActionDTO> allServiceActionsForLastSevenDays) {
+        List<ServiceActionDTO> listOfOilServiceActions = filterOilServiceActions(allServiceActionsForLastSevenDays);
+        if (!listOfOilServiceActions.isEmpty()) {
+            throw new ServiceActionException("Oil service was done in last 7 days");
+        }
+    }
+
+    private static List<ServiceActionDTO> filterOilServiceActions(List<ServiceActionDTO> allServiceActionsForLastSevenDays) {
+        List<ServiceActionDTO> listOfOilServiceActions = new ArrayList<>();
+        allServiceActionsForLastSevenDays.forEach(serviceActionDTO -> {
+            Set<ServiceActionTypeDTO> filtered = serviceActionDTO.getServiceActionTypes().stream()
+                    .filter(serviceActionTypeDTO -> serviceActionTypeDTO.getTypeOfService()
+                            .equals(TypeOfService.OIL_SERVICE)).collect(Collectors.toSet());
+            if (filtered.size() != 0) {
+                listOfOilServiceActions.add(serviceActionDTO);
+            }
+        });
+        return listOfOilServiceActions;
+    }
+
 
     @Override
     public List<ServiceActionDTO> findByFilter(ServiceActionFilter serviceActionFilter) {
