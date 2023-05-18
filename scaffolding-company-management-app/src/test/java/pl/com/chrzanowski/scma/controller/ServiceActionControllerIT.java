@@ -1,22 +1,29 @@
 package pl.com.chrzanowski.scma.controller;
 
+import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.*;
 import pl.com.chrzanowski.scma.repository.*;
 import pl.com.chrzanowski.scma.service.ServiceActionService;
 import pl.com.chrzanowski.scma.service.VehicleService;
 import pl.com.chrzanowski.scma.service.WorkshopService;
+import pl.com.chrzanowski.scma.service.dto.ServiceActionDTO;
+import pl.com.chrzanowski.scma.service.mapper.ServiceActionMapper;
 import pl.com.chrzanowski.scma.service.mapper.ServiceActionTypeMapper;
 import pl.com.chrzanowski.scma.service.mapper.VehicleMapper;
 import pl.com.chrzanowski.scma.service.mapper.WorkshopMapper;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,6 +31,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = ScaffoldingCompanyManagementAppApplication.class)
 @AutoConfigureMockMvc
@@ -46,8 +57,8 @@ public class ServiceActionControllerIT {
     private static final BigDecimal SECOND_TAX_VALUE = new BigDecimal(20);
     private static final BigDecimal FIRST_TAX_RATE = new BigDecimal("0.23");
     private static final BigDecimal SECOND_TAX_RATE = new BigDecimal("0.10");
-    private static final LocalDate FIRST_SERVICE_DATE = LocalDate.of(2022,1,2);
-    private static final LocalDate SECOND_SERVICE_DATE = LocalDate.of(2022,12,1);
+    private static final LocalDate FIRST_SERVICE_DATE = LocalDate.of(2022, 1, 2);
+    private static final LocalDate SECOND_SERVICE_DATE = LocalDate.of(2022, 12, 1);
     private static final String FIRST_DESCRIPTION = "FIRST_DESCRIPTION";
     private static final String SECOND_DESCRIPTION = "SECOND_DESCRIPTION";
 
@@ -59,6 +70,8 @@ public class ServiceActionControllerIT {
     ServiceActionRepository serviceActionRepository;
     @Autowired
     ServiceActionService serviceActionService;
+    @Autowired
+    ServiceActionMapper serviceActionMapper;
     @Autowired
     ServiceActionTypeRepository serviceActionTypeRepository;
     @Autowired
@@ -115,6 +128,7 @@ public class ServiceActionControllerIT {
                 .setDescription(FIRST_DESCRIPTION)
                 .setCreateDate(DEFAULT_CREATE_DATE);
     }
+
     public static ServiceAction createSecondEntity(EntityManager em) {
         return new ServiceAction()
                 .setCarMileage(SECOND_CAR_MILEAGE)
@@ -135,15 +149,111 @@ public class ServiceActionControllerIT {
     }
 
 
+    @Test
+    @Transactional
+    void createServiceAction() throws Exception {
 
+        int size = serviceActionService.findAll().size();
 
+        ServiceActionDTO serviceActionDTO = serviceActionMapper.toDto(firstServiceAction);
+        restServiceActionMvc.perform(post(API_PATH + "/add")
+                        .contentType(TestUtil.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(serviceActionDTO)))
+                .andExpect(status().isOk());
 
+        int sizeAfter = serviceActionService.findAll().size();
+        assertThat(sizeAfter).isEqualTo(size + 1);
+    }
 
+    @Test
+    @Transactional
+    void updateServiceAction() throws Exception {
+        serviceActionRepository.saveAndFlush(firstServiceAction);
+        int size = serviceActionService.findAll().size();
 
+        ServiceActionDTO serviceActionDTO = serviceActionMapper.toDto(firstServiceAction);
+        ServiceActionDTO serviceActionDTOtoUpdate = ServiceActionDTO.builder(serviceActionDTO)
+                .carMileage(SECOND_CAR_MILEAGE).build();
+        restServiceActionMvc.perform(put(API_PATH + "/update")
+                        .contentType(TestUtil.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(serviceActionDTOtoUpdate)))
+                .andExpect(status().isOk());
 
+        List<ServiceAction> serviceActionListAfterUpdate = serviceActionRepository.findAll();
+        int sizeAfter = serviceActionListAfterUpdate.size();
+        ServiceAction firstServiceActionAfterUpdate = serviceActionListAfterUpdate.get(0);
+        assertThat(sizeAfter).isEqualTo(size);
+        assertThat(firstServiceActionAfterUpdate.getCarMileage()).isEqualTo(SECOND_CAR_MILEAGE);
+    }
 
+    @Test
+    @Transactional
+    void getServiceActionById() throws Exception {
+        saveServiceActionToDB();
 
+        List<ServiceAction> serviceActionList = serviceActionRepository.findAll();
+        ServiceAction serviceAction = serviceActionList.get(0);
+        Long serviceActionId = serviceAction.getId();
 
+        restServiceActionMvc.perform(get(API_PATH + "/getById/{id}", serviceActionId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id").value(serviceAction.getId().intValue()))
+                .andExpect(jsonPath("$.carMileage").value(serviceAction.getCarMileage()))
+                .andExpect(jsonPath("$.invoiceNumber").value(serviceAction.getInvoiceNumber()))
+                .andExpect(jsonPath("$.grossValue").value(serviceAction.getGrossValue().toString()))
+                .andExpect(jsonPath("$.taxValue").value(serviceAction.getTaxValue().toString()))
+                .andExpect(jsonPath("$.netValue").value(serviceAction.getNetValue().toString()))
+                .andExpect(jsonPath("$.taxRate").value(serviceAction.getTaxRate().toString()))
+                .andExpect(jsonPath("$.serviceDate").value(serviceAction.getServiceDate().toString()))
+                .andExpect(jsonPath("$.description").value(serviceAction.getDescription()))
+                .andExpect(jsonPath("$.workshopId").value(serviceAction.getWorkshop().getId().intValue()))
+                .andExpect(jsonPath("$.workshopName").value(serviceAction.getWorkshop().getName()))
+                .andExpect(jsonPath("$.vehicleId").value(serviceAction.getVehicle().getId().intValue()))
+                .andExpect(jsonPath("$.vehicleRegistrationNumber").value(serviceAction.getVehicle()
+                        .getRegistrationNumber()));
+
+    }
+
+    @Test
+    @Transactional
+    void getServiceActionByIdAndShouldNotBeFound() throws Exception {
+        restServiceActionMvc.perform(get(API_PATH + "/getById/{id}", 123L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void getAllServiceActions() throws Exception {
+        saveServiceActionToDB();
+
+        int sizeBeforeTest = serviceActionRepository.findAll().size();
+
+        MvcResult result = restServiceActionMvc.perform(get(API_PATH + "/all"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty()).andReturn();
+
+        String list = result.getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(list);
+        int jsonSize = jsonArray.length();
+        assertThat(jsonSize).isEqualTo(sizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void deleteServiceActionById() throws Exception {
+        saveServiceActionToDB();
+        List<ServiceAction> allServiceActions = serviceActionRepository.findAll();
+        int sizeBeforeTest = allServiceActions.size();
+        Long id = allServiceActions.get(0).getId();
+
+        restServiceActionMvc.perform(delete(API_PATH + "/delete/{id}", id))
+                .andExpect(status().isOk());
+        int sizeAfterTest = serviceActionRepository.findAll().size();
+        assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
+    }
 
 
     private void deleteAllExistingData() {
@@ -155,6 +265,11 @@ public class ServiceActionControllerIT {
         serviceActionTypeRepository.deleteAll();
         workshopRepository.deleteAll();
         serviceActionRepository.deleteAll();
+    }
+
+    private void saveServiceActionToDB() {
+        serviceActionRepository.saveAndFlush(firstServiceAction);
+        serviceActionRepository.saveAndFlush(secondServiceAction);
     }
 
     private void createServiceActions() {
@@ -193,6 +308,7 @@ public class ServiceActionControllerIT {
     }
 
     private void createGlobalWorkshopInDB() {
+        firstWorkshop = WorkshopControllerIT.createEntity(em);
         firstWorkshop.setServiceActionTypes(firstSetOfActionTypes);
         em.persist(firstWorkshop);
         em.flush();
@@ -211,10 +327,8 @@ public class ServiceActionControllerIT {
 
 
     private void createSecondGlobalWorkshopInDB() {
-        List<ServiceActionType> serviceActionTypes = serviceActionTypeRepository.findAll();
-        Set<ServiceActionType> serviceActionTypeSet = new HashSet<>();
-        serviceActionTypeSet.add(serviceActionTypes.get(0));
-        secondWorkshop.setServiceActionTypes(serviceActionTypeSet);
+        secondWorkshop = WorkshopControllerIT.createSecondEntity(em);
+        secondWorkshop.setServiceActionTypes(secondSetOfActionTypes);
         em.persist(secondWorkshop);
         em.flush();
     }

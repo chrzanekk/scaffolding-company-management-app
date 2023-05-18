@@ -23,7 +23,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -1232,13 +1231,7 @@ public class TireControllerIT {
         int sizeAfterTest = result.getResponse().getContentLength();
         String list = result.getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(list);
-        List<Object> tireDTOList = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            tireDTOList.add(jsonArray.get(i));
-        }
-
-        int size = tireDTOList.size();
-        assertThat(size).isEqualTo(sizeBeforeTest);
+        assertThat(sizeBeforeTest).isEqualTo(jsonArray.length());
     }
 
     @Test

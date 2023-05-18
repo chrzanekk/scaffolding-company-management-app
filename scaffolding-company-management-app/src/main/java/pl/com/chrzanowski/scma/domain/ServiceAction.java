@@ -39,7 +39,7 @@ public class ServiceAction {
     @Column(name = "description", length = 200)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "workshop_id")
     @NotNull
     private Workshop workshop;
@@ -52,7 +52,7 @@ public class ServiceAction {
     private Set<ServiceActionType> serviceActionTypes = new HashSet<>();
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "vehicle_id")
     @NotNull
     private Vehicle vehicle;

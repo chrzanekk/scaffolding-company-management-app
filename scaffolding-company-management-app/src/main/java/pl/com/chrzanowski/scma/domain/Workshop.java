@@ -46,7 +46,7 @@ public class Workshop {
             inverseJoinColumns = @JoinColumn(name = "service_action_type_id"))
     private Set<ServiceActionType> serviceActionTypes = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "workshop")
+    @OneToMany
     List<ServiceAction> serviceActions = new ArrayList<>();
     private Instant createDate;
     private Instant modifyDate;

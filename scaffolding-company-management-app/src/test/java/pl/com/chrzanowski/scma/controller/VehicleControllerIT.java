@@ -2125,9 +2125,6 @@ public class VehicleControllerIT {
     @Transactional
     public void getAllVehicles() throws Exception {
         createGlobalVehiclesInDB();
-        List<Vehicle> vehicleList = vehicleRepository.findAll();
-        Vehicle firstVehicleFromDB = vehicleList.get(0);
-        Long firstVehicleId = firstVehicleFromDB.getId();
 
         restVehicleMvc.perform(get(API_PATH + "/all"))
                 .andExpect(status().isOk())

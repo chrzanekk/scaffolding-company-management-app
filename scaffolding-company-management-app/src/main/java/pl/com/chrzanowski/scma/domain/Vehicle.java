@@ -65,8 +65,7 @@ public class Vehicle {
     @NotNull
     private FuelType fuelType;
 
-    @OneToMany(cascade = CascadeType.ALL,
-    mappedBy = "vehicle")
+    @OneToMany
     List<ServiceAction> serviceActions = new ArrayList<>();
 
     public Vehicle(Long id,

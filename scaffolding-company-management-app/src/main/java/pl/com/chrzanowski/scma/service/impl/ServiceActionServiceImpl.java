@@ -70,6 +70,7 @@ public class ServiceActionServiceImpl implements ServiceActionService {
                     .taxValue(TaxCalculationUtil.calculateTaxValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
                     .grossValue(TaxCalculationUtil.calculateGrossValue(serviceActionDTO.getNetValue(), serviceActionDTO.getTaxRate()))
                     .modifyDate(Instant.now()).build();
+            ServiceAction serviceActionToUpdate = serviceActionMapper.toEntity(serviceActionDTOtoUpdate);
             ServiceAction serviceAction =
                     serviceActionRepository.save(serviceActionMapper.toEntity(serviceActionDTOtoUpdate));
             return serviceActionMapper.toDto(serviceAction);
