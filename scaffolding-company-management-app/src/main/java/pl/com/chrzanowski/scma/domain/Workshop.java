@@ -6,9 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "workshops")
@@ -43,10 +41,13 @@ public class Workshop {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
     @JoinTable(
-            name="workshop_service_action_type",
+            name = "workshop_service_action_type",
             joinColumns = @JoinColumn(name = "workshop_id"),
             inverseJoinColumns = @JoinColumn(name = "service_action_type_id"))
     private Set<ServiceActionType> serviceActionTypes = new HashSet<>();
+
+    @OneToMany
+    List<ServiceAction> serviceActions = new ArrayList<>();
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -64,6 +65,7 @@ public class Workshop {
                     String city,
                     Country country,
                     Set<ServiceActionType> serviceActionTypes,
+                    List<ServiceAction> serviceActions,
                     Instant createDate,
                     Instant modifyDate,
                     Instant removeDate) {
@@ -77,6 +79,7 @@ public class Workshop {
         this.city = city;
         this.country = country;
         this.serviceActionTypes = serviceActionTypes;
+        this.serviceActions = serviceActions;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
@@ -132,6 +135,10 @@ public class Workshop {
 
     public Instant getRemoveDate() {
         return removeDate;
+    }
+
+    public List<ServiceAction> getServiceActions() {
+        return serviceActions;
     }
 
     public Workshop setId(Long id) {
@@ -199,6 +206,11 @@ public class Workshop {
         return this;
     }
 
+    public Workshop setServiceActions(List<ServiceAction> serviceActions) {
+        this.serviceActions = serviceActions;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -218,6 +230,8 @@ public class Workshop {
         if (country != workshop.country) return false;
         if (!Objects.equals(serviceActionTypes, workshop.serviceActionTypes))
             return false;
+        if (!Objects.equals(serviceActions, workshop.serviceActions))
+            return false;
         if (!Objects.equals(createDate, workshop.createDate)) return false;
         if (!Objects.equals(modifyDate, workshop.modifyDate)) return false;
         return Objects.equals(removeDate, workshop.removeDate);
@@ -235,6 +249,7 @@ public class Workshop {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (serviceActionTypes != null ? serviceActionTypes.hashCode() : 0);
+        result = 31 * result + (serviceActions != null ? serviceActions.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
@@ -253,7 +268,8 @@ public class Workshop {
                 ", postalCode='" + postalCode + '\'' +
                 ", city='" + city + '\'' +
                 ", country=" + country +
-                ", serviceActionTypeSet=" + serviceActionTypes +
+                ", serviceActionTypes=" + serviceActionTypes +
+                ", serviceActions=" + serviceActions +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +

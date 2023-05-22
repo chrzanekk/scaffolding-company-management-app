@@ -955,7 +955,8 @@ public class VehicleControllerIT {
         Vehicle savedVehicleInDB = listAfterTest.get(0);
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest);
         assertThat(savedVehicleInDB.getVehicleModel().getName()).isEqualTo(updatedVehicleModel.getName());
-        assertThat(savedVehicleInDB.getVehicleModel().getVehicleBrand().getName()).isEqualTo(updatedVehicleModel.getVehicleBrand()
+        assertThat(savedVehicleInDB.getVehicleModel().getVehicleBrand()
+                .getName()).isEqualTo(updatedVehicleModel.getVehicleBrand()
                 .getName());
         assertThat(savedVehicleInDB.getFuelType().getName()).isEqualTo(updatedFuelType.getName());
         assertThat(savedVehicleInDB.getVehicleType().getName()).isEqualTo(updatedVehicleType.getName());
@@ -2124,9 +2125,6 @@ public class VehicleControllerIT {
     @Transactional
     public void getAllVehicles() throws Exception {
         createGlobalVehiclesInDB();
-        List<Vehicle> vehicleList = vehicleRepository.findAll();
-        Vehicle firstVehicleFromDB = vehicleList.get(0);
-        Long firstVehicleId = firstVehicleFromDB.getId();
 
         restVehicleMvc.perform(get(API_PATH + "/all"))
                 .andExpect(status().isOk())
@@ -2151,6 +2149,7 @@ public class VehicleControllerIT {
         defaultVehicleShouldBeFound("brandName=" + firstVehicle.getVehicleModel().getVehicleBrand().getName());
         defaultVehicleShouldNotBeFound("brandName=" + "badBand");
     }
+
     @Test
     @Transactional
     public void findVehicleWithFilterModelId() throws Exception {
@@ -2168,6 +2167,7 @@ public class VehicleControllerIT {
         defaultVehicleShouldBeFound("modelName=" + firstVehicle.getVehicleModel().getName());
         defaultVehicleShouldNotBeFound("modelName=" + "badModel");
     }
+
     @Test
     @Transactional
     public void findVehicleWithFilterVehicleTypeId() throws Exception {
@@ -2185,6 +2185,7 @@ public class VehicleControllerIT {
         defaultVehicleShouldBeFound("vehicleTypeName=" + firstVehicle.getVehicleType().getName());
         defaultVehicleShouldNotBeFound("vehicleTypeName=" + "badVehicleType");
     }
+
     @Test
     @Transactional
     public void findVehicleWithFilterFuelTypeId() throws Exception {
@@ -2229,6 +2230,7 @@ public class VehicleControllerIT {
         defaultVehicleShouldBeFound("productionYearStartWith=" + firstVehicle.getProductionYear());
         defaultVehicleShouldNotBeFound("productionYearStartWith=" + UPDATED_PRODUCTION_YEAR);
     }
+
     @Test
     @Transactional
     public void findVehicleWithFilterFreePlacesForTechInspection() throws Exception {
@@ -2256,6 +2258,7 @@ public class VehicleControllerIT {
         defaultVehicleShouldBeFound("lengthStartWith=" + firstVehicle.getLength());
         defaultVehicleShouldNotBeFound("lengthStartWith=" + new BigDecimal("22.3"));
     }
+
     @Test
     @Transactional
     public void findVehicleWithFilterFirstWidth() throws Exception {
@@ -2275,7 +2278,6 @@ public class VehicleControllerIT {
     }
 
 
-
     private void defaultVehicleShouldBeFound(String filter) throws Exception {
         restVehicleMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter))
                 .andExpect(status().isOk())
@@ -2284,20 +2286,23 @@ public class VehicleControllerIT {
                 .andExpect(jsonPath("$.[*].registrationNumber").value(hasItem(firstVehicle.getRegistrationNumber())))
                 .andExpect(jsonPath("$.[*].vin").value(hasItem(firstVehicle.getVin())))
                 .andExpect(jsonPath("$.[*].productionYear").value(hasItem(firstVehicle.getProductionYear().intValue())))
-                .andExpect(jsonPath("$.[*].firstRegistrationDate").value(hasItem(firstVehicle.getFirstRegistrationDate().toString())))
+                .andExpect(jsonPath("$.[*].firstRegistrationDate").value(hasItem(firstVehicle.getFirstRegistrationDate()
+                        .toString())))
                 .andExpect(jsonPath("$.[*].freePlacesForTechInspection").value(hasItem(firstVehicle.getFreePlacesForTechInspection()
                         .intValue())))
                 .andExpect(jsonPath("$.[*].length").value(hasItem(firstVehicle.getLength().doubleValue())))
                 .andExpect(jsonPath("$.[*].width").value(hasItem(firstVehicle.getWidth().doubleValue())))
                 .andExpect(jsonPath("$.[*].height").value(hasItem(firstVehicle.getHeight().doubleValue())))
-                .andExpect(jsonPath("$.[*].brandId").value(hasItem(firstVehicle.getVehicleModel().getVehicleBrand().getId().intValue())))
+                .andExpect(jsonPath("$.[*].brandId").value(hasItem(firstVehicle.getVehicleModel().getVehicleBrand()
+                        .getId().intValue())))
                 .andExpect(jsonPath("$.[*].brandName").value(hasItem(firstVehicle.getVehicleModel().getVehicleBrand()
                         .getName())))
                 .andExpect(jsonPath("$.[*].modelId").value(hasItem(firstVehicle.getVehicleModel().getId().intValue())))
                 .andExpect(jsonPath("$.[*].modelName").value(hasItem(firstVehicle.getVehicleModel().getName())))
                 .andExpect(jsonPath("$.[*].fuelTypeId").value(hasItem(firstVehicle.getFuelType().getId().intValue())))
                 .andExpect(jsonPath("$.[*].fuelTypeName").value(hasItem(firstVehicle.getFuelType().getName())))
-                .andExpect(jsonPath("$.[*].vehicleTypeId").value(hasItem(firstVehicle.getVehicleType().getId().intValue())))
+                .andExpect(jsonPath("$.[*].vehicleTypeId").value(hasItem(firstVehicle.getVehicleType().getId()
+                        .intValue())))
                 .andExpect(jsonPath("$.[*].vehicleTypeName").value(hasItem(firstVehicle.getVehicleType().getName())))
                 .andExpect(jsonPath("$.[*].createDate").value(hasItem(DEFAULT_CREATE_DATE.toString())));
     }
@@ -2343,6 +2348,7 @@ public class VehicleControllerIT {
         em.persist(updatedVehicleModel);
         em.flush();
     }
+
     private void createGlobalVehicleBrands() {
         firstVehicleBrand = VehicleBrandControllerIT.createEntity(em);
         em.persist(firstVehicleBrand);
@@ -2361,6 +2367,7 @@ public class VehicleControllerIT {
         createGlobalFuelTypes();
         createGlobalVehicleModels();
     }
+
     private void createGlobalVehicles() {
         firstVehicle = createEntity(em);
         firstVehicle.setFuelType(firstFuelType);

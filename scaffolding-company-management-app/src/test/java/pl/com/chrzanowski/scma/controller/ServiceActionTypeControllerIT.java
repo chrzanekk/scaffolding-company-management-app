@@ -10,6 +10,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.ServiceActionType;
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
 import pl.com.chrzanowski.scma.repository.ServiceActionTypeRepository;
 import pl.com.chrzanowski.scma.service.ServiceActionTypeService;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionTypeDTO;
@@ -55,14 +56,14 @@ public class ServiceActionTypeControllerIT {
     private ServiceActionType secondServiceActionType;
 
     public static ServiceActionType createEntity(EntityManager em) {
-        return new ServiceActionType().setName(FIRST_DEFAULT_NAME).setCreateDate(DEFAULT_CREATE_DATE);
+        return new ServiceActionType().setName(FIRST_DEFAULT_NAME).setTypeOfService(TypeOfService.OTHERS).setCreateDate(DEFAULT_CREATE_DATE);
     }
     public static ServiceActionType createSecondEntity(EntityManager em) {
-        return new ServiceActionType().setName(SECOND_DEFAULT_NAME).setCreateDate(DEFAULT_CREATE_DATE);
+        return new ServiceActionType().setName(SECOND_DEFAULT_NAME).setTypeOfService(TypeOfService.OTHERS).setCreateDate(DEFAULT_CREATE_DATE);
     }
 
     public static ServiceActionType createUpdatedEntity(EntityManager em) {
-        return new ServiceActionType().setName(FIRST_UPDATED_NAME).setCreateDate(DEFAULT_CREATE_DATE)
+        return new ServiceActionType().setName(FIRST_UPDATED_NAME).setTypeOfService(TypeOfService.OIL_SERVICE).setCreateDate(DEFAULT_CREATE_DATE)
                 .setModifyDate(DEFAULT_MODIFY_DATE);
     }
 
@@ -107,6 +108,21 @@ public class ServiceActionTypeControllerIT {
         int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
 
         ServiceActionTypeDTO serviceActionTypeDTO = ServiceActionTypeDTO.builder()
+                .typeOfService(TypeOfService.OTHERS)
+                .createDate(DEFAULT_CREATE_DATE)
+                .build();
+
+        restServiceActionTypeMockMvc.perform(post(API_PATH + "/add").contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(serviceActionTypeDTO))).andExpect(status().isBadRequest());
+
+    }
+    @Test
+    @Transactional
+    public void createServiceActionTypeShouldThrowBadRequestForMissingTypeOfService() throws Exception {
+        int sizeBeforeTest = serviceActionTypeRepository.findAll().size();
+
+        ServiceActionTypeDTO serviceActionTypeDTO = ServiceActionTypeDTO.builder()
+                .name(FIRST_DEFAULT_NAME)
                 .createDate(DEFAULT_CREATE_DATE)
                 .build();
 
@@ -124,6 +140,7 @@ public class ServiceActionTypeControllerIT {
         ServiceActionTypeDTO serviceActionTypeDTO = serviceActionTypeMapper.toDto(serviceActionType);
         ServiceActionTypeDTO serviceActionTypeDTO1 =
                 ServiceActionTypeDTO.builder().id(serviceActionTypeDTO.getId()).name(FIRST_UPDATED_NAME)
+                        .typeOfService(TypeOfService.OTHERS)
                         .createDate(serviceActionTypeDTO.getCreateDate()).modifyDate(DEFAULT_MODIFY_DATE).build();
 
         restServiceActionTypeMockMvc.perform(put(API_PATH + "/update").contentType(MediaType.APPLICATION_JSON)
@@ -268,6 +285,7 @@ public class ServiceActionTypeControllerIT {
         secondServiceActionType = createEntity(em);
         secondServiceActionType.setName(SECOND_DEFAULT_NAME);
         secondServiceActionType.setCreateDate(DEFAULT_CREATE_DATE);
+        secondServiceActionType.setTypeOfService(TypeOfService.OTHERS);
         em.persist(secondServiceActionType);
         em.flush();
     }
@@ -275,6 +293,7 @@ public class ServiceActionTypeControllerIT {
     private void createGlobalTwoUpdatedServiceActionTypes() {
         serviceActionType.setModifyDate(DEFAULT_MODIFY_DATE);
         serviceActionType.setName(FIRST_UPDATED_NAME);
+        serviceActionType.setTypeOfService(TypeOfService.OTHERS);
         em.persist(serviceActionType);
         em.flush();
 

@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.scma.domain;
 
 
+import pl.com.chrzanowski.scma.domain.enumeration.TypeOfService;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,11 @@ public class ServiceActionType {
     @NotBlank
     private String name;
 
+    @Column(name = "type_of_service")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TypeOfService typeOfService;
+
     private Instant createDate;
     private Instant modifyDate;
     private Instant removeDate;
@@ -31,22 +38,31 @@ public class ServiceActionType {
             mappedBy = "serviceActionTypes")
     private Set<Workshop> workshops = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY
+            ,cascade = {CascadeType.MERGE},
+    mappedBy = "serviceActionTypes")
+    private Set<ServiceAction> serviceActions = new HashSet<>();
+
 
     public ServiceActionType() {
     }
 
     public ServiceActionType(Long id,
                              String name,
+                             TypeOfService typeOfService,
                              Instant createDate,
                              Instant modifyDate,
                              Instant removeDate,
-                             Set<Workshop> workshops) {
+                             Set<Workshop> workshops,
+                             Set<ServiceAction> serviceActions) {
         this.id = id;
         this.name = name;
+        this.typeOfService = typeOfService;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.removeDate = removeDate;
         this.workshops = workshops;
+        this.serviceActions = serviceActions;
     }
 
     public Long getId() {
@@ -71,6 +87,14 @@ public class ServiceActionType {
 
     public Set<Workshop> getWorkshops() {
         return workshops;
+    }
+
+    public Set<ServiceAction> getServiceActions() {
+        return serviceActions;
+    }
+
+    public TypeOfService getTypeOfService() {
+        return typeOfService;
     }
 
     public ServiceActionType setId(Long id) {
@@ -103,6 +127,16 @@ public class ServiceActionType {
         return this;
     }
 
+    public ServiceActionType setServiceActions(Set<ServiceAction> serviceActions) {
+        this.serviceActions = serviceActions;
+        return this;
+    }
+
+    public ServiceActionType setTypeOfService(TypeOfService typeOfService) {
+        this.typeOfService = typeOfService;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,20 +146,24 @@ public class ServiceActionType {
 
         if (!Objects.equals(id, that.id)) return false;
         if (!Objects.equals(name, that.name)) return false;
+        if (typeOfService != that.typeOfService) return false;
         if (!Objects.equals(createDate, that.createDate)) return false;
         if (!Objects.equals(modifyDate, that.modifyDate)) return false;
         if (!Objects.equals(removeDate, that.removeDate)) return false;
-        return Objects.equals(workshops, that.workshops);
+        if (!Objects.equals(workshops, that.workshops)) return false;
+        return Objects.equals(serviceActions, that.serviceActions);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (typeOfService != null ? typeOfService.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
         result = 31 * result + (modifyDate != null ? modifyDate.hashCode() : 0);
         result = 31 * result + (removeDate != null ? removeDate.hashCode() : 0);
         result = 31 * result + (workshops != null ? workshops.hashCode() : 0);
+        result = 31 * result + (serviceActions != null ? serviceActions.hashCode() : 0);
         return result;
     }
 
@@ -134,10 +172,12 @@ public class ServiceActionType {
         return "ServiceActionType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", typeOfService=" + typeOfService +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
                 ", removeDate=" + removeDate +
                 ", workshops=" + workshops +
+                ", serviceActions=" + serviceActions +
                 '}';
     }
 }
