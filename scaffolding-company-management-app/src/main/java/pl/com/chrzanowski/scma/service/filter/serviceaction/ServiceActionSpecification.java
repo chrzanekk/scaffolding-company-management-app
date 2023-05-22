@@ -26,7 +26,7 @@ public class ServiceActionSpecification {
     private static final String WORKSHOP_ID = "workshopId";
     private static final String WORKSHOP_NAME = "workshopName";
     private static final String VEHICLE_ID = "vehicleId";
-    private static final String VEHICLE_REGISTRATION_NUMBER = "vehicleRegistrationNumber";
+    private static final String VEHICLE_REGISTRATION_NUMBER = "registrationNumber";
     private static final String SERVICE_DATE = "serviceDate";
     private static final String DESCRIPTION = "description";
     private static final String CREATE_DATE = "createDate";

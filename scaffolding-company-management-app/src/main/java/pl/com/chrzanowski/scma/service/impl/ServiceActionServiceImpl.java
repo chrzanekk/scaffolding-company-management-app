@@ -112,14 +112,14 @@ public class ServiceActionServiceImpl implements ServiceActionService {
     public List<ServiceActionDTO> findByFilter(ServiceActionFilter serviceActionFilter) {
         log.debug("Find service actions by filter: {}", serviceActionFilter);
         Specification<ServiceAction> spec = ServiceActionSpecification.createSpecification(serviceActionFilter);
-        List<ServiceActionDTO> result = serviceActionMapper.toDto(serviceActionRepository.findAll(spec));
-        return handleSummaryValuesOfServiceActions(result);
+        List<ServiceAction> result = serviceActionRepository.findAll(spec);
+        List<ServiceActionDTO> resultDTO = serviceActionMapper.toDto(result);
+        return handleSummaryValuesOfServiceActions(resultDTO);
     }
 
     private List<ServiceActionDTO> handleSummaryValuesOfServiceActions(List<ServiceActionDTO> result) {
         SummaryValueServiceActionDTO summaryValues = calculateSummaryValues(result);
-        addSummaryToFirstElementOfResult(summaryValues, result);
-        return result;
+        return addSummaryToFirstElementOfResult(summaryValues, result);
     }
 
     private SummaryValueServiceActionDTO calculateSummaryValues(List<ServiceActionDTO> list) {
@@ -144,13 +144,22 @@ public class ServiceActionServiceImpl implements ServiceActionService {
                 , BigDecimal::add);
     }
 
-    private void addSummaryToFirstElementOfResult(SummaryValueServiceActionDTO summaryValues,
-                                                  List<ServiceActionDTO> result) {
-        result.stream().findFirst().ifPresent(serviceActionDTO ->
-                ServiceActionDTO.builder(serviceActionDTO)
-                        .summaryGrossValue(summaryValues.getSummaryGrossValue())
-                        .summaryNetValue(summaryValues.getSummaryNetValue())
-                        .summaryTaxValue(summaryValues.getSummaryTaxValue()));
+    private List<ServiceActionDTO> addSummaryToFirstElementOfResult(SummaryValueServiceActionDTO summaryValues,
+                                                                    List<ServiceActionDTO> listToUpdate) {
+        List<ServiceActionDTO> result;
+        if (!listToUpdate.isEmpty()) {
+            result = new ArrayList<>();
+            ServiceActionDTO firstElement = listToUpdate.get(0);
+            ServiceActionDTO firstUpdatedElement = ServiceActionDTO.builder(firstElement)
+                    .summaryGrossValue(summaryValues.getSummaryGrossValue())
+                    .summaryNetValue(summaryValues.getSummaryNetValue())
+                    .summaryTaxValue(summaryValues.getSummaryTaxValue()).build();
+            result.add(firstUpdatedElement);
+            listToUpdate.stream().skip(1).forEach(result::add);
+        } else {
+            result = listToUpdate;
+        }
+        return result;
     }
 
     @Override

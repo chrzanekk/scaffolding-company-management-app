@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -51,10 +52,13 @@ public class ServiceActionControllerIT {
     private static final String SECOND_INVOICE_NUMBER = "365/12/2022";
     private static final BigDecimal FIRST_GROSS_VALUE = new BigDecimal(123);
     private static final BigDecimal SECOND_GROSS_VALUE = new BigDecimal(220);
+    private static final BigDecimal SUMMARY_GROSS_VALUE = new BigDecimal("343");
     private static final BigDecimal FIRST_NET_VALUE = new BigDecimal(100);
     private static final BigDecimal SECOND_NET_VALUE = new BigDecimal(200);
+    private static final BigDecimal SUMMARY_NET_VALUE = new BigDecimal(300);
     private static final BigDecimal FIRST_TAX_VALUE = new BigDecimal(23);
     private static final BigDecimal SECOND_TAX_VALUE = new BigDecimal(20);
+    private static final BigDecimal SUMMARY_TAX_VALUE = new BigDecimal(43);
     private static final BigDecimal FIRST_TAX_RATE = new BigDecimal("0.23");
     private static final BigDecimal SECOND_TAX_RATE = new BigDecimal("0.10");
     private static final LocalDate FIRST_SERVICE_DATE = LocalDate.of(2022, 1, 2);
@@ -233,7 +237,27 @@ public class ServiceActionControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isNotEmpty()).andReturn();
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andReturn();
+
+        String list = result.getResponse().getContentAsString();
+        JSONArray jsonArray = new JSONArray(list);
+        int jsonSize = jsonArray.length();
+        assertThat(jsonSize).isEqualTo(sizeBeforeTest);
+    }
+    @Test
+    @Transactional
+    void getAllServiceActionsHasSummaryValues() throws Exception {
+        saveServiceActionToDB();
+
+        int sizeBeforeTest = serviceActionRepository.findAll().size();
+
+        MvcResult result = restServiceActionMvc.perform(get(API_PATH + "/?sort=id,desc&"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[0].summaryGrossValue").value(SUMMARY_GROSS_VALUE))
+                .andExpect(jsonPath("$.[0].summaryTaxValue").value(SUMMARY_TAX_VALUE))
+                .andExpect(jsonPath("$.[0].summaryNetValue").value(SUMMARY_NET_VALUE)).andReturn();
 
         String list = result.getResponse().getContentAsString();
         JSONArray jsonArray = new JSONArray(list);
@@ -253,6 +277,118 @@ public class ServiceActionControllerIT {
                 .andExpect(status().isOk());
         int sizeAfterTest = serviceActionRepository.findAll().size();
         assertThat(sizeAfterTest).isEqualTo(sizeBeforeTest - 1);
+    }
+
+
+    @Test
+    @Transactional
+    void findServiceActionByCarMileage() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("carMileageStartsWith=" + FIRST_CAR_MILEAGE + "&carMileageEndWith=" + 222220);
+        defaultServiceActionShouldNotBeFound("carMileageStartsWith=" + 333333);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByInvoiceNumber() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("invoiceNumber=" + FIRST_INVOICE_NUMBER);
+        defaultServiceActionShouldNotBeFound("invoiceNumber=" + "badInvoiceNumber");
+    }
+    @Test
+    @Transactional
+    void findServiceActionByGrossValue() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("grossValueStartsWith=" + FIRST_GROSS_VALUE + "&grossValueEndWith=" + 125);
+        defaultServiceActionShouldNotBeFound("grossValueStartsWith=" + 666);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByNetValue() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("netValueStartsWith=" + FIRST_NET_VALUE + "&netValueEndWith=" + 101);
+        defaultServiceActionShouldNotBeFound("netValueStartsWith=" + 666);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByTaxValue() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("taxValueStartsWith=" + FIRST_TAX_VALUE + "&taxValueEndWith=" + 24);
+        defaultServiceActionShouldNotBeFound("taxValueStartsWith=" + 666);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByTaxRate() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("taxRateStartsWith=" + FIRST_TAX_RATE + "&taxRateEndWith=" + new BigDecimal(
+                "0.24"));
+        defaultServiceActionShouldNotBeFound("taxRateStartsWith=" + 666);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByServiceDate() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("serviceDateStartsWith=" + FIRST_SERVICE_DATE + "&serviceDateEndWith=" + FIRST_SERVICE_DATE.plusDays(1));
+        defaultServiceActionShouldNotBeFound("serviceDateStartsWith=" + LocalDate.now());
+    }
+
+    @Test
+    @Transactional
+    void findServiceActionByWorkshopId() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("workshopId=" + firstServiceAction.getWorkshop().getId());
+        defaultServiceActionShouldNotBeFound("workshopId=" + 144L);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByWorkshopName() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("workshopName=" + firstServiceAction.getWorkshop().getName().substring(0,3));
+        defaultServiceActionShouldNotBeFound("workshopName=" + "badWorkshopName");
+    }
+    @Test
+    @Transactional
+    void findServiceActionByVehicleId() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("vehicleId=" + firstServiceAction.getVehicle().getId());
+        defaultServiceActionShouldNotBeFound("vehicleId=" + 144L);
+    }
+    @Test
+    @Transactional
+    void findServiceActionByVehicleRegistrationNumber() throws Exception {
+        saveServiceActionToDB();
+        defaultServiceActionShouldBeFound("vehicleRegistrationNumber=" + firstServiceAction.getVehicle().getRegistrationNumber().substring(0,3));
+        defaultServiceActionShouldNotBeFound("vehicleRegistrationNumber=" + "badRegNumber");
+    }
+
+
+    private void defaultServiceActionShouldBeFound(String filter) throws Exception {
+        restServiceActionMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(firstServiceAction.getId().intValue())))
+                .andExpect(jsonPath("$.[*].carMileage").value(hasItem(firstServiceAction.getCarMileage())))
+                .andExpect(jsonPath("$.[*].invoiceNumber").value(hasItem(firstServiceAction.getInvoiceNumber())))
+                .andExpect(jsonPath("$.[*].grossValue").value(hasItem(firstServiceAction.getGrossValue().intValue())))
+                .andExpect(jsonPath("$.[*].taxValue").value(hasItem(firstServiceAction.getTaxValue().intValue())))
+                .andExpect(jsonPath("$.[*].netValue").value(hasItem(firstServiceAction.getNetValue().intValue())))
+                .andExpect(jsonPath("$.[*].taxRate").value(hasItem(firstServiceAction.getTaxRate().doubleValue())))
+                .andExpect(jsonPath("$.[*].serviceDate").value(hasItem(firstServiceAction.getServiceDate().toString())))
+                .andExpect(jsonPath("$.[*].description").value(hasItem(firstServiceAction.getDescription())))
+                .andExpect(jsonPath("$.[*].workshopId").value(hasItem(firstServiceAction.getWorkshop().getId()
+                        .intValue())))
+                .andExpect(jsonPath("$.[*].workshopName").value(hasItem(firstServiceAction.getWorkshop().getName())))
+                .andExpect(jsonPath("$.[*].vehicleId").value(hasItem(firstServiceAction.getVehicle().getId()
+                        .intValue())))
+                .andExpect(jsonPath("$.[*].vehicleRegistrationNumber").value(hasItem(firstServiceAction.getVehicle()
+                        .getRegistrationNumber())));
+    }
+
+    private void defaultServiceActionShouldNotBeFound(String filter) throws Exception {
+        restServiceActionMvc.perform(get(API_PATH + "/?sort=id,desc&" + filter))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
     }
 
 
