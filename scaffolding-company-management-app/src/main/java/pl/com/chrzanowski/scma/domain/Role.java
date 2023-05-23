@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.scma.domain;
 
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -12,12 +14,13 @@ public class Role {
     private Long id;
 
     @Column(length = 20)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private ERole name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    public Role(Long id, String name, Set<User> users) {
+    public Role(Long id, ERole name, Set<User> users) {
         this.id = id;
         this.name = name;
         this.users = users;
@@ -34,11 +37,11 @@ public class Role {
         this.id = id;
     }
 
-    public String getName() {
+    public ERole getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(ERole name) {
         this.name = name;
     }
 
