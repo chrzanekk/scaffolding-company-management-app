@@ -14,12 +14,11 @@ import pl.com.chrzanowski.scma.ScaffoldingCompanyManagementAppApplication;
 import pl.com.chrzanowski.scma.domain.*;
 import pl.com.chrzanowski.scma.repository.*;
 import pl.com.chrzanowski.scma.service.ServiceActionService;
-import pl.com.chrzanowski.scma.service.VehicleService;
+import pl.com.chrzanowski.scma.service.SummaryValueServiceActionService;
 import pl.com.chrzanowski.scma.service.WorkshopService;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionDTO;
 import pl.com.chrzanowski.scma.service.mapper.ServiceActionMapper;
 import pl.com.chrzanowski.scma.service.mapper.ServiceActionTypeMapper;
-import pl.com.chrzanowski.scma.service.mapper.VehicleMapper;
 import pl.com.chrzanowski.scma.service.mapper.WorkshopMapper;
 
 import javax.persistence.EntityManager;
@@ -89,10 +88,6 @@ public class ServiceActionControllerIT {
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
-    private VehicleService vehicleService;
-    @Autowired
-    private VehicleMapper vehicleMapper;
-    @Autowired
     private FuelTypeRepository fuelTypeRepository;
     @Autowired
     private VehicleTypeRepository vehicleTypeRepository;
@@ -100,6 +95,8 @@ public class ServiceActionControllerIT {
     private VehicleModelRepository vehicleModelRepository;
     @Autowired
     private VehicleBrandRepository vehicleBrandRepository;
+    @Autowired
+    private SummaryValueServiceActionService summaryValueServiceActionService;
 
     private Workshop firstWorkshop;
     private Workshop secondWorkshop;
@@ -245,9 +242,10 @@ public class ServiceActionControllerIT {
         int jsonSize = jsonArray.length();
         assertThat(jsonSize).isEqualTo(sizeBeforeTest);
     }
+
     @Test
     @Transactional
-    void getAllServiceActionsHasSummaryValues() throws Exception {
+    void getAllServiceActionsHasSummaryValuesByFilter() throws Exception {
         saveServiceActionToDB();
 
         int sizeBeforeTest = serviceActionRepository.findAll().size();
@@ -263,6 +261,19 @@ public class ServiceActionControllerIT {
         JSONArray jsonArray = new JSONArray(list);
         int jsonSize = jsonArray.length();
         assertThat(jsonSize).isEqualTo(sizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void getAllServiceActionsHasSummaryValues() throws Exception {
+        saveServiceActionToDB();
+
+        restServiceActionMvc.perform(get(API_PATH + "/getSummaryValues"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.summaryGrossValue").value(SUMMARY_GROSS_VALUE.doubleValue()))
+                .andExpect(jsonPath("$.summaryTaxValue").value(SUMMARY_TAX_VALUE.doubleValue()))
+                .andExpect(jsonPath("$.summaryNetValue").value(SUMMARY_NET_VALUE.doubleValue()));
     }
 
     @Test
@@ -287,6 +298,7 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("carMileageStartsWith=" + FIRST_CAR_MILEAGE + "&carMileageEndWith=" + 222220);
         defaultServiceActionShouldNotBeFound("carMileageStartsWith=" + 333333);
     }
+
     @Test
     @Transactional
     void findServiceActionByInvoiceNumber() throws Exception {
@@ -294,6 +306,7 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("invoiceNumber=" + FIRST_INVOICE_NUMBER);
         defaultServiceActionShouldNotBeFound("invoiceNumber=" + "badInvoiceNumber");
     }
+
     @Test
     @Transactional
     void findServiceActionByGrossValue() throws Exception {
@@ -301,6 +314,7 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("grossValueStartsWith=" + FIRST_GROSS_VALUE + "&grossValueEndWith=" + 125);
         defaultServiceActionShouldNotBeFound("grossValueStartsWith=" + 666);
     }
+
     @Test
     @Transactional
     void findServiceActionByNetValue() throws Exception {
@@ -308,6 +322,7 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("netValueStartsWith=" + FIRST_NET_VALUE + "&netValueEndWith=" + 101);
         defaultServiceActionShouldNotBeFound("netValueStartsWith=" + 666);
     }
+
     @Test
     @Transactional
     void findServiceActionByTaxValue() throws Exception {
@@ -315,6 +330,7 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("taxValueStartsWith=" + FIRST_TAX_VALUE + "&taxValueEndWith=" + 24);
         defaultServiceActionShouldNotBeFound("taxValueStartsWith=" + 666);
     }
+
     @Test
     @Transactional
     void findServiceActionByTaxRate() throws Exception {
@@ -323,6 +339,7 @@ public class ServiceActionControllerIT {
                 "0.24"));
         defaultServiceActionShouldNotBeFound("taxRateStartsWith=" + 666);
     }
+
     @Test
     @Transactional
     void findServiceActionByServiceDate() throws Exception {
@@ -338,13 +355,15 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("workshopId=" + firstServiceAction.getWorkshop().getId());
         defaultServiceActionShouldNotBeFound("workshopId=" + 144L);
     }
+
     @Test
     @Transactional
     void findServiceActionByWorkshopName() throws Exception {
         saveServiceActionToDB();
-        defaultServiceActionShouldBeFound("workshopName=" + firstServiceAction.getWorkshop().getName().substring(0,3));
+        defaultServiceActionShouldBeFound("workshopName=" + firstServiceAction.getWorkshop().getName().substring(0, 3));
         defaultServiceActionShouldNotBeFound("workshopName=" + "badWorkshopName");
     }
+
     @Test
     @Transactional
     void findServiceActionByVehicleId() throws Exception {
@@ -352,11 +371,13 @@ public class ServiceActionControllerIT {
         defaultServiceActionShouldBeFound("vehicleId=" + firstServiceAction.getVehicle().getId());
         defaultServiceActionShouldNotBeFound("vehicleId=" + 144L);
     }
+
     @Test
     @Transactional
     void findServiceActionByVehicleRegistrationNumber() throws Exception {
         saveServiceActionToDB();
-        defaultServiceActionShouldBeFound("vehicleRegistrationNumber=" + firstServiceAction.getVehicle().getRegistrationNumber().substring(0,3));
+        defaultServiceActionShouldBeFound("vehicleRegistrationNumber=" + firstServiceAction.getVehicle()
+                .getRegistrationNumber().substring(0, 3));
         defaultServiceActionShouldNotBeFound("vehicleRegistrationNumber=" + "badRegNumber");
     }
 
