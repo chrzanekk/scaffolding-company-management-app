@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
@@ -38,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
+    public Optional<Role> findByName(ERole name) {
         log.info("Fetching role {}", name);
         return roleRepository.findByName(name);
     }

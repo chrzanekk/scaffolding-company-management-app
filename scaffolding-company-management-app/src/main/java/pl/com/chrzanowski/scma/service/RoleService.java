@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.service;
 
 import pl.com.chrzanowski.scma.domain.Role;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 
 import java.util.Optional;
@@ -10,7 +11,7 @@ public interface RoleService {
 
     Set<Role> findAll();
 
-    Optional<Role> findByName(String name);
+    Optional<Role> findByName(ERole name);
 
     Role saveRole(RoleDTO roleDTO);
 }

@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotBlank
+    @Size(min = 8, max = 120)
     private String password;
     private Boolean locked = false;
     private Boolean enabled = false;
@@ -36,7 +37,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(Long id, String email, String username, String password, Boolean locked, Boolean enabled, Set<Role> roles) {
+    public User(Long id,
+                String email,
+                String username,
+                String password,
+                Boolean locked,
+                Boolean enabled,
+                Set<Role> roles) {
         this.id = id;
         this.email = email;
         this.username = username;

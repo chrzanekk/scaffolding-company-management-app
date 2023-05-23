@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.domain.User;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.UserService;
@@ -58,10 +59,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addRoleToUser(String email, String roleName) {
+    public void addRoleToUser(String email, ERole roleName) {
         log.info("Assigning new role {} to user {}", roleName, email);
-        FieldValidator.validateString(email, "email");
-        FieldValidator.validateString(roleName, "role name");
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Role> role = roleRepository.findByName(roleName);
         if (user.isPresent() && role.isPresent()) {
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUser(String email) {
         log.info("Fetching user {} ", email);
-        FieldValidator.validateString(email, "email");
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
     }
 
