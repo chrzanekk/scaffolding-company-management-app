@@ -15,8 +15,6 @@ public class UserMapper {
             user.setEmail(userDTO.getEmail());
             user.setUsername(userDTO.getUsername());
             user.setPassword(userDTO.getPassword());
-            user.setLocked(userDTO.isLocked());
-            user.setEnabled(userDTO.isEnabled());
             user.setRoles(userDTO.getRoles());
             return user;
         }

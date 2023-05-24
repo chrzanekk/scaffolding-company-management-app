@@ -17,6 +17,11 @@ spring:
   profiles:
     active: dev
 
+scaffolding-app:
+  jwtCookieName:  "scma-coockie"
+  jwtSecret: "secret-key-to-generate-later"
+  jwtExpirationMs: 86400000
+
 
 
 

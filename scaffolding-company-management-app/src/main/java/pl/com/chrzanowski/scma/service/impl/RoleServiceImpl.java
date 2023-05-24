@@ -9,7 +9,6 @@ import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.service.mapper.RoleMapper;
-import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -47,8 +46,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role saveRole(RoleDTO roleDTO) {
         log.info("Adding new role {} to database", roleDTO.getName());
-        FieldValidator.validateObject(roleDTO, "roleDTO");
-        FieldValidator.validateString(roleDTO.getName(), "Role name");
         return roleRepository.save(roleMapper.roleDTOtoRole(roleDTO));
     }
 }

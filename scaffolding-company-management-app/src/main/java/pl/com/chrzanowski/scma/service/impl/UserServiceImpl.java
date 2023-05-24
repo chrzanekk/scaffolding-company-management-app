@@ -2,8 +2,6 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
@@ -23,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -40,15 +38,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
     }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        FieldValidator.validateString(email, "email");
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND,
-                email)));
-    }
-
 
     @Override
     public User saveUser(UserDTO userDTO) {
