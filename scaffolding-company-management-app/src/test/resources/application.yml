@@ -24,6 +24,8 @@ spring:
   sql:
     init:
       platform: hsqldb
-#logging:
-#  level:
-#    org.hibernate.SQL: DEBUG
+
+scaffolding-app:
+  jwtCookieName:  "scma-coockie"
+  jwtSecret: "secret-key-to-generate-later"
+  jwtExpirationMs: 86400000

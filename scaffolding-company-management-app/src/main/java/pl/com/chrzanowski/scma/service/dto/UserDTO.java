@@ -34,6 +34,20 @@ public class UserDTO {
         setRoles(builder.roles);
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builder(UserDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.email = copy.getEmail();
+        builder.username = copy.getUsername();
+        builder.password = copy.getPassword();
+        builder.roles = copy.getRoles();
+        return builder;
+    }
+
     public Long getId() {
         return id;
     }
@@ -66,7 +80,7 @@ public class UserDTO {
         this.password = password;
     }
 
-    public boolean isLocked() {
+    public boolean isIsLocked() {
         return isLocked;
     }
 
@@ -74,7 +88,7 @@ public class UserDTO {
         isLocked = locked;
     }
 
-    public boolean isEnabled() {
+    public boolean isIsEnabled() {
         return isEnabled;
     }
 
@@ -127,10 +141,6 @@ public class UserDTO {
         private Set<Role> roles;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {

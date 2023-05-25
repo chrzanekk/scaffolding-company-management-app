@@ -70,6 +70,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public Boolean isUserExists(String userName) {
+        log.debug("Request to check if userName exists in DB: {}", userName);
+        return userRepository.existsByUsername(userName);
+    }
+
+    @Override
+    public Boolean isEmailExists(String email) {
+        log.debug("Request to check if email exists in DB: {}", email);
+        return userRepository.existsByEmail(email);
+    }
+
     private void validateUserDTO(UserDTO userDTO) {
         FieldValidator.validateString(userDTO.getUsername(), "Username");
         FieldValidator.validateString(userDTO.getPassword(), "Password");
