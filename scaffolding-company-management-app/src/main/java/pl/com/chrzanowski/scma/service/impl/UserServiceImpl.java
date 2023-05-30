@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
@@ -11,6 +12,7 @@ import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
+import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 import pl.com.chrzanowski.scma.util.FieldValidator;
 
@@ -33,18 +35,50 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
     }
 
     @Override
-    public User saveUser(UserDTO userDTO) {
+    public UserDTO save(UserDTO userDTO) {
         log.info("Saving new user {} to database", userDTO.getEmail());
         FieldValidator.validateObject(userDTO, "userDTO");
         validateUserDTO(userDTO);
-        return userRepository.save(userMapper.userDTOtoUser(userDTO));
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDTO)));
+    }
+
+    @Override
+    public UserDTO update(UserDTO userDTO) {
+        return null;
+    }
+
+    @Override
+    public List<UserDTO> findByFilter(UserFilter filter) {
+        return null;
+    }
+
+    @Override
+    public Page<UserDTO> findByFilterAndPage(UserFilter filter) {
+        return null;
+    }
+
+    @Override
+    public UserDTO findById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
+    public List<UserDTO> findAll() {
+        log.info("Fetching all users. ");
+        return userMapper.toDto(userRepository.findAll());
     }
 
     @Override
@@ -59,15 +93,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String email) {
+    public UserDTO getUser(String email) {
         log.info("Fetching user {} ", email);
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
-    }
-
-    @Override
-    public List<User> findAll() {
-        log.info("Fetching all users. ");
-        return userRepository.findAll();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
+        return userMapper.toDto(user);
     }
 
     @Override

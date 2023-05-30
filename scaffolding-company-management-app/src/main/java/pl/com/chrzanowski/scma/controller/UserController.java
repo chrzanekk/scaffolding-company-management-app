@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
-import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
+import pl.com.chrzanowski.scma.exception.RoleException;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.service.RoleService;
@@ -35,30 +35,58 @@ public class UserController {
         this.encoder = encoder;
         this.roleService = roleService;
     }
-// todo check ticket #1 on github
+
+    // todo check ticket #1 on github
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        if(userService.isUserExists(registerRequest.getUsername())) {
+        if (userService.isUserExists(registerRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error. Username is already taken!"));
         }
 
-        if(userService.isEmailExists(registerRequest.getEmail())) {
+        if (userService.isEmailExists(registerRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error. Email is already in use!"));
         }
-
-        UserDTO newUser = UserDTO.builder()
-                .username(registerRequest.getUsername())
-                .email(registerRequest.getEmail())
-                .password(encoder.encode(registerRequest.getPassword())).build();
 
         Set<String> stringRoles = registerRequest.getRole();
         Set<RoleDTO> roleDTOSet = new HashSet<>();
 
         if (stringRoles == null) {
-            Role userRole = roleService.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new ObjectNotFoundException("Role not found"));
+            RoleDTO userRole = roleService.findByName(ERole.ROLE_USER);
+        } else {
+            stringRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        try {
+                            RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN);
+                            roleDTOSet.add(adminRole);
+                            break;
+                        } catch (RoleException e) {
+                            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "Role not found");
+                        }
+                    case "mod":
+                        try {
+                            RoleDTO modeRole = roleService.findByName(ERole.ROLE_MODERATOR);
+                            roleDTOSet.add(modeRole);
+                            break;
+                        } catch (RoleException e) {
+                            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "Role not found");
+                        }
+                    default:
+                        RoleDTO userRole = roleService.findByName(ERole.ROLE_USER);
+                        roleDTOSet.add(userRole);
+                }
+            });
         }
+        UserDTO newUser = UserDTO.builder()
+                .username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .roles(roleDTOSet)
+                .password(encoder.encode(registerRequest.getPassword())).build();
+        userService.save(newUser);
+
+        return ResponseEntity.ok(new MessageResponse("Registered successfully!"));
     }
+
 
 
 

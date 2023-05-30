@@ -1,23 +1,36 @@
 package pl.com.chrzanowski.scma.service;
 
 
-import pl.com.chrzanowski.scma.domain.User;
+import org.springframework.data.domain.Page;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
+import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 
 import java.util.List;
 
 public interface UserService {
 
-    User saveUser(UserDTO userDTO);
+    UserDTO save(UserDTO userDTO);
+
+    UserDTO update(UserDTO userDTO);
+
+    List<UserDTO> findByFilter(UserFilter filter);
+
+    Page<UserDTO> findByFilterAndPage(UserFilter filter);
+
+    UserDTO findById(Long id);
+
+    List<UserDTO> findAll();
+
+    void delete(Long id);
 
     void addRoleToUser(String email, ERole roleName);
 
-    User getUser(String email);
-
-    List<User> findAll();
+    UserDTO getUser(String email);
 
     Boolean isUserExists(String userName);
 
     Boolean isEmailExists(String email);
+
+
 }

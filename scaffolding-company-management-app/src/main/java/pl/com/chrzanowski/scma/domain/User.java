@@ -30,6 +30,9 @@ public class User {
     @Size(min = 8, max = 120)
     private String password;
 
+    private Boolean isLocked;
+    private Boolean isEnabled;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -42,6 +45,8 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.isEnabled = false;
+        this.isLocked = false;
 
     }
 
@@ -94,6 +99,24 @@ public class User {
         return this;
     }
 
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public User setLocked(Boolean locked) {
+        isLocked = locked;
+        return this;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public User setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,6 +128,8 @@ public class User {
         if (!Objects.equals(email, user.email)) return false;
         if (!Objects.equals(username, user.username)) return false;
         if (!Objects.equals(password, user.password)) return false;
+        if (!Objects.equals(isLocked, user.isLocked)) return false;
+        if (!Objects.equals(isEnabled, user.isEnabled)) return false;
         return Objects.equals(roles, user.roles);
     }
 
@@ -114,6 +139,8 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (isLocked != null ? isLocked.hashCode() : 0);
+        result = 31 * result + (isEnabled != null ? isEnabled.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
@@ -125,6 +152,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", isLocked=" + isLocked +
+                ", isEnabled=" + isEnabled +
                 ", roles=" + roles +
                 '}';
     }

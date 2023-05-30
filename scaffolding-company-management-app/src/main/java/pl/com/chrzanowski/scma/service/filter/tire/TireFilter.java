@@ -38,62 +38,6 @@ public class TireFilter {
     public TireFilter() {
     }
 
-    public TireFilter(Long id,
-                      String brand,
-                      String model,
-                      Integer widthStartsWith,
-                      Integer widthEndWith,
-                      Integer profileStartsWith,
-                      Integer profileEndWith,
-                      Integer diameterStartsWith,
-                      Integer diameterEndWith,
-                      TireType type,
-                      TireReinforcedIndex reinforcedIndex,
-                      TireSpeedIndex speedIndex,
-                      TireLoadCapacityIndex loadCapacityIndex,
-                      TireSeasonType seasonType,
-                      Boolean runOnFlat,
-                      TireStatus tireStatus,
-                      Integer productionYearStartsWith,
-                      Integer productionYearEndWith,
-                      LocalDate purchaseDateStartsWith,
-                      LocalDate purchaseDateEndWith,
-                      Instant createDateStartsWith,
-                      Instant createDateEndWith,
-                      Instant modifyDateStartsWith,
-                      Instant modifyDateEndWith,
-                      Instant removeDateStartsWith,
-                      Instant removeDateEndWith,
-                      Long vehicleId) {
-        this.id = id;
-        this.brand = brand;
-        this.model = model;
-        this.widthStartsWith = widthStartsWith;
-        this.widthEndWith = widthEndWith;
-        this.profileStartsWith = profileStartsWith;
-        this.profileEndWith = profileEndWith;
-        this.diameterStartsWith = diameterStartsWith;
-        this.diameterEndWith = diameterEndWith;
-        this.type = type;
-        this.reinforcedIndex = reinforcedIndex;
-        this.speedIndex = speedIndex;
-        this.loadCapacityIndex = loadCapacityIndex;
-        this.seasonType = seasonType;
-        this.runOnFlat = runOnFlat;
-        this.tireStatus = tireStatus;
-        this.productionYearStartsWith = productionYearStartsWith;
-        this.productionYearEndWith = productionYearEndWith;
-        this.purchaseDateStartsWith = purchaseDateStartsWith;
-        this.purchaseDateEndWith = purchaseDateEndWith;
-        this.createDateStartsWith = createDateStartsWith;
-        this.createDateEndWith = createDateEndWith;
-        this.modifyDateStartsWith = modifyDateStartsWith;
-        this.modifyDateEndWith = modifyDateEndWith;
-        this.removeDateStartsWith = removeDateStartsWith;
-        this.removeDateEndWith = removeDateEndWith;
-        this.vehicleId = vehicleId;
-    }
-
     public Long getId() {
         return id;
     }

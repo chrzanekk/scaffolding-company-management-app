@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
+import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
@@ -54,5 +55,12 @@ public class UserAuthController {
                         .username(userDetails.getUsername())
                         .email(userDetails.getEmail())
                         .roles(roles).build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        ResponseCookie responseCookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(new MessageResponse("You have been logged out!"));
     }
 }

@@ -1,7 +1,5 @@
 package pl.com.chrzanowski.scma.service.dto;
 
-import pl.com.chrzanowski.scma.domain.Role;
-
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,9 +10,10 @@ public class UserDTO {
     private String password;
     private boolean isLocked;
     private boolean isEnabled;
-    private Set<Role> roles;
+    private Set<RoleDTO> roles;
 
-    public UserDTO(Long id, String email, String username, String password, boolean isLocked, boolean isEnabled, Set<Role> roles) {
+    public UserDTO(Long id, String email, String username, String password, boolean isLocked, boolean isEnabled,
+                   Set<RoleDTO> roles) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -96,11 +95,11 @@ public class UserDTO {
         isEnabled = enabled;
     }
 
-    public Set<Role> getRoles() {
+    public Set<RoleDTO> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleDTO> roles) {
         this.roles = roles;
     }
 
@@ -138,7 +137,7 @@ public class UserDTO {
         private String password;
         private boolean isLocked;
         private boolean isEnabled;
-        private Set<Role> roles;
+        private Set<RoleDTO> roles;
 
         private Builder() {
         }
@@ -173,7 +172,7 @@ public class UserDTO {
             return this;
         }
 
-        public Builder roles(Set<Role> roles) {
+        public Builder roles(Set<RoleDTO> roles) {
             this.roles = roles;
             return this;
         }
