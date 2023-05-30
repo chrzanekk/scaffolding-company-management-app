@@ -57,7 +57,7 @@ public class UserController {
         Set<String> stringRoles = registerRequest.getRole();
         Set<RoleDTO> roleDTOSet = new HashSet<>();
 
-        if (stringRoles == null) {
+        if (stringRoles == null || stringRoles.isEmpty()) {
             roleDTOSet.add(roleService.findByName(ERole.ROLE_USER));
         } else {
             stringRoles.forEach(role -> {
@@ -89,6 +89,8 @@ public class UserController {
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .roles(roleDTOSet)
+                .enabled(false)
+                .locked(false)
                 .password(encoder.encode(registerRequest.getPassword())).build();
         userService.save(newUser);
 

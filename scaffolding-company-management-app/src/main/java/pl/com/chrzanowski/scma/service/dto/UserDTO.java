@@ -8,18 +8,18 @@ public class UserDTO {
     private String email;
     private String username;
     private String password;
-    private boolean isLocked;
-    private boolean isEnabled;
+    private Boolean locked;
+    private Boolean enabled;
     private Set<RoleDTO> roles;
 
-    public UserDTO(Long id, String email, String username, String password, boolean isLocked, boolean isEnabled,
+    public UserDTO(Long id, String email, String username, String password, Boolean locked, Boolean enabled,
                    Set<RoleDTO> roles) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.isLocked = isLocked;
-        this.isEnabled = isEnabled;
+        this.locked = locked;
+        this.enabled = enabled;
         this.roles = roles;
     }
 
@@ -28,8 +28,8 @@ public class UserDTO {
         setEmail(builder.email);
         setUsername(builder.username);
         setPassword(builder.password);
-        setLocked(builder.isLocked);
-        setEnabled(builder.isEnabled);
+        setLocked(builder.locked);
+        setEnabled(builder.enabled);
         setRoles(builder.roles);
     }
 
@@ -79,20 +79,20 @@ public class UserDTO {
         this.password = password;
     }
 
-    public boolean isIsLocked() {
-        return isLocked;
+    public Boolean getLocked() {
+        return locked;
     }
 
-    public void setLocked(boolean locked) {
-        isLocked = locked;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
-    public boolean isIsEnabled() {
-        return isEnabled;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Set<RoleDTO> getRoles() {
@@ -108,12 +108,12 @@ public class UserDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDTO userDTO = (UserDTO) o;
-        return isLocked == userDTO.isLocked && isEnabled == userDTO.isEnabled && Objects.equals(id, userDTO.id) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && Objects.equals(roles, userDTO.roles);
+        return locked == userDTO.locked && enabled == userDTO.enabled && Objects.equals(id, userDTO.id) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && Objects.equals(roles, userDTO.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, username, password, isLocked, isEnabled, roles);
+        return Objects.hash(id, email, username, password, locked, enabled, roles);
     }
 
     @Override
@@ -123,8 +123,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", isLocked=" + isLocked +
-                ", isEnabled=" + isEnabled +
+                ", isLocked=" + locked +
+                ", isEnabled=" + enabled +
                 ", roles=" + roles +
                 '}';
     }
@@ -135,8 +135,8 @@ public class UserDTO {
         private String email;
         private String username;
         private String password;
-        private boolean isLocked;
-        private boolean isEnabled;
+        private Boolean locked;
+        private Boolean enabled;
         private Set<RoleDTO> roles;
 
         private Builder() {
@@ -162,13 +162,13 @@ public class UserDTO {
             return this;
         }
 
-        public Builder isLocked(boolean isLocked) {
-            this.isLocked = isLocked;
+        public Builder locked(Boolean locked) {
+            this.locked = locked;
             return this;
         }
 
-        public Builder isEnabled(boolean isEnabled) {
-            this.isEnabled = isEnabled;
+        public Builder enabled(Boolean enabled) {
+            this.enabled = enabled;
             return this;
         }
 

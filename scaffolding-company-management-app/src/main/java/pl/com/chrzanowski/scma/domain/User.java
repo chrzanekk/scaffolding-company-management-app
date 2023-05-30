@@ -30,8 +30,8 @@ public class User {
     @Size(min = 8, max = 120)
     private String password;
 
-    private Boolean isLocked;
-    private Boolean isEnabled;
+    private Boolean locked;
+    private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
@@ -39,15 +39,20 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String email,
+    public User(Long id,
+                String email,
                 String username,
-                String password) {
+                String password,
+                Boolean locked,
+                Boolean enabled,
+                Set<Role> roles) {
+        this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.isEnabled = false;
-        this.isLocked = false;
-
+        this.locked = locked;
+        this.enabled = enabled;
+        this.roles = roles;
     }
 
     public User() {
@@ -100,20 +105,20 @@ public class User {
     }
 
     public Boolean getLocked() {
-        return isLocked;
+        return locked;
     }
 
     public User setLocked(Boolean locked) {
-        isLocked = locked;
+        this.locked = locked;
         return this;
     }
 
     public Boolean getEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     public User setEnabled(Boolean enabled) {
-        isEnabled = enabled;
+        this.enabled = enabled;
         return this;
     }
 
@@ -128,8 +133,8 @@ public class User {
         if (!Objects.equals(email, user.email)) return false;
         if (!Objects.equals(username, user.username)) return false;
         if (!Objects.equals(password, user.password)) return false;
-        if (!Objects.equals(isLocked, user.isLocked)) return false;
-        if (!Objects.equals(isEnabled, user.isEnabled)) return false;
+        if (!Objects.equals(locked, user.locked)) return false;
+        if (!Objects.equals(enabled, user.enabled)) return false;
         return Objects.equals(roles, user.roles);
     }
 
@@ -139,8 +144,8 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (isLocked != null ? isLocked.hashCode() : 0);
-        result = 31 * result + (isEnabled != null ? isEnabled.hashCode() : 0);
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
+        result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
@@ -152,8 +157,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", isLocked=" + isLocked +
-                ", isEnabled=" + isEnabled +
+                ", isLocked=" + locked +
+                ", isEnabled=" + enabled +
                 ", roles=" + roles +
                 '}';
     }
