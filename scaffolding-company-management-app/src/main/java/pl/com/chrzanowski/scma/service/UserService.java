@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.service;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
@@ -16,7 +17,7 @@ public interface UserService {
 
     List<UserDTO> findByFilter(UserFilter filter);
 
-    Page<UserDTO> findByFilterAndPage(UserFilter filter);
+    Page<UserDTO> findByFilterAndPage(UserFilter filter, Pageable pageable);
 
     UserDTO findById(Long id);
 

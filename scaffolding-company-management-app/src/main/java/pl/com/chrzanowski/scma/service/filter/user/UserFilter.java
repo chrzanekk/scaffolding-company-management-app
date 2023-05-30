@@ -5,8 +5,8 @@ public class UserFilter {
     private Long id;
     private String emailStartsWith;
     private String usernameStartsWith;
-    private boolean isLocked;
-    private boolean isEnabled;
+    private Boolean isLocked;
+    private Boolean isEnabled;
 
     public UserFilter() {
     }
@@ -38,20 +38,20 @@ public class UserFilter {
         return this;
     }
 
-    public boolean isLocked() {
+    public Boolean isLocked() {
         return isLocked;
     }
 
-    public UserFilter setLocked(boolean locked) {
+    public UserFilter setLocked(Boolean locked) {
         isLocked = locked;
         return this;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return isEnabled;
     }
 
-    public UserFilter setEnabled(boolean enabled) {
+    public UserFilter setEnabled(Boolean enabled) {
         isEnabled = enabled;
         return this;
     }

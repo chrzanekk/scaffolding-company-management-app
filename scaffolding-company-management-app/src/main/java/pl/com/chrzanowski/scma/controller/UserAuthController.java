@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/auth")
 public class UserAuthController {
 
     private final AuthenticationManager authenticationManager;
