@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
-import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
-import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.SummaryValueServiceActionService;
 import pl.com.chrzanowski.scma.service.dto.ServiceActionDTO;
 import pl.com.chrzanowski.scma.service.dto.SummaryValueServiceActionDTO;
@@ -62,12 +60,8 @@ public class ServiceActionController {
     @GetMapping("/getById/{id}")
     public ResponseEntity<ServiceActionDTO> getServiceActionById(@Valid @PathVariable Long id) {
         log.debug("REST request to get service action by id: {}", id);
-        try {
-            ServiceActionDTO serviceActionDTO = serviceActionService.findById(id);
-            return ResponseEntity.ok().body(serviceActionDTO);
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "serviceActionNotFound");
-        }
+        ServiceActionDTO serviceActionDTO = serviceActionService.findById(id);
+        return ResponseEntity.ok().body(serviceActionDTO);
     }
 
     @GetMapping("/getSummaryValues")
@@ -80,23 +74,15 @@ public class ServiceActionController {
     @PostMapping("/add")
     public ResponseEntity<ServiceActionDTO> addServiceAction(@RequestBody ServiceActionDTO serviceActionDTO) {
         log.debug("REST request to add new service action: {}", serviceActionDTO);
-        try {
-            ServiceActionDTO newServiceActionDTO = serviceActionService.save(serviceActionDTO);
-            return ResponseEntity.ok().body(newServiceActionDTO);
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "serviceActionNotFound");
-        }
+        ServiceActionDTO newServiceActionDTO = serviceActionService.save(serviceActionDTO);
+        return ResponseEntity.ok().body(newServiceActionDTO);
     }
 
     @PutMapping("/update")
     public ResponseEntity<ServiceActionDTO> updateServiceAction(@RequestBody ServiceActionDTO serviceActionDTO) {
         log.debug("REST request to update service action: {}", serviceActionDTO);
-        try {
-            ServiceActionDTO updatedServiceActionDTO = serviceActionService.update(serviceActionDTO);
-            return ResponseEntity.ok().body(updatedServiceActionDTO);
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "serviceActionNotFound");
-        }
+        ServiceActionDTO updatedServiceActionDTO = serviceActionService.update(serviceActionDTO);
+        return ResponseEntity.ok().body(updatedServiceActionDTO);
     }
 
     @DeleteMapping("/delete/{id}")

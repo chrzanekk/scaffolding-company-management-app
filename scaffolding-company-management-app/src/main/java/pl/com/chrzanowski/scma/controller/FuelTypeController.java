@@ -9,9 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
-import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
-import pl.com.chrzanowski.scma.exception.EmptyValueException;
-import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.FuelTypeService;
 import pl.com.chrzanowski.scma.service.dto.FuelTypeDTO;
 import pl.com.chrzanowski.scma.service.filter.fueltype.FuelTypeFilter;
@@ -64,27 +61,15 @@ public class FuelTypeController {
     @PostMapping(path = "/add")
     public ResponseEntity<FuelTypeDTO> addFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to add new fuelType: {}", fuelTypeDTO);
-        try {
-            FuelTypeDTO newFuelTypeDTO = fuelTypeService.save(fuelTypeDTO);
-            return ResponseEntity.ok().body(newFuelTypeDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
-        }
+        FuelTypeDTO newFuelTypeDTO = fuelTypeService.save(fuelTypeDTO);
+        return ResponseEntity.ok().body(newFuelTypeDTO);
     }
 
     @PutMapping(path = "/update")
     public ResponseEntity<FuelTypeDTO> updateFuelType(@RequestBody FuelTypeDTO fuelTypeDTO) {
         log.debug("REST request to update fuelType: {}", fuelTypeDTO);
-        try {
-            FuelTypeDTO updatedFuelTypeDTO = fuelTypeService.update(fuelTypeDTO);
-            return ResponseEntity.ok().body(updatedFuelTypeDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleModelNotFound");
-        }
+        FuelTypeDTO updatedFuelTypeDTO = fuelTypeService.update(fuelTypeDTO);
+        return ResponseEntity.ok().body(updatedFuelTypeDTO);
     }
 
     @DeleteMapping(path = "/delete/{id}")

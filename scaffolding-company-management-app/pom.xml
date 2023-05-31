@@ -39,7 +39,6 @@
 			<version>0.11.5</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -78,17 +77,17 @@
 			<version>1.5.3.Final</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.zalando/problem -->
-		<dependency>
-			<groupId>org.zalando</groupId>
-			<artifactId>problem</artifactId>
-			<version>0.27.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.zalando</groupId>-->
+<!--			<artifactId>problem</artifactId>-->
+<!--			<version>0.27.1</version>-->
+<!--		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/org.zalando/problem-spring-web -->
-		<dependency>
-			<groupId>org.zalando</groupId>
-			<artifactId>problem-spring-web</artifactId>
-			<version>0.27.0</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.zalando</groupId>-->
+<!--			<artifactId>problem-spring-web</artifactId>-->
+<!--			<version>0.27.0</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
