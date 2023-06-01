@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.scma.service.dto;
 
-import java.util.Objects;
 import java.util.Set;
 
 public class UserDTO {
@@ -101,19 +100,6 @@ public class UserDTO {
 
     public void setRoles(Set<RoleDTO> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return locked == userDTO.locked && enabled == userDTO.enabled && Objects.equals(id, userDTO.id) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && Objects.equals(roles, userDTO.roles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, username, password, locked, enabled, roles);
     }
 
     @Override

@@ -60,14 +60,13 @@ public class UserAuthController {
         this.encoder = encoder;
     }
 
-    //todo consider to change from cookie to return JWTToken in response
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.debug("REST request to login user {}", loginRequest);
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(token);
-//        Authentication authentication = authenticationManager.authenticate(token);
+        Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

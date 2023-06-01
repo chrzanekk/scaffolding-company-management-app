@@ -22,7 +22,7 @@ public class JwtUtils {
     private String jwtSecret;
 
     @Value("${scaffolding-app.jwtExpirationMs}")
-    private String jwtExpirationMs;
+    private Long jwtExpirationMs;
 
     @Value("${scaffolding-app.jwtCookieName}")
     private String jwtCookieName;
