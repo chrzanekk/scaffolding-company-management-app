@@ -2,12 +2,9 @@ package pl.com.chrzanowski.scma.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
+import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
-import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.scma.service.RoleService;
@@ -40,20 +37,17 @@ public class UserAuthController {
     private final Logger log = LoggerFactory.getLogger(UserAuthController.class);
 
     private final AuthenticationManager authenticationManager;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtUtils jwtUtils;
     private final UserService userService;
     private final RoleService roleService;
     private final PasswordEncoder encoder;
 
 
-    public UserAuthController(AuthenticationManager authenticationManager,
-                              AuthenticationManagerBuilder authenticationManagerBuilder, JwtUtils jwtUtils,
+    public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
                               RoleService roleService,
                               PasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
         this.roleService = roleService;
@@ -69,15 +63,18 @@ public class UserAuthController {
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                .body(UserInfoResponse.builder().id(userDetails.getId()).username(userDetails.getUsername())
-                        .email(userDetails.getEmail()).roles(roles).build());
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                roles));
     }
 
     @PostMapping("/register")
@@ -122,11 +119,4 @@ public class UserAuthController {
         return ResponseEntity.ok(new MessageResponse("Registered successfully!"));
     }
 
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser() {
-        ResponseCookie responseCookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(new MessageResponse("You have been logged out!"));
-    }
 }
