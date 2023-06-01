@@ -1,12 +1,14 @@
 package pl.com.chrzanowski.scma.service.dto;
 
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+
 import java.util.Objects;
 
 public class RoleDTO {
     private long id;
-    private String name;
+    private ERole name;
 
-    public RoleDTO(long id, String name) {
+    public RoleDTO(long id, ERole name) {
         this.id = id;
         this.name = name;
     }
@@ -38,11 +40,11 @@ public class RoleDTO {
         this.id = id;
     }
 
-    public String getName() {
+    public ERole getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(ERole name) {
         this.name = name;
     }
 
@@ -70,7 +72,7 @@ public class RoleDTO {
 
     public static final class Builder {
         private long id;
-        private String name;
+        private ERole name;
 
         private Builder() {
         }
@@ -84,7 +86,7 @@ public class RoleDTO {
             return this;
         }
 
-        public Builder name(String name) {
+        public Builder name(ERole name) {
             this.name = name;
             return this;
         }

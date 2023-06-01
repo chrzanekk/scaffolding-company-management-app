@@ -1,24 +1,18 @@
 package pl.com.chrzanowski.scma.service.mapper;
 
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
 import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 
-@Service
-public class UserMapper {
+@Mapper(componentModel = "spring", uses = {RoleMapper.class})
+public interface UserMapper extends EntityMapper<UserDTO, User> {
 
-    public User userDTOtoUser(UserDTO userDTO) {
-        if(userDTO == null) {
+    default User fromId(Long id) {
+        if (id == null) {
             return null;
-        } else {
-            User user = new User();
-            user.setEmail(userDTO.getEmail());
-            user.setUsername(userDTO.getUsername());
-            user.setPassword(userDTO.getPassword());
-            user.setLocked(userDTO.isLocked());
-            user.setEnabled(userDTO.isEnabled());
-            user.setRoles(userDTO.getRoles());
-            return user;
         }
+        User user = new User();
+        user.setId(id);
+        return user;
     }
 }

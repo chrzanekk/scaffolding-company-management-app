@@ -9,9 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
-import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
-import pl.com.chrzanowski.scma.exception.EmptyValueException;
-import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.TireService;
 import pl.com.chrzanowski.scma.service.dto.TireDTO;
 import pl.com.chrzanowski.scma.service.filter.tire.TireFilter;
@@ -59,40 +56,22 @@ public class TireController {
     @GetMapping("/getById/{id}")
     public ResponseEntity<TireDTO> getVehicleTireById(@Valid @PathVariable Long id) {
         log.debug("REST request to get vehicle tire by id: {}", id);
-        try {
-            TireDTO tireDTO = tireService.findById(id);
-            return ResponseEntity.ok().body(tireDTO);
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleTireNotFound");
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        }
+        TireDTO tireDTO = tireService.findById(id);
+        return ResponseEntity.ok().body(tireDTO);
     }
 
     @PostMapping("/add")
     public ResponseEntity<TireDTO> addVehicleTire(@Valid @RequestBody TireDTO tireDTO) {
         log.debug("REST request to add new vehicle tire: {}", tireDTO);
-        try {
-            TireDTO newTireDTO = tireService.save(tireDTO);
-            return ResponseEntity.ok().body(newTireDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleTireFound");
-        }
+        TireDTO newTireDTO = tireService.save(tireDTO);
+        return ResponseEntity.ok().body(newTireDTO);
     }
 
     @PutMapping("/update")
     public ResponseEntity<TireDTO> updateVehicleTire(@Valid @RequestBody TireDTO tireDTO) {
         log.debug("RST request to update vehicle: {}", tireDTO);
-        try {
-            TireDTO updatedTireDTO = tireService.update(tireDTO);
-            return ResponseEntity.ok().body(updatedTireDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleTireNotFound");
-        }
+        TireDTO updatedTireDTO = tireService.update(tireDTO);
+        return ResponseEntity.ok().body(updatedTireDTO);
     }
 
     @DeleteMapping("/delete/{id}")

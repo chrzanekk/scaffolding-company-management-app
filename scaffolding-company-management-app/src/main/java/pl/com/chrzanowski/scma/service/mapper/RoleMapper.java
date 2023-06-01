@@ -1,19 +1,18 @@
 package pl.com.chrzanowski.scma.service.mapper;
 
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
 import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 
-@Service
-public class RoleMapper {
+@Mapper(componentModel = "spring")
+public interface RoleMapper extends EntityMapper<RoleDTO, Role> {
 
-    public Role roleDTOtoRole(RoleDTO roleDTO) {
-        if(roleDTO == null) {
+    default Role fromId(Long id) {
+        if (id == null) {
             return null;
-        } else {
-            Role role = new Role();
-            role.setName(roleDTO.getName());
-            return role;
         }
+        Role role = new Role();
+        role.setId(id);
+        return role;
     }
 }

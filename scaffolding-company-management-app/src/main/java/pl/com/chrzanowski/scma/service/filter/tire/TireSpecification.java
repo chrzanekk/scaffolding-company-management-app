@@ -28,14 +28,11 @@ public class TireSpecification {
     private static final String TIRE_STATUS = "tireStatus";
     private static final String VEHICLE = "vehicle";
     private static final String VEHICLE_ID = "vehicleId";
-    private static final String VEHICLE_BRAND_NAME = "vehicleBrandName";
-    private static final String VEHICLE_MODEL_NAME = "vehicleModelName";
     private static final String PRODUCTION_YEAR = "productionYear";
     private static final String PURCHASE_DATE = "purchaseDate";
     private static final String CREATE_DATE = "createDate";
     private static final String MODIFY_DATE = "modifyDate";
-    private static final String VEHICLE_BRAND = "vehicleBrand";
-    private static final String VEHICLE_MODEL = "vehicleModel";
+
 
     public static Specification<Tire> create(TireFilter filter) {
         Specification<Tire> specification = Specification.where(null);
@@ -113,10 +110,10 @@ public class TireSpecification {
                         PRODUCTION_YEAR));
             }
             if (filter.getPurchaseDateStartsWith() != null) {
-                specification = specification.and(hasDateStartWith(filter.getPurchaseDateStartsWith(), PURCHASE_DATE));
+                specification = specification.and(hasDateStartWith(filter.getPurchaseDateStartsWith()));
             }
             if (filter.getPurchaseDateEndWith() != null) {
-                specification = specification.and(hasDateEndWith(filter.getPurchaseDateEndWith(), PURCHASE_DATE));
+                specification = specification.and(hasDateEndWith(filter.getPurchaseDateEndWith()));
             }
             if (filter.getVehicleId() != null) {
                 specification = specification.and(hasVehicleId(filter.getVehicleId()));
@@ -143,13 +140,13 @@ public class TireSpecification {
                 date);
     }
 
-    private static Specification<Tire> hasDateStartWith(LocalDate date, String fieldType) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(fieldType),
+    private static Specification<Tire> hasDateStartWith(LocalDate date) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(TireSpecification.PURCHASE_DATE),
                 date);
     }
 
-    private static Specification<Tire> hasDateEndWith(LocalDate date, String fieldType) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldType),
+    private static Specification<Tire> hasDateEndWith(LocalDate date) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(TireSpecification.PURCHASE_DATE),
                 date);
     }
 

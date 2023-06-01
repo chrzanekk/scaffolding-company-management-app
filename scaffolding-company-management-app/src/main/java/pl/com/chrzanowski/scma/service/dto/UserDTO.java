@@ -1,8 +1,5 @@
 package pl.com.chrzanowski.scma.service.dto;
 
-import pl.com.chrzanowski.scma.domain.Role;
-
-import java.util.Objects;
 import java.util.Set;
 
 public class UserDTO {
@@ -10,17 +7,18 @@ public class UserDTO {
     private String email;
     private String username;
     private String password;
-    private boolean isLocked;
-    private boolean isEnabled;
-    private Set<Role> roles;
+    private Boolean locked;
+    private Boolean enabled;
+    private Set<RoleDTO> roles;
 
-    public UserDTO(Long id, String email, String username, String password, boolean isLocked, boolean isEnabled, Set<Role> roles) {
+    public UserDTO(Long id, String email, String username, String password, Boolean locked, Boolean enabled,
+                   Set<RoleDTO> roles) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.isLocked = isLocked;
-        this.isEnabled = isEnabled;
+        this.locked = locked;
+        this.enabled = enabled;
         this.roles = roles;
     }
 
@@ -29,9 +27,23 @@ public class UserDTO {
         setEmail(builder.email);
         setUsername(builder.username);
         setPassword(builder.password);
-        setLocked(builder.isLocked);
-        setEnabled(builder.isEnabled);
+        setLocked(builder.locked);
+        setEnabled(builder.enabled);
         setRoles(builder.roles);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builder(UserDTO copy) {
+        Builder builder = new Builder();
+        builder.id = copy.getId();
+        builder.email = copy.getEmail();
+        builder.username = copy.getUsername();
+        builder.password = copy.getPassword();
+        builder.roles = copy.getRoles();
+        return builder;
     }
 
     public Long getId() {
@@ -66,41 +78,28 @@ public class UserDTO {
         this.password = password;
     }
 
-    public boolean isLocked() {
-        return isLocked;
+    public Boolean getLocked() {
+        return locked;
     }
 
-    public void setLocked(boolean locked) {
-        isLocked = locked;
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public Set<Role> getRoles() {
+    public Set<RoleDTO> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleDTO> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return isLocked == userDTO.isLocked && isEnabled == userDTO.isEnabled && Objects.equals(id, userDTO.id) && Objects.equals(email, userDTO.email) && Objects.equals(username, userDTO.username) && Objects.equals(password, userDTO.password) && Objects.equals(roles, userDTO.roles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, username, password, isLocked, isEnabled, roles);
     }
 
     @Override
@@ -110,8 +109,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", isLocked=" + isLocked +
-                ", isEnabled=" + isEnabled +
+                ", isLocked=" + locked +
+                ", isEnabled=" + enabled +
                 ", roles=" + roles +
                 '}';
     }
@@ -122,15 +121,11 @@ public class UserDTO {
         private String email;
         private String username;
         private String password;
-        private boolean isLocked;
-        private boolean isEnabled;
-        private Set<Role> roles;
+        private Boolean locked;
+        private Boolean enabled;
+        private Set<RoleDTO> roles;
 
         private Builder() {
-        }
-
-        public static Builder builder() {
-            return new Builder();
         }
 
         public Builder id(Long id) {
@@ -153,17 +148,17 @@ public class UserDTO {
             return this;
         }
 
-        public Builder isLocked(boolean isLocked) {
-            this.isLocked = isLocked;
+        public Builder locked(Boolean locked) {
+            this.locked = locked;
             return this;
         }
 
-        public Builder isEnabled(boolean isEnabled) {
-            this.isEnabled = isEnabled;
+        public Builder enabled(Boolean enabled) {
+            this.enabled = enabled;
             return this;
         }
 
-        public Builder roles(Set<Role> roles) {
+        public Builder roles(Set<RoleDTO> roles) {
             this.roles = roles;
             return this;
         }

@@ -10,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
-import pl.com.chrzanowski.scma.exception.BadRequestAlertException;
-import pl.com.chrzanowski.scma.exception.EmptyValueException;
-import pl.com.chrzanowski.scma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.scma.service.VehicleService;
 import pl.com.chrzanowski.scma.service.dto.VehicleDTO;
 import pl.com.chrzanowski.scma.service.filter.vehicle.VehicleFilter;
@@ -61,40 +58,22 @@ public class VehicleController {
     @GetMapping("/getById/{id}")
     public ResponseEntity<VehicleDTO> getVehicleById(@Valid @PathVariable Long id) {
         log.debug("REST request to get vehicle by id: {}", id);
-        try {
-            VehicleDTO vehicleDTO = vehicleService.findById(id);
-            return ResponseEntity.ok().body(vehicleDTO);
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleNotFound");
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        }
+        VehicleDTO vehicleDTO = vehicleService.findById(id);
+        return ResponseEntity.ok().body(vehicleDTO);
     }
 
     @PostMapping("/add")
     public ResponseEntity<VehicleDTO> addVehicle(@RequestBody VehicleDTO vehicleDTO) {
         log.debug("REST request to add new vehicle: {}", vehicleDTO);
-        try {
-            VehicleDTO newVehicleDTO = vehicleService.save(vehicleDTO);
-            return ResponseEntity.ok().body(newVehicleDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleNotFound");
-        }
+        VehicleDTO newVehicleDTO = vehicleService.save(vehicleDTO);
+        return ResponseEntity.ok().body(newVehicleDTO);
     }
 
     @PutMapping("/update")
     public ResponseEntity<VehicleDTO> updateVehicle(@RequestBody VehicleDTO vehicleDTO) {
         log.debug("REST request to update vehicle: {}", vehicleDTO);
-        try {
-            VehicleDTO updatedVehicleDTO = vehicleService.update(vehicleDTO);
-            return ResponseEntity.ok().body(updatedVehicleDTO);
-        } catch (EmptyValueException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "emptyFieldException");
-        } catch (ObjectNotFoundException e) {
-            throw new BadRequestAlertException(e.getMessage(), ENTITY_NAME, "vehicleNotFound");
-        }
+        VehicleDTO updatedVehicleDTO = vehicleService.update(vehicleDTO);
+        return ResponseEntity.ok().body(updatedVehicleDTO);
     }
 
     @DeleteMapping("/delete/{id}")

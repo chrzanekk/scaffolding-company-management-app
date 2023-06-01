@@ -4,11 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.domain.Role;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+import pl.com.chrzanowski.scma.exception.RoleException;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.service.mapper.RoleMapper;
-import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Transactional
 public class RoleServiceImpl implements RoleService {
 
-    private final Logger log = LoggerFactory.getLogger(RoleService.class);
+    private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     private final RoleRepository roleRepository;
 
@@ -31,23 +32,23 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Set<Role> findAll() {
+    public Set<RoleDTO> findAll() {
         log.info("Fetching all roles.");
         List<Role> roleList = roleRepository.findAll();
-        return Set.copyOf(roleList);
+        return roleMapper.toDto(Set.copyOf(roleList));
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
+    public RoleDTO findByName(ERole name) {
         log.info("Fetching role {}", name);
-        return roleRepository.findByName(name);
+        Optional<Role> role = roleRepository.findByName(name);
+        return role.map(roleMapper::toDto)
+                .orElseThrow(() -> new RoleException("ErrorRole not found: " + ERole.ROLE_ADMIN.getRoleName()));
     }
 
     @Override
-    public Role saveRole(RoleDTO roleDTO) {
+    public RoleDTO saveRole(RoleDTO roleDTO) {
         log.info("Adding new role {} to database", roleDTO.getName());
-        FieldValidator.validateObject(roleDTO, "roleDTO");
-        FieldValidator.validateString(roleDTO.getName(), "Role name");
-        return roleRepository.save(roleMapper.roleDTOtoRole(roleDTO));
+        return roleMapper.toDto(roleRepository.save(roleMapper.toEntity(roleDTO)));
     }
 }
