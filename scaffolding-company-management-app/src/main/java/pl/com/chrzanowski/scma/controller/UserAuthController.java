@@ -20,6 +20,7 @@ import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
+import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
 import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.RoleDTO;
@@ -40,17 +41,19 @@ public class UserAuthController {
     private final JwtUtils jwtUtils;
     private final UserService userService;
     private final RoleService roleService;
+    private final ConfirmationTokenService confirmationTokenService;
     private final PasswordEncoder encoder;
 
 
     public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
                               RoleService roleService,
-                              PasswordEncoder encoder) {
+                              ConfirmationTokenService confirmationTokenService, PasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
         this.roleService = roleService;
+        this.confirmationTokenService = confirmationTokenService;
         this.encoder = encoder;
     }
 
@@ -112,11 +115,14 @@ public class UserAuthController {
             });
         }
         UserDTO newUser = UserDTO.builder().username(registerRequest.getUsername()).email(registerRequest.getEmail())
-                .roles(roleDTOSet).enabled(true).locked(false).password(encoder.encode(registerRequest.getPassword()))
+                .roles(roleDTOSet).enabled(false).locked(false).password(encoder.encode(registerRequest.getPassword()))
                 .build();
-        userService.save(newUser);
+        UserDTO savedUser = userService.save(newUser);
+        String confirmationToken = confirmationTokenService.generateToken();
+        confirmationTokenService.saveToken(confirmationToken, savedUser);
 
-        return ResponseEntity.ok(new MessageResponse("Registered successfully!"));
+        return ResponseEntity.ok().body(confirmationToken);
     }
+
 
 }
