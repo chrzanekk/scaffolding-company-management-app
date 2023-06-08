@@ -6,13 +6,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
+import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
+import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.UserService;
+import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
+import pl.com.chrzanowski.scma.service.dto.RoleDTO;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 import pl.com.chrzanowski.scma.service.filter.user.UserSpecification;
@@ -20,8 +25,11 @@ import pl.com.chrzanowski.scma.service.mapper.UserMapper;
 import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -38,11 +46,73 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final RoleService roleService;
+    private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordEncoder encoder;
+
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           UserMapper userMapper) {
+                           UserMapper userMapper,
+                           RoleService roleService,
+                           ConfirmationTokenService confirmationTokenService,
+                           PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+        this.roleService = roleService;
+        this.confirmationTokenService = confirmationTokenService;
+        this.encoder = encoder;
+    }
+
+    @Override
+    public UserDTO register(RegisterRequest request) {
+        log.debug("Request to register new user: {}", request);
+        Set<String> stringRoles = request.getRole();
+        Set<RoleDTO> roleDTOSet = new HashSet<>();
+
+        if (stringRoles == null || stringRoles.isEmpty()) {
+            roleDTOSet.add(roleService.findByName(ERole.ROLE_USER));
+        } else {
+            stringRoles.forEach(role -> {
+                switch (role) {
+                    case "admin" -> {
+                        RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN);
+                        roleDTOSet.add(adminRole);
+                    }
+                    case "mod" -> {
+                        RoleDTO modeRole = roleService.findByName(ERole.ROLE_MODERATOR);
+                        roleDTOSet.add(modeRole);
+                    }
+                    default -> {
+                        RoleDTO userRole = roleService.findByName(ERole.ROLE_USER);
+                        roleDTOSet.add(userRole);
+                    }
+                }
+            });
+        }
+        UserDTO newUser = UserDTO.builder().username(request.getUsername()).email(request.getEmail())
+                .roles(roleDTOSet).enabled(false).locked(false).password(encoder.encode(request.getPassword()))
+                .build();
+
+        return save(newUser);
+    }
+
+    @Override
+    @Transactional
+    public String confirm(String token) {
+        ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.getConfirmationToken(token);
+        if (confirmationTokenDTO.getConfirmDate() != null) {
+            throw new IllegalStateException("Email already confirmed");
+        }
+
+        LocalDateTime expireDate = confirmationTokenDTO.getExpireDate();
+        if (expireDate.isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Token expired.");
+        }
+
+        ConfirmationTokenDTO confirmedDTO = confirmationTokenService.updateToken(confirmationTokenDTO);
+        UserDTO user = getUser(confirmedDTO.getEmail());
+        UserDTO confirmedUser = update(UserDTO.builder(user).enabled(true).locked(false).build());
+        return "Confirmed at" + confirmedDTO.getConfirmDate().toString();
     }
 
     @Override
@@ -90,17 +160,6 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> findAll() {
         log.info("Fetching all users. ");
         return userMapper.toDto(userRepository.findAll());
-    }
-
-    @Override
-    public void addRoleToUser(String email, ERole roleName) {
-        log.info("Assigning new role {} to user {}", roleName, email);
-        Optional<User> user = userRepository.findByEmail(email);
-        Optional<Role> role = roleRepository.findByName(roleName);
-        if (user.isPresent() && role.isPresent()) {
-            user.get().getRoles().add(role.get());
-        }
-
     }
 
     @Override

@@ -9,6 +9,8 @@ public interface ConfirmationTokenService {
 
     ConfirmationTokenDTO saveToken(String token, UserDTO userDTO);
 
+    ConfirmationTokenDTO updateToken(ConfirmationTokenDTO confirmationTokenDTO);
+
     ConfirmationTokenDTO getConfirmationToken(String token);
 
     void deleteConfirmationToken(Long id);

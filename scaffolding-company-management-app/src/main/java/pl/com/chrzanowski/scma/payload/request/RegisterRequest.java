@@ -22,6 +22,29 @@ public class RegisterRequest {
     @Size(min = 6, max = 40)
     private String password;
 
+    public RegisterRequest() {
+    }
+
+    private RegisterRequest(Builder builder) {
+        setUsername(builder.username);
+        setEmail(builder.email);
+        setRole(builder.role);
+        setPassword(builder.password);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static Builder builder(RegisterRequest copy) {
+        Builder builder = new Builder();
+        builder.username = copy.getUsername();
+        builder.email = copy.getEmail();
+        builder.role = copy.getRole();
+        builder.password = copy.getPassword();
+        return builder;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -54,4 +77,47 @@ public class RegisterRequest {
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "RegisterRequest{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    public static final class Builder {
+        private @NotBlank @Size(min = 3, max = 20) String username;
+        private @NotBlank @Size(max = 50) @Email String email;
+        private Set<String> role;
+        private @NotBlank @Size(min = 6, max = 40) String password;
+
+        private Builder() {
+        }
+
+        public Builder username(@NotBlank @Size(min = 3, max = 20) String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder email(@NotBlank @Size(max = 50) @Email String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder role(Set<String> role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder password(@NotBlank @Size(min = 6, max = 40) String password) {
+            this.password = password;
+            return this;
+        }
+
+        public RegisterRequest build() {
+            return new RegisterRequest(this);
+        }
+    }
 }

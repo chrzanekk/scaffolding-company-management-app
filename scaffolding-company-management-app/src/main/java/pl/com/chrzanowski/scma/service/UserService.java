@@ -3,13 +3,17 @@ package pl.com.chrzanowski.scma.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 
 import java.util.List;
 
 public interface UserService {
+
+    UserDTO register(RegisterRequest request);
+
+    String confirm(String token);
 
     UserDTO save(UserDTO userDTO);
 
@@ -24,8 +28,6 @@ public interface UserService {
     List<UserDTO> findAll();
 
     void delete(Long id);
-
-    void addRoleToUser(String email, ERole roleName);
 
     UserDTO getUser(String email);
 

@@ -45,10 +45,19 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
+    public ConfirmationTokenDTO updateToken(ConfirmationTokenDTO confirmationTokenDTO) {
+        log.debug("Request to update confirmed token: {}", confirmationTokenDTO.getConfirmationToken());
+        ConfirmationToken confirmed = confirmationTokenRepository.save(
+                confirmationTokenMapper.toEntity(ConfirmationTokenDTO.builder(confirmationTokenDTO)
+                        .confirmDate(LocalDateTime.now()).build()));
+        return confirmationTokenMapper.toDto(confirmed);
+    }
+
+    @Override
     public ConfirmationTokenDTO getConfirmationToken(String token) {
-        log.debug("Request to get verification token: {}", token);
+        log.debug("Request to get confirmation token: {}", token);
         return confirmationTokenRepository.findByConfirmationToken(token).map(confirmationTokenMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException("Token expired"));
+                .orElseThrow(() -> new ObjectNotFoundException("Token not found"));
     }
 
     @Override

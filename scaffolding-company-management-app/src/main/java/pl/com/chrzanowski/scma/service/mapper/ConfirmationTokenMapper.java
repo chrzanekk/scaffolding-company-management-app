@@ -13,6 +13,8 @@ public interface ConfirmationTokenMapper extends EntityMapper<ConfirmationTokenD
     @Mapping(source = "user.username", target = "userName")
     ConfirmationTokenDTO toDto(ConfirmationToken confirmationToken);
     @Mapping(source = "userId", target = "user.id")
+    @Mapping(source = "email", target = "user.email")
+    @Mapping(source = "userName", target = "user.username")
     ConfirmationToken toEntity(ConfirmationTokenDTO confirmationTokenDTO);
 
     default ConfirmationToken fromId(Long id) {
