@@ -22,6 +22,7 @@ import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 import pl.com.chrzanowski.scma.service.filter.user.UserSpecification;
 import pl.com.chrzanowski.scma.service.mapper.UserMapper;
+import pl.com.chrzanowski.scma.util.EmailUtil;
 import pl.com.chrzanowski.scma.util.FieldValidator;
 
 import javax.transaction.Transactional;
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO register(RegisterRequest request) {
         log.debug("Request to register new user: {}", request);
+        EmailUtil.validateEmail(request.getEmail());
         Set<String> stringRoles = request.getRole();
         Set<RoleDTO> roleDTOSet = new HashSet<>();
 
