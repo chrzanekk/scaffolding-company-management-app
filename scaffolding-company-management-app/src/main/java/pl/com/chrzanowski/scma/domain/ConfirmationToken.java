@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "cofirmation_tokens")
 public class ConfirmationToken {
 
     @Id

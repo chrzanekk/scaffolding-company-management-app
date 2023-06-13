@@ -70,7 +70,6 @@ public class UserAuthController {
 
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -95,6 +94,8 @@ public class UserAuthController {
         UserDTO savedUser = userService.register(updatedRequest);
         String generatedToken = confirmationTokenService.generateToken();
         ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.saveToken(generatedToken, savedUser);
+
+        //todo change response to include token and message after registration (mail sent to confirmation)
 
         return ResponseEntity.ok().body(confirmationTokenDTO);
     }
