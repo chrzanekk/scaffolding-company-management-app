@@ -1,8 +1,10 @@
 package pl.com.chrzanowski.scma.domain;
 
+import pl.com.chrzanowski.scma.domain.enumeration.Language;
 import pl.com.chrzanowski.scma.domain.enumeration.MailEvent;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -14,20 +16,24 @@ public class SentEmail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name ="title")
+    @Column(name = "title")
     private String title;
 
     @Column(name = "content")
+    @Size(max = 5000)
     private String content;
 
     @Column(name = "event")
     @Enumerated(EnumType.STRING)
     private MailEvent mailEvent;
+    @Column(name = "language")
+    @Enumerated(EnumType.STRING)
+    private Language language;
 
     @Column(name = "create_time")
     private LocalDateTime createDatetime;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
@@ -67,6 +73,15 @@ public class SentEmail {
         return this;
     }
 
+    public Language getLanguage() {
+        return language;
+    }
+
+    public SentEmail setLanguage(Language language) {
+        this.language = language;
+        return this;
+    }
+
     public User getUser() {
         return user;
     }
@@ -93,12 +108,12 @@ public class SentEmail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SentEmail sentEmail = (SentEmail) o;
-        return Objects.equals(id, sentEmail.id) && Objects.equals(title, sentEmail.title) && Objects.equals(content, sentEmail.content) && mailEvent == sentEmail.mailEvent && Objects.equals(createDatetime, sentEmail.createDatetime) && Objects.equals(user, sentEmail.user);
+        return Objects.equals(id, sentEmail.id) && Objects.equals(title, sentEmail.title) && Objects.equals(content, sentEmail.content) && mailEvent == sentEmail.mailEvent && language == sentEmail.language && Objects.equals(createDatetime, sentEmail.createDatetime) && Objects.equals(user, sentEmail.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, mailEvent, createDatetime, user);
+        return Objects.hash(id, title, content, mailEvent, language, createDatetime, user);
     }
 
     @Override
@@ -108,6 +123,7 @@ public class SentEmail {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", mailEvent=" + mailEvent +
+                ", language=" + language +
                 ", createDatetime=" + createDatetime +
                 ", user=" + user +
                 '}';

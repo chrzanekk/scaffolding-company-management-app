@@ -76,6 +76,9 @@ public class ApplicationConfig {
     @Value("${path-to-fonts}")
     private String pathToFonts;
 
+    @Value("${path-to-email-template}")
+    private String pathToEmailTemplate;
+
 
     private String templateNameServiceActionsDemandPdf = "admin-vehicle-service-actions-pdf.html";
 
@@ -163,6 +166,9 @@ public class ApplicationConfig {
         return faviconPath;
     }
 
+    public String getPathToEmailTemplate() {
+        return pathToEmailTemplate;
+    }
 
     @Bean
     RestTemplate restTemplate() {

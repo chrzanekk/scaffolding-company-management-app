@@ -15,10 +15,12 @@ import pl.com.chrzanowski.scma.exception.UsernameAlreadyExistsException;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.payload.response.JwtResponse;
+import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
 import pl.com.chrzanowski.scma.service.RoleService;
+import pl.com.chrzanowski.scma.service.SentEmailService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
@@ -26,6 +28,7 @@ import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,18 +42,21 @@ public class UserAuthController {
     private final RoleService roleService;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordEncoder encoder;
+    private final SentEmailService sentEmailService;
 
 
     public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
                               RoleService roleService,
-                              ConfirmationTokenService confirmationTokenService, PasswordEncoder encoder) {
+                              ConfirmationTokenService confirmationTokenService, PasswordEncoder encoder,
+                              SentEmailService sentEmailService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
         this.roleService = roleService;
         this.confirmationTokenService = confirmationTokenService;
         this.encoder = encoder;
+        this.sentEmailService = sentEmailService;
     }
 
 
@@ -95,9 +101,8 @@ public class UserAuthController {
         String generatedToken = confirmationTokenService.generateToken();
         ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.saveToken(generatedToken, savedUser);
 
-        //todo change response to include token and message after registration (mail sent to confirmation)
-
-        return ResponseEntity.ok().body(confirmationTokenDTO);
+        MessageResponse response = sentEmailService.sendAfterRegistration(confirmationTokenDTO, new Locale("pl"));
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(path = "/confirm")

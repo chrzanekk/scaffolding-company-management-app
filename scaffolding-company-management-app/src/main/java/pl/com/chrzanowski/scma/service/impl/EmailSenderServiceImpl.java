@@ -49,4 +49,5 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             javaMailSender.send(mail);
         }).start();
     }
+
 }

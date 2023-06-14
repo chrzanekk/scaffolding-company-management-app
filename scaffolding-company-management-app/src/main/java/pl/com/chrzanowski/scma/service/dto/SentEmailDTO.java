@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.scma.service.dto;
 
+import pl.com.chrzanowski.scma.domain.enumeration.Language;
 import pl.com.chrzanowski.scma.domain.enumeration.MailEvent;
 
 import java.time.LocalDateTime;
@@ -11,21 +12,23 @@ public class SentEmailDTO {
     private final String userEmail;
     private final String title;
     private final String content;
-    private final MailEvent event;
+    private final MailEvent mailEvent;
+    private final Language language;
     private final LocalDateTime createDatetime;
 
     public SentEmailDTO(Long id,
                         Long userId,
                         String userEmail, String title,
                         String content,
-                        MailEvent event,
-                        LocalDateTime createDatetime) {
+                        MailEvent mailEvent,
+                        Language language, LocalDateTime createDatetime) {
         this.id = id;
         this.userId = userId;
         this.userEmail = userEmail;
         this.title = title;
         this.content = content;
-        this.event = event;
+        this.mailEvent = mailEvent;
+        this.language = language;
         this.createDatetime = createDatetime;
     }
 
@@ -35,7 +38,8 @@ public class SentEmailDTO {
         userEmail = builder.userEmail;
         title = builder.title;
         content = builder.content;
-        event = builder.event;
+        mailEvent = builder.mailEvent;
+        language = builder.language;
         createDatetime = builder.createDatetime;
     }
 
@@ -50,7 +54,8 @@ public class SentEmailDTO {
         builder.userEmail = copy.getUserEmail();
         builder.title = copy.getTitle();
         builder.content = copy.getContent();
-        builder.event = copy.getEvent();
+        builder.mailEvent = copy.getMailEvent();
+        builder.language = copy.getLanguage();
         builder.createDatetime = copy.getCreateDatetime();
         return builder;
     }
@@ -75,8 +80,12 @@ public class SentEmailDTO {
         return content;
     }
 
-    public MailEvent getEvent() {
-        return event;
+    public MailEvent getMailEvent() {
+        return mailEvent;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
     public LocalDateTime getCreateDatetime() {
@@ -88,12 +97,12 @@ public class SentEmailDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SentEmailDTO that = (SentEmailDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(userEmail, that.userEmail) && Objects.equals(title, that.title) && Objects.equals(content, that.content) && event == that.event && Objects.equals(createDatetime, that.createDatetime);
+        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(userEmail, that.userEmail) && Objects.equals(title, that.title) && Objects.equals(content, that.content) && mailEvent == that.mailEvent && language == that.language && Objects.equals(createDatetime, that.createDatetime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, userEmail, title, content, event, createDatetime);
+        return Objects.hash(id, userId, userEmail, title, content, mailEvent, language, createDatetime);
     }
 
     @Override
@@ -104,7 +113,8 @@ public class SentEmailDTO {
                 ", userEmail='" + userEmail + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", event=" + event +
+                ", mailEvent=" + mailEvent +
+                ", language=" + language +
                 ", createDatetime=" + createDatetime +
                 '}';
     }
@@ -116,7 +126,8 @@ public class SentEmailDTO {
         private String userEmail;
         private String title;
         private String content;
-        private MailEvent event;
+        private MailEvent mailEvent;
+        private Language language;
         private LocalDateTime createDatetime;
 
         private Builder() {
@@ -131,6 +142,7 @@ public class SentEmailDTO {
             this.userId = userId;
             return this;
         }
+
         public Builder userEmail(String userEmail) {
             this.userEmail = userEmail;
             return this;
@@ -146,8 +158,13 @@ public class SentEmailDTO {
             return this;
         }
 
-        public Builder event(MailEvent event) {
-            this.event = event;
+        public Builder mailEvent(MailEvent mailEvent) {
+            this.mailEvent = mailEvent;
+            return this;
+        }
+
+        public Builder language(Language language) {
+            this.language = language;
             return this;
         }
 
