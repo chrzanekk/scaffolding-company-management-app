@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
-    private static final int TOKEN_VALIDITY_TIME_IN_MINUTES = 15;
+    private static final int TOKEN_VALIDITY_TIME_IN_MINUTES = 30;
     private final Logger log = LoggerFactory.getLogger(ConfirmationTokenServiceImpl.class);
 
     private final ConfirmationTokenRepository confirmationTokenRepository;

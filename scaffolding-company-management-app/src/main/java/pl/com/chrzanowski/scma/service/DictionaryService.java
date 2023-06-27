@@ -44,6 +44,7 @@ public class DictionaryService {
         if (Language.US == lang || Language.EN == lang) {
             list.add(DictionaryDTO.builder().code(MailEvent.AFTER_REGISTRATION.getCode()).value("Registration " +
                     "confirmation").language(lang.getCode()).build());
+            list.add(DictionaryDTO.builder().code(MailEvent.AFTER_CONFIRMATION.getCode()).value("Email confirmed").language(lang.getCode()).build());
             list.add(DictionaryDTO.builder().code(MailEvent.AFTER_PASSWORD_CHANGE.getCode()).value("Password has been" +
                     " changed").language(lang.getCode()).build());
             list.add(DictionaryDTO.builder().code(MailEvent.PASSWORD_RESET.getCode()).value("Password reset")
@@ -54,6 +55,8 @@ public class DictionaryService {
         } else if (Language.PL == lang) {
             list.add(DictionaryDTO.builder().code(MailEvent.AFTER_REGISTRATION.getCode())
                     .value("Potwierdzenie rejestracji").language(lang.getCode()).build());
+            list.add(DictionaryDTO.builder().code(MailEvent.AFTER_CONFIRMATION.getCode()).value("Email potwierdzony").language(lang.getCode()).build());
+
             list.add(DictionaryDTO.builder().code(MailEvent.AFTER_PASSWORD_CHANGE.getCode())
                     .value("Hasło zostało zmienione").language(lang.getCode()).build());
             list.add(DictionaryDTO.builder().code(MailEvent.PASSWORD_RESET.getCode()).value("Resetowanie hasła")

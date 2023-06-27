@@ -10,6 +10,8 @@ import java.util.Locale;
 public interface SentEmailService {
     MessageResponse sendAfterRegistration(ConfirmationTokenDTO confirmationTokenDTO, Locale locale);
 
+    MessageResponse sendAfterEmailConfirmation(ConfirmationTokenDTO confirmationTokenDTO, Locale locale);
+
     MessageResponse sendAfterPasswordChange(NewPasswordPutRequest newPasswordPutRequest);
 
     MessageResponse sendPasswordResetMail(PasswordResetRequest passwordResetRequest);

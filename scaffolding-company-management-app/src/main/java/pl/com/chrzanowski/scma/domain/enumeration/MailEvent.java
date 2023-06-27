@@ -2,9 +2,10 @@ package pl.com.chrzanowski.scma.domain.enumeration;
 
 public enum MailEvent {
     AFTER_REGISTRATION("r"),
+    AFTER_CONFIRMATION("c"),
     AFTER_PASSWORD_CHANGE("p"),
     PASSWORD_RESET("n"),
-    EMAIL_CONFIRMATION_LINK("c");
+    EMAIL_CONFIRMATION_LINK("l");
 
     private String code;
 

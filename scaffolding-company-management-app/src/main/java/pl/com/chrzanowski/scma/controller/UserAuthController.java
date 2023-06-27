@@ -108,6 +108,8 @@ public class UserAuthController {
     @GetMapping(path = "/confirm")
     public String confirmRegistration(@RequestParam("token") String token) {
         log.debug("REST request to confirm user registration. Token: {}", token);
+        ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.getConfirmationToken(token);
+        sentEmailService.sendAfterEmailConfirmation(confirmationTokenDTO, new Locale("pl"));
         return userService.confirm(token);
     }
 

@@ -22,12 +22,15 @@ import pl.com.chrzanowski.scma.service.dto.DictionaryDTO;
 import pl.com.chrzanowski.scma.service.dto.SentEmailDTO;
 import pl.com.chrzanowski.scma.service.mapper.SentEmailMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
 @Service
 public class SentEmailServiceImpl implements SentEmailService {
     private final Logger log = LoggerFactory.getLogger(SentEmailServiceImpl.class);
+
+    private static final String API_PATH = "/api/auth";
 
     private final EmailSenderService emailSenderService;
     private final SentEmailRepository sentEmailRepository;
@@ -53,7 +56,7 @@ public class SentEmailServiceImpl implements SentEmailService {
         Context context = new Context(locale);
         context.setVariable("loginPageUrl", applicationConfig.getScaffoldingAppUrl() + "/login");
         context.setVariable("emailConfirmationLink",
-                applicationConfig.getScaffoldingAppUrl() + "/confirm?token=" + confirmationTokenDTO.getConfirmationToken());
+                applicationConfig.getScaffoldingAppUrl() + API_PATH + "/confirm?token=" + confirmationTokenDTO.getConfirmationToken());
         //template to send as string
         String content = templateEngine.process("mail-after-registration", context);
         String title = chooseTitle(MailEvent.AFTER_REGISTRATION, locale);
@@ -64,6 +67,28 @@ public class SentEmailServiceImpl implements SentEmailService {
                 .content(content)
                 .mailEvent(MailEvent.AFTER_REGISTRATION)
                 .language(Language.from(locale.getLanguage())).build();
+        emailSenderService.sendEmail(sentEmailDTO);
+        SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
+        sentEmailRepository.save(sentEmail);
+        return new MessageResponse("Register successful");
+    }
+
+    @Override
+    public MessageResponse sendAfterEmailConfirmation(ConfirmationTokenDTO confirmationTokenDTO, Locale locale) {
+        log.debug("Request to send email to confirm user activation:");
+        Context context = new Context(locale);
+        context.setVariable("loginPageUrl", applicationConfig.getScaffoldingAppUrl() + "/login");
+        //template to send as string
+        String content = templateEngine.process("mail-after-confirmation", context);
+        String title = chooseTitle(MailEvent.AFTER_CONFIRMATION, locale);
+        SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
+                .userId(confirmationTokenDTO.getUserId())
+                .userEmail(confirmationTokenDTO.getEmail())
+                .title(title)
+                .content(content)
+                .mailEvent(MailEvent.AFTER_CONFIRMATION)
+                .language(Language.from(locale.getLanguage()))
+                .createDatetime(LocalDateTime.now()).build();
         emailSenderService.sendEmail(sentEmailDTO);
         SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sentEmailRepository.save(sentEmail);
