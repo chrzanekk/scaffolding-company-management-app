@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.scma.exception.EmailAlreadyExistsException;
 import pl.com.chrzanowski.scma.exception.UsernameAlreadyExistsException;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
+import pl.com.chrzanowski.scma.payload.request.PasswordResetRequest;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
@@ -113,7 +114,11 @@ public class UserAuthController {
         return userService.confirm(token);
     }
 
-
+    @PutMapping(path = "/request-password-reset")
+    public String passwordReset(@RequestBody PasswordResetRequest passwordResetRequest) {
+        log.debug("REST request to set new password for user: {}", passwordResetRequest.getEmail());
+        return "";
+    }
 
     private boolean isEmailTaken(RegisterRequest registerRequest) {
         return Boolean.TRUE.equals(userService.isEmailExists(registerRequest.getEmail()));

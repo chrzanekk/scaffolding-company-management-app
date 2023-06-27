@@ -4,16 +4,16 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cofirmation_tokens")
-public class ConfirmationToken {
+@Table(name = "password_reset_tokens")
+public class PasswordResetToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "token_id")
     private Long id;
 
-    @Column(name = "confirmation_token")
-    private String confirmationToken;
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
     @JoinColumn(nullable = false, name = "user_id")
@@ -24,41 +24,41 @@ public class ConfirmationToken {
 
     @Column(name = "expire_date")
     private LocalDateTime expireDate;
-    @Column(name = "confirm_date")
+    @Column(name = "reset_date")
     private LocalDateTime confirmDate;
 
-    public ConfirmationToken(Long id,
-                             String confirmationToken,
-                             User user,
-                             LocalDateTime createDate,
-                             LocalDateTime expireDate,
-                             LocalDateTime confirmDate) {
+    public PasswordResetToken(Long id,
+                              String passwordResetToken,
+                              User user,
+                              LocalDateTime createDate,
+                              LocalDateTime expireDate,
+                              LocalDateTime confirmDate) {
         this.id = id;
-        this.confirmationToken = confirmationToken;
+        this.passwordResetToken = passwordResetToken;
         this.user = user;
         this.createDate = createDate;
         this.expireDate = expireDate;
         this.confirmDate = confirmDate;
     }
 
-    public ConfirmationToken() {
+    public PasswordResetToken() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public ConfirmationToken setId(Long id) {
+    public PasswordResetToken setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public String getPasswordResetToken() {
+        return passwordResetToken;
     }
 
-    public ConfirmationToken setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public PasswordResetToken setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
         return this;
     }
 
@@ -66,7 +66,7 @@ public class ConfirmationToken {
         return user;
     }
 
-    public ConfirmationToken setUser(User user) {
+    public PasswordResetToken setUser(User user) {
         this.user = user;
         return this;
     }
@@ -75,7 +75,7 @@ public class ConfirmationToken {
         return createDate;
     }
 
-    public ConfirmationToken setCreateDate(LocalDateTime createDate) {
+    public PasswordResetToken setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
@@ -84,8 +84,8 @@ public class ConfirmationToken {
         return expireDate;
     }
 
-    public ConfirmationToken setExpireDate(LocalDateTime validDate) {
-        this.expireDate = validDate;
+    public PasswordResetToken setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = expireDate;
         return this;
     }
 
@@ -93,7 +93,7 @@ public class ConfirmationToken {
         return confirmDate;
     }
 
-    public ConfirmationToken setConfirmDate(LocalDateTime confirmDate) {
+    public PasswordResetToken setConfirmDate(LocalDateTime confirmDate) {
         this.confirmDate = confirmDate;
         return this;
     }
