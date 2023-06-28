@@ -10,8 +10,6 @@ import pl.com.chrzanowski.scma.domain.SentEmail;
 import pl.com.chrzanowski.scma.domain.enumeration.DictionaryType;
 import pl.com.chrzanowski.scma.domain.enumeration.Language;
 import pl.com.chrzanowski.scma.domain.enumeration.MailEvent;
-import pl.com.chrzanowski.scma.payload.request.NewPasswordPutRequest;
-import pl.com.chrzanowski.scma.payload.request.PasswordResetRequest;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.repository.SentEmailRepository;
 import pl.com.chrzanowski.scma.service.DictionaryService;
@@ -19,6 +17,7 @@ import pl.com.chrzanowski.scma.service.EmailSenderService;
 import pl.com.chrzanowski.scma.service.SentEmailService;
 import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.DictionaryDTO;
+import pl.com.chrzanowski.scma.service.dto.PasswordResetTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.SentEmailDTO;
 import pl.com.chrzanowski.scma.service.mapper.SentEmailMapper;
 
@@ -96,14 +95,47 @@ public class SentEmailServiceImpl implements SentEmailService {
     }
 
     @Override
-    public MessageResponse sendAfterPasswordChange(NewPasswordPutRequest newPasswordPutRequest) {
-        log.debug("Request to send email to confirm password reset.");
-        return new MessageResponse("");
+    public MessageResponse sendPasswordResetMail(PasswordResetTokenDTO passwordResetTokenDTO, Locale locale) {
+        log.debug("Request to send email to reset password");
+        Context context = new Context(locale);
+        context.setVariable("loginPageUrl", applicationConfig.getScaffoldingAppUrl() + "/login");
+        context.setVariable("passwordResetLink",
+                applicationConfig.getScaffoldingAppUrl() + API_PATH + "/reset-password?token=" + passwordResetTokenDTO.getPasswordResetToken());
+        String content = templateEngine.process("mail-password-reset", context);
+        String title = chooseTitle(MailEvent.PASSWORD_RESET, locale);
+        SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
+                .userId(passwordResetTokenDTO.getUserId())
+                .userEmail(passwordResetTokenDTO.getEmail())
+                .title(title)
+                .content(content)
+                .mailEvent(MailEvent.PASSWORD_RESET)
+                .language(Language.from(locale.getLanguage())).build();
+        emailSenderService.sendEmail(sentEmailDTO);
+        SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
+        sentEmailRepository.save(sentEmail);
+        return new MessageResponse("Password reset token sent.");
     }
 
     @Override
-    public MessageResponse sendPasswordResetMail(PasswordResetRequest passwordResetRequest) {
-        return new MessageResponse("");
+    public MessageResponse sendAfterPasswordChange(PasswordResetTokenDTO passwordResetTokenDTO, Locale locale) {
+        log.debug("Request to send email to confirm password reset.");
+        Context context = new Context(locale);
+        context.setVariable("loginPageUrl", applicationConfig.getScaffoldingAppUrl() + "/login");
+        //template to send as string
+        String content = templateEngine.process("mail-after-password-change", context);
+        String title = chooseTitle(MailEvent.AFTER_PASSWORD_CHANGE, locale);
+        SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
+                .userId(passwordResetTokenDTO.getUserId())
+                .userEmail(passwordResetTokenDTO.getEmail())
+                .title(title)
+                .content(content)
+                .mailEvent(MailEvent.AFTER_PASSWORD_CHANGE)
+                .language(Language.from(locale.getLanguage()))
+                .createDatetime(LocalDateTime.now()).build();
+        emailSenderService.sendEmail(sentEmailDTO);
+        SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
+        sentEmailRepository.save(sentEmail);
+        return new MessageResponse("Password changed successfully");
     }
 
     private String chooseTitle(MailEvent mailEvent, Locale locale) {

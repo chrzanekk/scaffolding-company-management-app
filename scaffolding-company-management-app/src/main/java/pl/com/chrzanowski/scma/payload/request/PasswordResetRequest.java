@@ -1,8 +1,10 @@
 package pl.com.chrzanowski.scma.payload.request;
 
+import javax.validation.constraints.NotNull;
+
 public class PasswordResetRequest {
 
-    private final String email;
+    private final @NotNull String email;
 
 
     public PasswordResetRequest(String email) {
