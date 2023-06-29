@@ -46,8 +46,8 @@ public class ApplicationConfig {
     @Value("${platform.url}")
     private String scaffoldingAppUrl;
 
-    @Value("${passwordResetTokenValidityTimeInMinutes}")
-    private Long passwordResetTokenValidityTimeInMinutes;
+    @Value("${tokenValidityTimeInMinutes}")
+    private Long tokenValidityTimeInMinutes;
 
     @Value("${logo.frontPath}")
     private String logoFrontPath;
@@ -134,8 +134,8 @@ public class ApplicationConfig {
         return scaffoldingAppUrl;
     }
 
-    public Long getPasswordResetTokenValidityTimeInMinutes() {
-        return passwordResetTokenValidityTimeInMinutes;
+    public Long getTokenValidityTimeInMinutes() {
+        return tokenValidityTimeInMinutes;
     }
 
     public String getLogoFrontPath() {

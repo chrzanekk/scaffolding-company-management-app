@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
         ConfirmationTokenDTO confirmedDTO = confirmationTokenService.updateToken(confirmationTokenDTO);
         UserDTO user = getUser(confirmedDTO.getEmail());
-        UserDTO confirmedUser = update(UserDTO.builder(user).enabled(true).locked(false).build());
+        update(UserDTO.builder(user).enabled(true).locked(false).build());
         return "Confirmed at" + confirmedDTO.getConfirmDate().toString();
     }
 

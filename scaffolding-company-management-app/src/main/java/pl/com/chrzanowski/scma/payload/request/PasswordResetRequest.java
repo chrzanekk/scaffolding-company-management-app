@@ -1,18 +1,24 @@
 package pl.com.chrzanowski.scma.payload.request;
 
-import javax.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PasswordResetRequest {
 
-    private final @NotNull String email;
+    private String email;
 
-
-    public PasswordResetRequest(String email) {
+    @JsonCreator
+    public PasswordResetRequest(@JsonProperty("email") String email) {
         this.email = email;
 
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public PasswordResetRequest setEmail(String email) {
+        this.email = email;
+        return this;
     }
 }

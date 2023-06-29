@@ -18,6 +18,11 @@
                 th:href="${emailConfirmationLink}" th:text="#{mail.after.registration.confirm.email.link}"></a></h3>
         </td>
     </tr>
+    <tr bgcolor="ffffff">
+        <td height="100" align="center"><h3><span th:text="#{mail.after.registration.confirm.email.valid}"></span> <span
+                th:text="${tokenValidityTime}"></span> <span th:text="#{mail.after.registration.confirm.email.minutes}"></span>
+        </h3></td>
+    </tr>
     <tr>
         <td height="50" align="center">
             <p><span th:text="#{mail.footer}"></span>

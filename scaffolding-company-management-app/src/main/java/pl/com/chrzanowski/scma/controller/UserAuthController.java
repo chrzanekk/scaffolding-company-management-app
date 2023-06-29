@@ -9,8 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import pl.com.chrzanowski.scma.config.ApplicationConfig;
 import pl.com.chrzanowski.scma.exception.EmailAlreadyExistsException;
 import pl.com.chrzanowski.scma.exception.EmailNotFoundException;
+import pl.com.chrzanowski.scma.exception.PasswordNotMatchException;
 import pl.com.chrzanowski.scma.exception.UsernameAlreadyExistsException;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
 import pl.com.chrzanowski.scma.payload.request.NewPasswordPutRequest;
@@ -20,13 +22,11 @@ import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
-import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
-import pl.com.chrzanowski.scma.service.PasswordResetTokenService;
-import pl.com.chrzanowski.scma.service.SentEmailService;
-import pl.com.chrzanowski.scma.service.UserService;
+import pl.com.chrzanowski.scma.service.*;
 import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.PasswordResetTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
+import pl.com.chrzanowski.scma.util.TokenUtil;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -45,20 +45,25 @@ public class UserAuthController {
     private final UserService userService;
     private final ConfirmationTokenService confirmationTokenService;
     private final PasswordResetTokenService passwordResetTokenService;
+    private final PasswordResetService passwordResetService;
     private final SentEmailService sentEmailService;
+    private final ApplicationConfig applicationConfig;
 
 
     public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
                               ConfirmationTokenService confirmationTokenService,
                               PasswordResetTokenService passwordResetTokenService,
-                              SentEmailService sentEmailService) {
+                              PasswordResetService passwordResetService, SentEmailService sentEmailService,
+                              ApplicationConfig applicationConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
         this.confirmationTokenService = confirmationTokenService;
         this.passwordResetTokenService = passwordResetTokenService;
+        this.passwordResetService = passwordResetService;
         this.sentEmailService = sentEmailService;
+        this.applicationConfig = applicationConfig;
     }
 
 
@@ -111,6 +116,8 @@ public class UserAuthController {
     public String confirmRegistration(@RequestParam("token") String token) {
         log.debug("REST request to confirm user registration. Token: {}", token);
         ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.getConfirmationToken(token);
+
+        TokenUtil.validateTokenTime(confirmationTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
         sentEmailService.sendAfterEmailConfirmation(confirmationTokenDTO, new Locale("pl"));
         return userService.confirm(token);
     }
@@ -131,10 +138,16 @@ public class UserAuthController {
     }
 
     @GetMapping("/reset-password")
-    public String newPasswordPut(@RequestParam("token") String token,
-                                 @RequestBody NewPasswordPutRequest request) {
+    public ResponseEntity<?> newPasswordPut(@RequestParam("token") String token,
+                                            @RequestBody NewPasswordPutRequest request) {
         log.debug("REST request to set new password by token: {}", token);
-        return "";
+        validatePasswordMatch(request);
+        PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.get(token);
+
+        TokenUtil.validateTokenTime(passwordResetTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
+        MessageResponse response = passwordResetService.saveNewPassword(passwordResetTokenDTO, request);
+        sentEmailService.sendAfterPasswordChange(passwordResetTokenDTO, new Locale("pl"));
+        return ResponseEntity.ok().body(response);
     }
 
     private boolean isEmailTaken(String email) {
@@ -145,5 +158,10 @@ public class UserAuthController {
         return Boolean.TRUE.equals(userService.isUserExists(userName));
     }
 
+    private void validatePasswordMatch(NewPasswordPutRequest request) {
+        if (!request.getNewPasswordHash().equals(request.getNewPasswordHashRepeat())) {
+            throw new PasswordNotMatchException("Password not match");
+        }
+    }
 
 }
