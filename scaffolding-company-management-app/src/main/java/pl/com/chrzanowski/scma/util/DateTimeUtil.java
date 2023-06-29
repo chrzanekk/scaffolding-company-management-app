@@ -1,6 +1,10 @@
 package pl.com.chrzanowski.scma.util;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Calendar;
+
 
 public class DateTimeUtil {
 
@@ -9,5 +13,12 @@ public class DateTimeUtil {
             return localDateTime;
         }
         return Instant.now();
+    }
+
+    public static Date calculateExpiryDate(int expiryDateInMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, expiryDateInMinutes);
+        return new Date(cal.getTime().getTime());
     }
 }

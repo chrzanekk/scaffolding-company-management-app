@@ -8,27 +8,31 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.com.chrzanowski.scma.domain.enumeration.ERole;
+import org.springframework.web.bind.annotation.*;
+import pl.com.chrzanowski.scma.config.ApplicationConfig;
+import pl.com.chrzanowski.scma.exception.EmailAlreadyExistsException;
+import pl.com.chrzanowski.scma.exception.EmailNotFoundException;
+import pl.com.chrzanowski.scma.exception.PasswordNotMatchException;
+import pl.com.chrzanowski.scma.exception.UsernameAlreadyExistsException;
 import pl.com.chrzanowski.scma.payload.request.LoginRequest;
+import pl.com.chrzanowski.scma.payload.request.NewPasswordPutRequest;
+import pl.com.chrzanowski.scma.payload.request.PasswordResetRequest;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
 import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
 import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
-import pl.com.chrzanowski.scma.service.RoleService;
-import pl.com.chrzanowski.scma.service.UserService;
-import pl.com.chrzanowski.scma.service.dto.RoleDTO;
+import pl.com.chrzanowski.scma.service.*;
+import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
+import pl.com.chrzanowski.scma.service.dto.PasswordResetTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
+import pl.com.chrzanowski.scma.util.TokenUtil;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.HashSet;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,27 +43,37 @@ public class UserAuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final UserService userService;
-    private final RoleService roleService;
-    private final PasswordEncoder encoder;
+    private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
+    private final PasswordResetService passwordResetService;
+    private final SentEmailService sentEmailService;
+    private final ApplicationConfig applicationConfig;
 
 
     public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
-                              RoleService roleService,
-                              PasswordEncoder encoder) {
+                              ConfirmationTokenService confirmationTokenService,
+                              PasswordResetTokenService passwordResetTokenService,
+                              PasswordResetService passwordResetService, SentEmailService sentEmailService,
+                              ApplicationConfig applicationConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
-        this.roleService = roleService;
-        this.encoder = encoder;
+        this.confirmationTokenService = confirmationTokenService;
+        this.passwordResetTokenService = passwordResetTokenService;
+        this.passwordResetService = passwordResetService;
+        this.sentEmailService = sentEmailService;
+        this.applicationConfig = applicationConfig;
     }
 
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.debug("REST request to login user {}", loginRequest);
+        LoginRequest updatedRequest =
+                LoginRequest.builder(loginRequest).username(loginRequest.getUsername().toLowerCase()).build();
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(updatedRequest.getUsername(), updatedRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -69,7 +83,6 @@ public class UserAuthController {
 
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -78,45 +91,77 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
+    @Transactional
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         log.debug("REST request to register new user {}", registerRequest);
-        if (Boolean.TRUE.equals(userService.isUserExists(registerRequest.getUsername()))) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error. Username is already taken!"));
+        RegisterRequest updatedRequest =
+                RegisterRequest.builder(registerRequest).username(registerRequest.getUsername().toLowerCase()).build();
+        if (isUsernameTaken(updatedRequest.getUsername())) {
+            throw new UsernameAlreadyExistsException("Error. Username is already in use.");
         }
 
-        if (Boolean.TRUE.equals(userService.isEmailExists(registerRequest.getEmail()))) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error. Email is already in use!"));
+        if (isEmailTaken(updatedRequest.getEmail())) {
+            throw new EmailAlreadyExistsException("Error. Email is already in use!");
         }
 
-        Set<String> stringRoles = registerRequest.getRole();
-        Set<RoleDTO> roleDTOSet = new HashSet<>();
+        UserDTO savedUser = userService.register(updatedRequest);
+        String generatedToken = confirmationTokenService.generateToken();
+        ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.saveToken(generatedToken, savedUser);
 
-        if (stringRoles == null || stringRoles.isEmpty()) {
-            roleDTOSet.add(roleService.findByName(ERole.ROLE_USER));
-        } else {
-            stringRoles.forEach(role -> {
-                switch (role) {
-                    case "admin" -> {
-                        RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN);
-                        roleDTOSet.add(adminRole);
-                    }
-                    case "mod" -> {
-                        RoleDTO modeRole = roleService.findByName(ERole.ROLE_MODERATOR);
-                        roleDTOSet.add(modeRole);
-                    }
-                    default -> {
-                        RoleDTO userRole = roleService.findByName(ERole.ROLE_USER);
-                        roleDTOSet.add(userRole);
-                    }
-                }
-            });
+        MessageResponse response = sentEmailService.sendAfterRegistration(confirmationTokenDTO, new Locale("pl"));
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/confirm")
+    public String confirmRegistration(@RequestParam("token") String token) {
+        log.debug("REST request to confirm user registration. Token: {}", token);
+        ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.getConfirmationToken(token);
+
+        TokenUtil.validateTokenTime(confirmationTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
+        sentEmailService.sendAfterEmailConfirmation(confirmationTokenDTO, new Locale("pl"));
+        return userService.confirm(token);
+    }
+
+    @PutMapping("/request-password-reset")
+    @Transactional
+    public ResponseEntity<?> passwordReset(@Valid @NotNull @RequestBody PasswordResetRequest passwordResetRequest) {
+        log.debug("REST request to set new password for user: {}", passwordResetRequest.getEmail());
+
+        if (!isEmailTaken(passwordResetRequest.getEmail())) {
+            throw new EmailNotFoundException("Email not found");
         }
-        UserDTO newUser = UserDTO.builder().username(registerRequest.getUsername()).email(registerRequest.getEmail())
-                .roles(roleDTOSet).enabled(true).locked(false).password(encoder.encode(registerRequest.getPassword()))
-                .build();
-        userService.save(newUser);
+        UserDTO userDTO = userService.getUser(passwordResetRequest.getEmail());
+        String token = passwordResetTokenService.generate();
+        PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.save(token, userDTO);
+        MessageResponse response = sentEmailService.sendPasswordResetMail(passwordResetTokenDTO, new Locale("pl"));
+        return ResponseEntity.ok().body(response);
+    }
 
-        return ResponseEntity.ok(new MessageResponse("Registered successfully!"));
+    @GetMapping("/reset-password")
+    public ResponseEntity<?> newPasswordPut(@RequestParam("token") String token,
+                                            @RequestBody NewPasswordPutRequest request) {
+        log.debug("REST request to set new password by token: {}", token);
+        validatePasswordMatch(request);
+        PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.get(token);
+
+        TokenUtil.validateTokenTime(passwordResetTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
+        MessageResponse response = passwordResetService.saveNewPassword(passwordResetTokenDTO, request);
+        sentEmailService.sendAfterPasswordChange(passwordResetTokenDTO, new Locale("pl"));
+        return ResponseEntity.ok().body(response);
+    }
+
+    private boolean isEmailTaken(String email) {
+        return Boolean.TRUE.equals(userService.isEmailExists(email));
+    }
+
+    private boolean isUsernameTaken(String userName) {
+        return Boolean.TRUE.equals(userService.isUserExists(userName));
+    }
+
+    private void validatePasswordMatch(NewPasswordPutRequest request) {
+        if (!request.getNewPasswordHash().equals(request.getNewPasswordHashRepeat())) {
+            throw new PasswordNotMatchException("Password not match");
+        }
     }
 
 }
