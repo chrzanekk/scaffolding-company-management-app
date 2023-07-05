@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.scma.controller.util.PaginationUtil;
-import pl.com.chrzanowski.scma.service.RoleService;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
@@ -21,24 +20,23 @@ import java.util.List;
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    private static final String ENTITY_NAME = "userController";
     private final UserService userService;
 
-
-    private final RoleService roleService;
-
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
-
-
-    //todo implement update user - should connect with confir registration, password reset etc? need to find out
 
     @GetMapping(path = "/")
     public ResponseEntity<List<UserDTO>> getUsersByFilter(UserFilter userFilter) {
         log.debug("REST request to get all users by filter: {}", userFilter);
         List<UserDTO> result = userService.findByFilter(userFilter);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(path = "/all")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        log.debug("REST request to get all users.");
+        List<UserDTO> result = userService.findAll();
         return ResponseEntity.ok().body(result);
     }
 
@@ -63,4 +61,5 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.ok().build();
     }
+
 }

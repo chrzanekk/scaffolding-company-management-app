@@ -1,6 +1,16 @@
-export class UserRegister {
+import {Eroles} from "./enums/eroles.string";
+
+export interface IUserRegister {
   username?: string;
   email?: string;
   password?: string;
+  role?: Eroles[];
 }
-const userRegister: UserRegister = new UserRegister();
+
+export class UserRegister implements IUserRegister {
+  constructor(public username?: string,
+              email?: string,
+              password?: string,
+              role?: Eroles[]) {
+  }
+}
