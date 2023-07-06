@@ -1,32 +1,58 @@
-<mat-card>
-    <mat-card-header>
-      <h1>User Registration</h1>
-    </mat-card-header>
-  <mat-card-content>
-    <form class="example-form" [formGroup]="registerForm" (ngSubmit)="proceedRegistration()">
-      <mat-form-field>
-        <mat-label>User name</mat-label>
-        <input matInput formControlName="username">
-      </mat-form-field>
-      &nbsp;
-      <br>
-      <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email">
-      </mat-form-field>
-      &nbsp;
-      <br>
-      <mat-form-field>
-        <mat-label>Password</mat-label>
-        <input type="password" matInput formControlName="password">
-      </mat-form-field>
-      <div>
-        <button mat-raised-button color="primary">Submit</button>
-        <a routerLink="/login" mat-raised-button color="accent">Back to Login</a>
+<div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1>Rejestracja</h1>
+
+      <div class="alert alert-success" *ngIf="success">
+        <strong>Registration saved!</strong> Please check your email for confirmation.
       </div>
-    </form>
 
+      <div class="alert alert-danger" *ngIf="error">
+        <strong>Registration failed!</strong> Please try again later.
+      </div>
 
-  </mat-card-content>
-</mat-card>
+      <div class="alert alert-danger" *ngIf="errorUserExists">
+        <strong>Login name already registered!</strong> Please choose another one.
+      </div>
 
+      <div class="alert alert-danger" *ngIf="errorEmailExists">
+        <strong>Email is already in use!</strong> Please choose another one.
+      </div>
+
+      <div class="alert alert-danger" *ngIf="doNotMatch">
+        The password and its confirmation do not match!
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form name="register" role="form" (ngSubmit)="proceedRegistration()" [formGroup]="registerForm" *ngIf="!success">
+
+        <div class="form-group">
+          <label class="form-control-label" for="email">Adres email</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Podaj adres e-mail"
+                 formControlName="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="username">Login</label>
+          <input type="text" class="form-control" id="username" placeholder="Podaj Login">
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="password">Hasło</label>
+          <input type="password" class="form-control" id="password" placeholder="Podaj hasło">
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" for="confirmPassword" >Potwirdź  Hasło</label>
+          <input type="password" class="form-control" id="confirmPassword" placeholder="Potwierdz hasło"
+                 name="confirmPassword" #confirmPassword>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Zarejestruj</button>
+      </form>
+    </div>
+  </div>
+</div>

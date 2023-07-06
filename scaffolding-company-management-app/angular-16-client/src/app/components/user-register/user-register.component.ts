@@ -11,6 +11,11 @@ import {IUserRegister, UserRegister} from "../../models/user-register.model";
   styleUrls: ['./user-register.component.css']
 })
 export class UserRegisterComponent {
+  doNotMatch = false;
+  error = false;
+  errorEmailExists = false;
+  errorUserExists = false;
+  success = false;
 
   constructor(private builder: FormBuilder,
               private toastr: ToastrService,
@@ -19,21 +24,40 @@ export class UserRegisterComponent {
   }
 
   registerForm = this.builder.group({
-    id: this.builder.control('', Validators.compose([Validators.required])),
-    username: this.builder.control('', Validators.required),
-    email: this.builder.control('', Validators.compose([Validators.required, Validators.email])),
-    password: this.builder.control('', Validators.required)
+    username: this.builder.control('',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(25),
+        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),])),
+    email: this.builder.control('',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(70),
+        Validators.email])),
+    password: this.builder.control('',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(50)])),
+    confirmPassword: this.builder.control('',
+      Validators.compose([
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(50)])),
   });
 
   proceedRegistration() {
-    if (this.registerForm.valid) {
+    const password = this.registerForm.get(['password'])!.value;
+    const confirmPassword = this.registerForm.get(['confirmPassword'])!.value;
+    if (password !== confirmPassword) {
+      this.doNotMatch = true;
+    } else {
       const registerUser = this.createFromForm();
       this.authService.register(registerUser).subscribe(res => {
         this.toastr.success('Registered successfully, confirmation email sent');
-        this.router.navigate(['home']).then(r => true);
       })
-    } else {
-      this.toastr.warning('Enter correct data');
     }
   }
 
@@ -45,5 +69,4 @@ export class UserRegisterComponent {
       password: this.registerForm.get(['password'])!.value,
     };
   }
-
 }

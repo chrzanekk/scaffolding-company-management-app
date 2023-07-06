@@ -13,11 +13,10 @@ import {ProfileComponent} from './components/user-profile/user-profile.component
 import {UserRegisterComponent} from './components/user-register/user-register.component';
 import {UserLoginComponent} from './components/user-login/user-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MaterialModule} from "../material.module";
 import {ToastrModule} from "ngx-toastr";
 import {UsersComponent} from './components/users/users.component';
 import {UpdatePopupComponent} from './components/update-popup/update-popup.component';
-import {MatButtonModule} from "@angular/material/button";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -33,18 +32,18 @@ import {MatButtonModule} from "@angular/material/button";
     UpdatePopupComponent,
 
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MaterialModule,
-        ReactiveFormsModule,
-        ToastrModule.forRoot(),
-        MatButtonModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    ToastrModule.forRoot(),
+    CommonModule,
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
