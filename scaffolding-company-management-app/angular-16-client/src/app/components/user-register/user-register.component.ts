@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../services/auth.service";
@@ -10,7 +10,7 @@ import {IUserRegister, UserRegister} from "../../models/user-register.model";
   templateUrl: './user-register.component.html',
   styleUrls: ['./user-register.component.css']
 })
-export class UserRegisterComponent {
+export class UserRegisterComponent implements OnInit {
   doNotMatch = false;
   error = false;
   errorEmailExists = false;
@@ -21,6 +21,9 @@ export class UserRegisterComponent {
               private toastr: ToastrService,
               private authService: AuthService,
               private router: Router) {
+  }
+
+  ngOnInit() {
   }
 
   registerForm = this.builder.group({
@@ -53,6 +56,7 @@ export class UserRegisterComponent {
     const confirmPassword = this.registerForm.get(['confirmPassword'])!.value;
     if (password !== confirmPassword) {
       this.doNotMatch = true;
+      this.toastr.warning("Password didnt match")
     } else {
       const registerUser = this.createFromForm();
       this.authService.register(registerUser).subscribe(res => {

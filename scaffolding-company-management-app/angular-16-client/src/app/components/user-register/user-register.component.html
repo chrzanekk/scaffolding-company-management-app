@@ -3,25 +3,25 @@
     <div class="col-md-8">
       <h1>Rejestracja</h1>
 
-      <div class="alert alert-success" *ngIf="success">
-        <strong>Registration saved!</strong> Please check your email for confirmation.
-      </div>
+<!--      <div class="alert alert-success" *ngIf="success">-->
+<!--        <strong>Registration saved!</strong> Please check your email for confirmation.-->
+<!--      </div>-->
 
-      <div class="alert alert-danger" *ngIf="error">
-        <strong>Registration failed!</strong> Please try again later.
-      </div>
+<!--      <div class="alert alert-danger" *ngIf="error">-->
+<!--        <strong>Registration failed!</strong> Please try again later.-->
+<!--      </div>-->
 
-      <div class="alert alert-danger" *ngIf="errorUserExists">
-        <strong>Login name already registered!</strong> Please choose another one.
-      </div>
+<!--      <div class="alert alert-danger" *ngIf="errorUserExists">-->
+<!--        <strong>Login name already registered!</strong> Please choose another one.-->
+<!--      </div>-->
 
-      <div class="alert alert-danger" *ngIf="errorEmailExists">
-        <strong>Email is already in use!</strong> Please choose another one.
-      </div>
+<!--      <div class="alert alert-danger" *ngIf="errorEmailExists">-->
+<!--        <strong>Email is already in use!</strong> Please choose another one.-->
+<!--      </div>-->
 
-      <div class="alert alert-danger" *ngIf="doNotMatch">
-        The password and its confirmation do not match!
-      </div>
+<!--      <div class="alert alert-danger" *ngIf="doNotMatch">-->
+<!--        The password and its confirmation do not match!-->
+<!--      </div>-->
     </div>
   </div>
 
@@ -37,18 +37,19 @@
 
         <div class="form-group">
           <label class="form-control-label" for="username">Login</label>
-          <input type="text" class="form-control" id="username" placeholder="Podaj Login">
+          <input type="text" class="form-control" id="username" placeholder="Podaj Login" formControlName="username">
         </div>
 
         <div class="form-group">
           <label class="form-control-label" for="password">Hasło</label>
-          <input type="password" class="form-control" id="password" placeholder="Podaj hasło">
+          <input type="password" class="form-control" id="password" placeholder="Podaj hasło"
+                 formControlName="password">
         </div>
 
         <div class="form-group">
           <label class="form-control-label" for="confirmPassword" >Potwirdź  Hasło</label>
           <input type="password" class="form-control" id="confirmPassword" placeholder="Potwierdz hasło"
-                 name="confirmPassword" #confirmPassword>
+                 name="confirmPassword" formControlName="confirmPassword">
         </div>
 
         <button type="submit" class="btn btn-primary">Zarejestruj</button>

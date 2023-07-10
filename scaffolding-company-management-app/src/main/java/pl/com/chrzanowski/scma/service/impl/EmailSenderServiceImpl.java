@@ -12,10 +12,13 @@ import pl.com.chrzanowski.scma.service.dto.SentEmailDTO;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class EmailSenderServiceImpl implements EmailSenderService {
     private static final Logger log = LoggerFactory.getLogger(EmailSenderServiceImpl.class);
+
     private final JavaMailSender javaMailSender;
     private final ApplicationConfig applicationConfig;
 

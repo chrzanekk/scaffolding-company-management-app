@@ -19,7 +19,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeExceptionHandling(Exception e, WebRequest request) {
+    public ResponseEntity<Object> runtimeExceptionHandling(Exception e, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(new Date())
                 .message(e.getMessage())

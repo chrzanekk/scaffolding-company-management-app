@@ -79,6 +79,13 @@ public class ApplicationConfig {
     @Value("${path-to-email-template}")
     private String pathToEmailTemplate;
 
+    @Value("${spring.mail.port}")
+    private Integer mailPort;
+    @Value("${spring.mail.host}")
+    private String mailHost;
+    @Value("${spring.mail.properties.mail.transport.protocol}")
+    private String mailProtocol;
+
 
     private String templateNameServiceActionsDemandPdf = "admin-vehicle-service-actions-pdf.html";
 
@@ -168,6 +175,18 @@ public class ApplicationConfig {
 
     public String getPathToEmailTemplate() {
         return pathToEmailTemplate;
+    }
+
+    public Integer getMailPort() {
+        return mailPort;
+    }
+
+    public String getMailHost() {
+        return mailHost;
+    }
+
+    public String getMailProtocol() {
+        return mailProtocol;
     }
 
     @Bean

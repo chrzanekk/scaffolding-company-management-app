@@ -24,8 +24,67 @@ spring:
   sql:
     init:
       platform: hsqldb
+  mail:
+    host: mail.net
+    port: 666
+    username: scaffapp@kchrzanowski.pl
+    password: FAKEPASSWORDZIOM
+    properties:
+      mail:
+        transport.protocol: smtp
+        smtp:
+          port: 666
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        debug: false
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 25MB
+
 
 scaffolding-app:
-  jwtCookieName:  "scma-coockie"
   jwtSecret: "secret-key-to-generate-later"
   jwtExpirationMs: 86400000
+
+
+
+
+company:
+  name: Test Company
+  addressFirstLine: 00-000 Internet
+  addressSecondLine: www street 12
+  country: Web
+  nip: 0000000000
+  regon: 000000000
+  pageUrl: http://127.0.0.1
+  contactMail: test@test.com
+  contactMailto: mailto:test@test.com
+
+platform:
+  url: http://localhost:8080
+  name:
+    front: Scaffolding App
+    panel: Scaffolding App
+  replyToEmail: test@test.pl
+  fromEmail: Scaffolding App / LocalHost <test@test.pl>
+tokenValidityTimeInMinutes: 15
+logo:
+  frontPath: /img/logos/logorch-1-128.png
+  panelPath: /img/logos/logorch-1-128.png
+faviconPath: /img/logos/logorch-1-128.png
+path-to-service-actions-demand-pdf: E:/
+path-to-fonts: /static/fonts/
+path-to-email-template: /resources/mail-templates
+
+#logging:
+#  level:
+#    pl.com.chrzanowski.scaffolding: TRACE
+#  pattern:
+#    console: d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n
+
