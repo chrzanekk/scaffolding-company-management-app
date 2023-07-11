@@ -230,6 +230,7 @@ public class TireControllerIT {
 
     @Test
     @Transactional
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void createTire() throws Exception {
         List<Tire> allTiresBeforeTest = tireRepository.findAll();
         int sizeBeforeTest = allTiresBeforeTest.size();

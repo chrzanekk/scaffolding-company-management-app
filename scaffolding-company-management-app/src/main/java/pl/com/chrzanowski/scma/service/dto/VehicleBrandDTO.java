@@ -4,11 +4,14 @@ import java.time.Instant;
 import java.util.Objects;
 
 public class VehicleBrandDTO {
-    private final Long id;
-    private final String name;
-    private final Instant createDate;
-    private final Instant modifyDate;
-    private final Instant removeDate;
+    private  Long id;
+    private  String name;
+    private  Instant createDate;
+    private  Instant modifyDate;
+    private  Instant removeDate;
+
+    public VehicleBrandDTO() {
+    }
 
     public VehicleBrandDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
         this.id = id;
@@ -85,7 +88,7 @@ public class VehicleBrandDTO {
     }
 
 
-    public static final class Builder {
+    public static  class Builder {
         private Long id;
         private String name;
         private Instant createDate;

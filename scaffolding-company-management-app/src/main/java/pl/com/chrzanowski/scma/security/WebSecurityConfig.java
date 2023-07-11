@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.security.jwt.AuthEntryPointJwt;
 import pl.com.chrzanowski.scma.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.scma.security.service.UserDetailsServiceImpl;
@@ -73,7 +74,8 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll();
+                .antMatchers("/api/test/**").permitAll()
+                .antMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(),ERole.ROLE_USER.getRoleName());
 
         http.authenticationProvider(authenticationProvider());
 

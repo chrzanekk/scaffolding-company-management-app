@@ -7,63 +7,27 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class TireDTO {
-    private final Long id;
-    private final String brand;
-    private final String model;
-    private final Integer width;
-    private final Integer profile;
-    private final Integer diameter;
-    private final TireType type;
-    private final TireReinforcedIndex tireReinforcedIndex;
-    private final TireSpeedIndex speedIndex;
-    private final TireLoadCapacityIndex capacityIndex;
-    private final TireSeasonType tireSeasonType;
-    private final Boolean runOnFlat;
-    private final Integer productionYear;
-    private final LocalDate purchaseDate;
-    private final TireStatus tireStatus;
-    private final Instant createDate;
-    private final Instant modifyDate;
-    private final Instant removeDate;
-    private final Long vehicleId;
+    private Long id;
+    private String brand;
+    private String model;
+    private Integer width;
+    private Integer profile;
+    private Integer diameter;
+    private TireType type;
+    private TireReinforcedIndex tireReinforcedIndex;
+    private TireSpeedIndex speedIndex;
+    private TireLoadCapacityIndex capacityIndex;
+    private TireSeasonType tireSeasonType;
+    private Boolean runOnFlat;
+    private Integer productionYear;
+    private LocalDate purchaseDate;
+    private TireStatus tireStatus;
+    private Instant createDate;
+    private Instant modifyDate;
+    private Instant removeDate;
+    private Long vehicleId;
 
-    public TireDTO(Long id,
-                   String brand,
-                   String model,
-                   Integer width,
-                   Integer profile,
-                   Integer diameter,
-                   TireType type,
-                   TireReinforcedIndex tireReinforcedIndex,
-                   TireSpeedIndex speedIndex,
-                   TireLoadCapacityIndex capacityIndex,
-                   TireSeasonType tireSeasonType,
-                   Boolean runOnFlat,
-                   Integer productionYear,
-                   LocalDate purchaseDate,
-                   TireStatus tireStatus,
-                   Instant createDate,
-                   Instant modifyDate,
-                   Instant removeDate, Long vehicleId) {
-        this.id = id;
-        this.brand = brand;
-        this.model = model;
-        this.width = width;
-        this.profile = profile;
-        this.diameter = diameter;
-        this.type = type;
-        this.tireReinforcedIndex = tireReinforcedIndex;
-        this.speedIndex = speedIndex;
-        this.capacityIndex = capacityIndex;
-        this.tireSeasonType = tireSeasonType;
-        this.runOnFlat = runOnFlat;
-        this.productionYear = productionYear;
-        this.purchaseDate = purchaseDate;
-        this.tireStatus = tireStatus;
-        this.createDate = createDate;
-        this.modifyDate = modifyDate;
-        this.removeDate = removeDate;
-        this.vehicleId = vehicleId;
+    public TireDTO() {
     }
 
     private TireDTO(Builder builder) {
@@ -272,7 +236,7 @@ public class TireDTO {
     }
 
 
-    public static final class Builder {
+    public static class Builder {
         private Long id;
         private String brand;
         private String model;

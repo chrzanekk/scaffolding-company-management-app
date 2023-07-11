@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {IUserRegister, UserRegister} from "../../models/user-register.model";
+import Validation from "../../utils/validation";
 
 @Component({
   selector: 'app-user-register',
@@ -12,52 +13,60 @@ import {IUserRegister, UserRegister} from "../../models/user-register.model";
 })
 export class UserRegisterComponent implements OnInit {
   doNotMatch = false;
-  error = false;
-  errorEmailExists = false;
-  errorUserExists = false;
   success = false;
+  submitted = false;
+  registerForm:  FormGroup = new FormGroup({
+    username: new FormControl(''),
+    email: new FormControl(''),
+    password: new FormControl(''),
+    confirmPassword: new FormControl('')
+  });
+
 
   constructor(private builder: FormBuilder,
               private toastr: ToastrService,
               private authService: AuthService,
               private router: Router) {
+
   }
 
   ngOnInit() {
+    this.registerForm = this.builder.group({
+      username: this.builder.control('',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(25),
+          Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),]),
+      email: this.builder.control('',
+        [
+          Validators.required,
+          Validators.email]),
+      password: this.builder.control('',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(50)]),
+      confirmPassword: this.builder.control('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(50)]),
+    },
+    {
+      validators: [Validation.match('password', 'confirmPassword')]
+    });
   }
 
-  registerForm = this.builder.group({
-    username: this.builder.control('',
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(25),
-        Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),])),
-    email: this.builder.control('',
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(5),
-        Validators.maxLength(70),
-        Validators.email])),
-    password: this.builder.control('',
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(50)])),
-    confirmPassword: this.builder.control('',
-      Validators.compose([
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(50)])),
-  });
+  get f(): {[key: string]: AbstractControl } {
+    return this.registerForm.controls;
+  }
+
 
   proceedRegistration() {
-    const password = this.registerForm.get(['password'])!.value;
-    const confirmPassword = this.registerForm.get(['confirmPassword'])!.value;
-    if (password !== confirmPassword) {
-      this.doNotMatch = true;
-      this.toastr.warning("Password didnt match")
-    } else {
+      this.submitted = true;
+      if(this.registerForm.invalid) {
+        return;
+      } else {
       const registerUser = this.createFromForm();
       this.authService.register(registerUser).subscribe(res => {
         this.toastr.success('Registered successfully, confirmation email sent');
@@ -65,7 +74,15 @@ export class UserRegisterComponent implements OnInit {
     }
   }
 
-  private createFromForm(): IUserRegister {
+  resetForm() {
+    this.submitted = false;
+    this.registerForm.reset();
+  }
+
+
+  createFromForm()
+    :
+    IUserRegister {
     return {
       ...new UserRegister(),
       username: this.registerForm.get(['username'])!.value,
