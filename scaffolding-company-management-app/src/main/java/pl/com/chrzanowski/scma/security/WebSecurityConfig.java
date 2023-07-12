@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.com.chrzanowski.scma.config.SecurityProblemSupport;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
-import pl.com.chrzanowski.scma.security.jwt.AuthEntryPointJwt;
 import pl.com.chrzanowski.scma.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.scma.security.service.UserDetailsServiceImpl;
 
@@ -29,13 +29,13 @@ public class WebSecurityConfig {
 
     UserDetailsServiceImpl userDetailsService;
 
-    private final AuthEntryPointJwt unauthorizedHandler;
+    private final SecurityProblemSupport securityProblemSupport;
 
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
-                             AuthEntryPointJwt unauthorizedHandler) {
+                             SecurityProblemSupport securityProblemSupport) {
         this.userDetailsService = userDetailsService;
-        this.unauthorizedHandler = unauthorizedHandler;
+        this.securityProblemSupport = securityProblemSupport;
     }
 
     @Bean
@@ -68,7 +68,8 @@ public class WebSecurityConfig {
         http
                 .cors().and()
                 .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+                .exceptionHandling().authenticationEntryPoint(securityProblemSupport)
+                .accessDeniedHandler(securityProblemSupport)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

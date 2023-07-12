@@ -11,6 +11,9 @@ public class UserDTO {
     private Boolean enabled;
     private Set<RoleDTO> roles;
 
+    public UserDTO() {
+    }
+
     public UserDTO(Long id, String email, String username, String password, Boolean locked, Boolean enabled,
                    Set<RoleDTO> roles) {
         this.id = id;

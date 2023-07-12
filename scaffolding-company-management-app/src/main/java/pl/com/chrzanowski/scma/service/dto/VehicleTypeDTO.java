@@ -11,6 +11,9 @@ public class VehicleTypeDTO {
     private Instant modifyDate;
     private Instant removeDate;
 
+    public VehicleTypeDTO() {
+    }
+
     public VehicleTypeDTO(Long id, String name, Instant createDate, Instant modifyDate, Instant removeDate) {
         this.id = id;
         this.name = name;

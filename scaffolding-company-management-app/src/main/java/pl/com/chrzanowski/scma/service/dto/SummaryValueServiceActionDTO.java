@@ -5,9 +5,12 @@ import java.util.Objects;
 
 public class SummaryValueServiceActionDTO {
 
-    private final BigDecimal summaryGrossValue;
-    private final BigDecimal summaryTaxValue;
-    private final BigDecimal summaryNetValue;
+    private BigDecimal summaryGrossValue;
+    private BigDecimal summaryTaxValue;
+    private BigDecimal summaryNetValue;
+
+    public SummaryValueServiceActionDTO() {
+    }
 
     public SummaryValueServiceActionDTO(BigDecimal summaryGrossValue,
                                         BigDecimal summaryTaxValue,

@@ -8,28 +8,29 @@ import java.util.Set;
 
 public class ServiceActionDTO {
 
-    private final Long id;
-    private final Integer carMileage;
-    private final String invoiceNumber;
-    private final BigDecimal grossValue;
-    private final BigDecimal taxValue;
-    private final BigDecimal netValue;
-    private final BigDecimal taxRate;
-    private final LocalDate serviceDate;
-    private final String description;
-    private final Long workshopId;
-    private final String workshopName;
-    private final Set<ServiceActionTypeDTO> serviceActionTypes;
-    private final Long vehicleId;
-    private final String vehicleRegistrationNumber;
-    private final Instant createDate;
-    private final Instant modifyDate;
-    private final Instant removeDate;
-    private final BigDecimal summaryGrossValue;
-    private final BigDecimal summaryTaxValue;
-    private final BigDecimal summaryNetValue;
+    private Long id;
+    private Integer carMileage;
+    private String invoiceNumber;
+    private BigDecimal grossValue;
+    private BigDecimal taxValue;
+    private BigDecimal netValue;
+    private BigDecimal taxRate;
+    private LocalDate serviceDate;
+    private String description;
+    private Long workshopId;
+    private String workshopName;
+    private Set<ServiceActionTypeDTO> serviceActionTypes;
+    private Long vehicleId;
+    private String vehicleRegistrationNumber;
+    private Instant createDate;
+    private Instant modifyDate;
+    private Instant removeDate;
+    private BigDecimal summaryGrossValue;
+    private BigDecimal summaryTaxValue;
+    private BigDecimal summaryNetValue;
 
-
+    public ServiceActionDTO() {
+    }
 
     public ServiceActionDTO(Long id,
                             Integer carMileage,
@@ -291,7 +292,7 @@ public class ServiceActionDTO {
     }
 
 
-    public static final class Builder {
+    public static class Builder {
         private Long id;
         private Integer carMileage;
         private String invoiceNumber;

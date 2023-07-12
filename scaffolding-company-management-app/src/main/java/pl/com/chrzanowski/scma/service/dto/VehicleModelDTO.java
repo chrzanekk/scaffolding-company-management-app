@@ -13,6 +13,9 @@ public class VehicleModelDTO {
     private Long vehicleBrandId;
     private String vehicleBrandName;
 
+    public VehicleModelDTO() {
+    }
+
     public VehicleModelDTO(Long id,
                            String name,
                            Instant createDate,

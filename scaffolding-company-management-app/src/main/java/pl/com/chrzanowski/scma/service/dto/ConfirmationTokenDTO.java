@@ -5,15 +5,17 @@ import java.util.Objects;
 
 public class ConfirmationTokenDTO {
 
-    private final Long id;
-    private final String confirmationToken;
-    private final Long userId;
-    private final String userName;
-    private final String email;
-    private final LocalDateTime createDate;
-    private final LocalDateTime expireDate;
-    private final LocalDateTime confirmDate;
+    private Long id;
+    private String confirmationToken;
+    private Long userId;
+    private String userName;
+    private String email;
+    private LocalDateTime createDate;
+    private LocalDateTime expireDate;
+    private LocalDateTime confirmDate;
 
+    public ConfirmationTokenDTO() {
+    }
 
     public ConfirmationTokenDTO(Long id,
                                 String confirmationToken,

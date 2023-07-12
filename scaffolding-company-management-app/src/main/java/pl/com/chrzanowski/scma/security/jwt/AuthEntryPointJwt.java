@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.scma.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -36,6 +37,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         body.put("path", request.getServletPath());
 
         final ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         mapper.writeValue(response.getOutputStream(), body);
     }
 }
