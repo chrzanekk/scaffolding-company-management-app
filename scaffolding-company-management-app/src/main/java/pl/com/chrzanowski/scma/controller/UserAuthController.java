@@ -2,6 +2,7 @@ package pl.com.chrzanowski.scma.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import pl.com.chrzanowski.scma.config.ApplicationConfig;
 import pl.com.chrzanowski.scma.exception.EmailAlreadyExistsException;
 import pl.com.chrzanowski.scma.exception.EmailNotFoundException;
 import pl.com.chrzanowski.scma.exception.PasswordNotMatchException;
@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/api/auth")
 public class UserAuthController {
+    @Value("${tokenValidityTimeInMinutes}")
+    private Long tokenValidityTimeInMinutes;
     private final Logger log = LoggerFactory.getLogger(UserAuthController.class);
 
     private final AuthenticationManager authenticationManager;
@@ -47,15 +49,13 @@ public class UserAuthController {
     private final PasswordResetTokenService passwordResetTokenService;
     private final PasswordResetService passwordResetService;
     private final SentEmailService sentEmailService;
-    private final ApplicationConfig applicationConfig;
 
 
     public UserAuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
                               UserService userService,
                               ConfirmationTokenService confirmationTokenService,
                               PasswordResetTokenService passwordResetTokenService,
-                              PasswordResetService passwordResetService, SentEmailService sentEmailService,
-                              ApplicationConfig applicationConfig) {
+                              PasswordResetService passwordResetService, SentEmailService sentEmailService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.userService = userService;
@@ -63,7 +63,6 @@ public class UserAuthController {
         this.passwordResetTokenService = passwordResetTokenService;
         this.passwordResetService = passwordResetService;
         this.sentEmailService = sentEmailService;
-        this.applicationConfig = applicationConfig;
     }
 
 
@@ -117,7 +116,7 @@ public class UserAuthController {
         log.debug("REST request to confirm user registration. Token: {}", token);
         ConfirmationTokenDTO confirmationTokenDTO = confirmationTokenService.getConfirmationToken(token);
 
-        TokenUtil.validateTokenTime(confirmationTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
+        TokenUtil.validateTokenTime(confirmationTokenDTO.getCreateDate(), tokenValidityTimeInMinutes);
         sentEmailService.sendAfterEmailConfirmation(confirmationTokenDTO, new Locale("pl"));
         return userService.confirm(token);
     }
@@ -144,7 +143,7 @@ public class UserAuthController {
         validatePasswordMatch(request);
         PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.get(token);
 
-        TokenUtil.validateTokenTime(passwordResetTokenDTO.getCreateDate(), applicationConfig.getTokenValidityTimeInMinutes());
+        TokenUtil.validateTokenTime(passwordResetTokenDTO.getCreateDate(), tokenValidityTimeInMinutes);
         MessageResponse response = passwordResetService.saveNewPassword(passwordResetTokenDTO, request);
         sentEmailService.sendAfterPasswordChange(passwordResetTokenDTO, new Locale("pl"));
         return ResponseEntity.ok().body(response);

@@ -2,10 +2,10 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import pl.com.chrzanowski.scma.config.ApplicationConfig;
 import pl.com.chrzanowski.scma.domain.SentEmail;
 import pl.com.chrzanowski.scma.domain.enumeration.DictionaryType;
 import pl.com.chrzanowski.scma.domain.enumeration.Language;
@@ -27,6 +27,12 @@ import java.util.Locale;
 
 @Service
 public class SentEmailServiceImpl implements SentEmailService {
+
+    @Value("${tokenValidityTimeInMinutes}")
+    private Long tokenValidityTimeInMinutes;
+
+    @Value("${platform.url}")
+    private String scaffoldingAppUrl;
     private final Logger log = LoggerFactory.getLogger(SentEmailServiceImpl.class);
 
     private static final String API_PATH = "/api/auth";
@@ -36,17 +42,17 @@ public class SentEmailServiceImpl implements SentEmailService {
     private final SentEmailRepository sentEmailRepository;
     private final DictionaryService dictionaryService;
     private final TemplateEngine templateEngine;
-    private final ApplicationConfig applicationConfig;
     private final SentEmailMapper sentEmailMapper;
 
-    public SentEmailServiceImpl(EmailSenderService emailSenderService, SentEmailRepository sentEmailRepository,
-                                DictionaryService dictionaryService, TemplateEngine templateEngine,
-                                ApplicationConfig applicationConfig, SentEmailMapper sentEmailMapper) {
+    public SentEmailServiceImpl(EmailSenderService emailSenderService,
+                                SentEmailRepository sentEmailRepository,
+                                DictionaryService dictionaryService,
+                                TemplateEngine templateEngine,
+                                SentEmailMapper sentEmailMapper) {
         this.emailSenderService = emailSenderService;
         this.sentEmailRepository = sentEmailRepository;
         this.dictionaryService = dictionaryService;
         this.templateEngine = templateEngine;
-        this.applicationConfig = applicationConfig;
         this.sentEmailMapper = sentEmailMapper;
     }
 
@@ -54,10 +60,10 @@ public class SentEmailServiceImpl implements SentEmailService {
     public MessageResponse sendAfterRegistration(ConfirmationTokenDTO confirmationTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user registration: {}", confirmationTokenDTO.getEmail());
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, applicationConfig.getScaffoldingAppUrl() + "/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/login");
         context.setVariable("emailConfirmationLink",
-                applicationConfig.getScaffoldingAppUrl() + API_PATH + "/confirm?token=" + confirmationTokenDTO.getConfirmationToken());
-        context.setVariable("tokenValidityTime", applicationConfig.getTokenValidityTimeInMinutes());
+                scaffoldingAppUrl + API_PATH + "/confirm?token=" + confirmationTokenDTO.getConfirmationToken());
+        context.setVariable("tokenValidityTime", tokenValidityTimeInMinutes);
         //template to send as string
         String content = templateEngine.process("mail-after-registration", context);
         String title = chooseTitle(MailEvent.AFTER_REGISTRATION, locale);
@@ -78,7 +84,7 @@ public class SentEmailServiceImpl implements SentEmailService {
     public MessageResponse sendAfterEmailConfirmation(ConfirmationTokenDTO confirmationTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user activation:");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, applicationConfig.getScaffoldingAppUrl() + "/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/login");
         //template to send as string
         String content = templateEngine.process("mail-after-confirmation", context);
         String title = chooseTitle(MailEvent.AFTER_CONFIRMATION, locale);
@@ -100,10 +106,10 @@ public class SentEmailServiceImpl implements SentEmailService {
     public MessageResponse sendPasswordResetMail(PasswordResetTokenDTO passwordResetTokenDTO, Locale locale) {
         log.debug("Request to send email to reset password");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, applicationConfig.getScaffoldingAppUrl() + "/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/login");
         context.setVariable("passwordResetLink",
-                applicationConfig.getScaffoldingAppUrl() + API_PATH + "/reset-password?token=" + passwordResetTokenDTO.getPasswordResetToken());
-        context.setVariable("tokenValidityTime", applicationConfig.getTokenValidityTimeInMinutes());
+                scaffoldingAppUrl + API_PATH + "/reset-password?token=" + passwordResetTokenDTO.getPasswordResetToken());
+        context.setVariable("tokenValidityTime", tokenValidityTimeInMinutes);
         String content = templateEngine.process("mail-password-reset", context);
         String title = chooseTitle(MailEvent.PASSWORD_RESET, locale);
         SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
@@ -123,7 +129,7 @@ public class SentEmailServiceImpl implements SentEmailService {
     public MessageResponse sendAfterPasswordChange(PasswordResetTokenDTO passwordResetTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm password reset.");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, applicationConfig.getScaffoldingAppUrl() + "/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/login");
         //template to send as string
         String content = templateEngine.process("mail-after-password-change", context);
         String title = chooseTitle(MailEvent.AFTER_PASSWORD_CHANGE, locale);

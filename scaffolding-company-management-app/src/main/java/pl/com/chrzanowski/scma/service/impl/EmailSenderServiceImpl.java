@@ -2,10 +2,10 @@ package pl.com.chrzanowski.scma.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.scma.config.ApplicationConfig;
 import pl.com.chrzanowski.scma.exception.EmailSendFailException;
 import pl.com.chrzanowski.scma.service.EmailSenderService;
 import pl.com.chrzanowski.scma.service.dto.SentEmailDTO;
@@ -17,14 +17,19 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class EmailSenderServiceImpl implements EmailSenderService {
+
+    @Value("${platform.replyToEmail}")
+    private String replyToEmail;
+
+    @Value("${platform.fromEmail}")
+    private String fromEmail;
     private static final Logger log = LoggerFactory.getLogger(EmailSenderServiceImpl.class);
 
     private final JavaMailSender javaMailSender;
-    private final ApplicationConfig applicationConfig;
 
-    public EmailSenderServiceImpl(JavaMailSender javaMailSender, ApplicationConfig applicationConfig) {
+
+    public EmailSenderServiceImpl(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.applicationConfig = applicationConfig;
     }
 
     @Override
@@ -34,8 +39,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             helper.setTo(sentEmailDTO.getUserEmail());
-            helper.setReplyTo(applicationConfig.getReplyToEmail());
-            helper.setFrom(applicationConfig.getFromEmail());
+            helper.setReplyTo(replyToEmail);
+            helper.setFrom(fromEmail);
             helper.setSubject(sentEmailDTO.getTitle());
             helper.setText(sentEmailDTO.getContent(), true);
         } catch (MessagingException e) {
