@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> runtimeExceptionHandling(Exception e, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
-                .timestamp(new Date())
+                .timestamp(LocalDateTime.now())
                 .message(e.getMessage())
                 .details(request.getDescription(false)).build();
         log.debug("Error: ",e);
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpMessageNotReadableException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
-                .timestamp(new Date())
+                .timestamp(LocalDateTime.now())
                 .message(ex.getMessage())
                 .details(request.getDescription(false)).build();
         log.debug("Error: ",ex);

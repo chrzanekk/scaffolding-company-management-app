@@ -1,17 +1,16 @@
 package pl.com.chrzanowski.scma.payload.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class NewPasswordPutRequest {
-    private final String newPasswordHash;
-    private final String newPasswordHashRepeat;
+    private String newPasswordHash;
+    private String newPasswordHashRepeat;
 
-    @JsonCreator
-    public NewPasswordPutRequest(@JsonProperty("newPasswordHash") String newPasswordHash,
-                                 @JsonProperty("newPasswordHashRepeat") String newPasswordHashRepeat) {
+    public NewPasswordPutRequest(String newPasswordHash,
+                                 String newPasswordHashRepeat) {
         this.newPasswordHash = newPasswordHash;
         this.newPasswordHashRepeat = newPasswordHashRepeat;
+    }
+
+    public NewPasswordPutRequest() {
     }
 
     public String getNewPasswordHash() {
@@ -20,5 +19,15 @@ public class NewPasswordPutRequest {
 
     public String getNewPasswordHashRepeat() {
         return newPasswordHashRepeat;
+    }
+
+    public NewPasswordPutRequest setNewPasswordHash(String newPasswordHash) {
+        this.newPasswordHash = newPasswordHash;
+        return this;
+    }
+
+    public NewPasswordPutRequest setNewPasswordHashRepeat(String newPasswordHashRepeat) {
+        this.newPasswordHashRepeat = newPasswordHashRepeat;
+        return this;
     }
 }

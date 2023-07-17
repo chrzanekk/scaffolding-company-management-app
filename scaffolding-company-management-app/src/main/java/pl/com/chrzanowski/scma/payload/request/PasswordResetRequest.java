@@ -1,16 +1,16 @@
 package pl.com.chrzanowski.scma.payload.request;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PasswordResetRequest {
 
     private String email;
 
-    @JsonCreator
-    public PasswordResetRequest(@JsonProperty("email") String email) {
-        this.email = email;
 
+    public PasswordResetRequest(String email) {
+        this.email = email;
+    }
+
+    public PasswordResetRequest() {
     }
 
     public String getEmail() {

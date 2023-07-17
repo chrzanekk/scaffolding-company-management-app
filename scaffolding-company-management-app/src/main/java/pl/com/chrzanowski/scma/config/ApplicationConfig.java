@@ -2,13 +2,8 @@ package pl.com.chrzanowski.scma.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
-
-import java.nio.charset.StandardCharsets;
 
 @Configuration
 @EnableCaching
@@ -82,7 +77,7 @@ public class ApplicationConfig {
     private Integer mailPort;
     @Value("${spring.mail.host}")
     private String mailHost;
-    @Value("${spring.mail.properties.mail.transport.protocol}")
+    @Value("${spring.mail.protocol}")
     private String mailProtocol;
 
 
@@ -188,14 +183,14 @@ public class ApplicationConfig {
         return mailProtocol;
     }
 
-    @Bean
-    RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        return restTemplate;
-    }
+//    @Bean
+//    RestTemplate restTemplate() {
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        restTemplate.getMessageConverters()
+//                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+//        return restTemplate;
+//    }
 
 
 }

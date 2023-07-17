@@ -1,15 +1,15 @@
 package pl.com.chrzanowski.scma.exception.error;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class ErrorDetails {
-    private final Date timestamp;
+    private final LocalDateTime timestamp;
     private final String message;
     private final String details;
 
 
-    public ErrorDetails(Date timestamp, String message, String details) {
+    public ErrorDetails(LocalDateTime timestamp, String message, String details) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;
@@ -33,7 +33,7 @@ public class ErrorDetails {
         return builder;
     }
 
-    public Date getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -69,14 +69,14 @@ public class ErrorDetails {
 
 
     public static final class Builder {
-        private Date timestamp;
+        private LocalDateTime timestamp;
         private String message;
         private String details;
 
         private Builder() {
         }
 
-        public Builder timestamp(Date timestamp) {
+        public Builder timestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }
