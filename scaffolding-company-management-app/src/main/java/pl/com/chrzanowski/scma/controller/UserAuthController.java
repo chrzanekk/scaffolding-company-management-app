@@ -1,13 +1,15 @@
 package pl.com.chrzanowski.scma.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.scma.exception.EmailAlreadyExistsException;
@@ -18,10 +20,9 @@ import pl.com.chrzanowski.scma.payload.request.LoginRequest;
 import pl.com.chrzanowski.scma.payload.request.NewPasswordPutRequest;
 import pl.com.chrzanowski.scma.payload.request.PasswordResetRequest;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
-import pl.com.chrzanowski.scma.payload.response.JwtResponse;
 import pl.com.chrzanowski.scma.payload.response.MessageResponse;
+import pl.com.chrzanowski.scma.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.scma.security.jwt.JwtUtils;
-import pl.com.chrzanowski.scma.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.scma.service.*;
 import pl.com.chrzanowski.scma.service.dto.ConfirmationTokenDTO;
 import pl.com.chrzanowski.scma.service.dto.PasswordResetTokenDTO;
@@ -31,13 +32,12 @@ import pl.com.chrzanowski.scma.util.TokenUtil;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/auth")
 public class UserAuthController {
+
     @Value("${tokenValidityTimeInMinutes}")
     private Long tokenValidityTimeInMinutes;
     private final Logger log = LoggerFactory.getLogger(UserAuthController.class);
@@ -67,7 +67,7 @@ public class UserAuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JWTToken> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.debug("REST request to login user {}", loginRequest);
         LoginRequest updatedRequest =
                 LoginRequest.builder(loginRequest).username(loginRequest.getUsername().toLowerCase()).build();
@@ -77,16 +77,10 @@ public class UserAuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtUtils.generateJwtToken(authentication);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(AuthTokenFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        return new ResponseEntity<>(new JWTToken(jwt), headers, HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -160,6 +154,24 @@ public class UserAuthController {
     private void validatePasswordMatch(NewPasswordPutRequest request) {
         if (!request.getNewPasswordHash().equals(request.getNewPasswordHashRepeat())) {
             throw new PasswordNotMatchException("Password not match");
+        }
+    }
+
+    static class JWTToken {
+
+        private String tokenValue;
+
+        JWTToken(String tokenValue) {
+            this.tokenValue = tokenValue;
+        }
+
+        @JsonProperty("id_token")
+        String getTokenValue() {
+            return tokenValue;
+        }
+
+        void setTokenValue(String tokenValue) {
+            this.tokenValue = tokenValue;
         }
     }
 

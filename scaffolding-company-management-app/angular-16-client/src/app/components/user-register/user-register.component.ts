@@ -35,7 +35,7 @@ export class UserRegisterComponent implements OnInit {
       username: this.builder.control('',
         [
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(4),
           Validators.maxLength(25),
           Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),]),
       email: this.builder.control('',
@@ -80,9 +80,7 @@ export class UserRegisterComponent implements OnInit {
   }
 
 
-  createFromForm()
-    :
-    IUserRegister {
+  createFromForm(): IUserRegister {
     return {
       ...new UserRegister(),
       username: this.registerForm.get(['username'])!.value,

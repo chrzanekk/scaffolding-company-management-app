@@ -10,7 +10,7 @@ import {UserLoginComponent} from "./components/user-login/user-login.component";
 
 const routes: Routes = [
   {path: 'fuelTypes', component: FuelTypeListComponent},
-  {path: '', component: HomeComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'register', component: UserRegisterComponent},
   {path: 'login', component: UserLoginComponent},
   {path: 'user', component: UsersComponent},
