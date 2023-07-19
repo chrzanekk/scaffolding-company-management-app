@@ -17,6 +17,7 @@ import {ToastrModule} from "ngx-toastr";
 import {UsersComponent} from './components/users/users.component';
 import {UpdatePopupComponent} from './components/update-popup/update-popup.component';
 import {CommonModule} from "@angular/common";
+import {httpInterceptorProviders} from "./helpers/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import {CommonModule} from "@angular/common";
     ToastrModule.forRoot(),
     CommonModule,
   ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule {

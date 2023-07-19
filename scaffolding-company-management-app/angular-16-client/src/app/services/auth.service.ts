@@ -27,8 +27,8 @@ export class AuthService {
   register(register: UserRegister): Observable<MessageResponse> {
     return this.http.post(AUTH_API + '/register', register, httpOptions)
   }
-//to be implemented in future
-  // logout(): Observable<any> {
-  //   return this.http.post(AUTH_API + 'logout', {}, httpOptions)
-  // }
+
+  logout(): Observable<any> {
+    return this.http.post(AUTH_API + '/logout', {}, httpOptions)
+  }
 }

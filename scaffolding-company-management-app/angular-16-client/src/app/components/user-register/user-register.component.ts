@@ -15,7 +15,7 @@ export class UserRegisterComponent implements OnInit {
   doNotMatch = false;
   success = false;
   submitted = false;
-  registerForm:  FormGroup = new FormGroup({
+  registerForm: FormGroup = new FormGroup({
     username: new FormControl(''),
     email: new FormControl(''),
     password: new FormControl(''),
@@ -32,41 +32,41 @@ export class UserRegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registerForm = this.builder.group({
-      username: this.builder.control('',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(25),
-          Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),]),
-      email: this.builder.control('',
-        [
-          Validators.required,
-          Validators.email]),
-      password: this.builder.control('',
-        [
+        username: this.builder.control('',
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(25),
+            Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$'),]),
+        email: this.builder.control('',
+          [
+            Validators.required,
+            Validators.email]),
+        password: this.builder.control('',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.maxLength(50)]),
+        confirmPassword: this.builder.control('', [
           Validators.required,
           Validators.minLength(8),
           Validators.maxLength(50)]),
-      confirmPassword: this.builder.control('', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(50)]),
-    },
-    {
-      validators: [Validation.match('password', 'confirmPassword')]
-    });
+      },
+      {
+        validators: [Validation.match('password', 'confirmPassword')]
+      });
   }
 
-  get f(): {[key: string]: AbstractControl } {
+  get f(): { [key: string]: AbstractControl } {
     return this.registerForm.controls;
   }
 
 
   proceedRegistration() {
-      this.submitted = true;
-      if(this.registerForm.invalid) {
-        return;
-      } else {
+    this.submitted = true;
+    if (this.registerForm.invalid) {
+      return;
+    } else {
       const registerUser = this.createFromForm();
       this.authService.register(registerUser).subscribe(res => {
         this.toastr.success('Registered successfully, confirmation email sent');

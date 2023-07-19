@@ -4,6 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {UserLogin} from "../../models/user-login.model";
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-user-login',
@@ -12,6 +13,10 @@ import {UserLogin} from "../../models/user-login.model";
 })
 export class UserLoginComponent implements OnInit {
   submitted = false;
+  isLoggedIn = false;
+  isLoginFailed = false;
+  roles: string[] = [];
+  errorMessage = '';
   loginForm: FormGroup = new FormGroup({
     username: new FormControl(''),
     password: new FormControl('')
@@ -20,10 +25,15 @@ export class UserLoginComponent implements OnInit {
   constructor(private builder: FormBuilder,
               private toastr: ToastrService,
               private authService: AuthService,
+              private storageService: StorageService,
               private router: Router) {
   }
 
   ngOnInit() {
+    if (this.storageService.isLoggedIn()) {
+      this.isLoggedIn = true;
+      this.roles = this.storageService.getUser().roles;
+    }
     this.loginForm = this.builder.group({
       username: this.builder.control('',
         [Validators.required]),
@@ -41,10 +51,24 @@ export class UserLoginComponent implements OnInit {
       return;
     } else {
       const loginUser = this.createFromForm();
-      this.authService.login(loginUser).subscribe(res => {
-        this.toastr.success(res.toString());
-      })
+      this.authService.login(loginUser).subscribe({
+        next: res => {
+          this.storageService.saveUser(res);
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+          this.roles = this.storageService.getUser().roles;
+          this.reloadPage();
+        },
+        error: err => {
+          this.errorMessage = err.error.message;
+          this.isLoginFailed = true;
+        }
+      });
     }
+  }
+
+  reloadPage(): void {
+    window.location.reload();
   }
 
   createFromForm(): UserLogin {
