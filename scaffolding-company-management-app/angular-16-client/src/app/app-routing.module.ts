@@ -7,12 +7,14 @@ import {HomeComponent} from "./components/home/home.component";
 import {UsersComponent} from "./components/users/users.component";
 import {UserRegisterComponent} from "./components/user-register/user-register.component";
 import {UserLoginComponent} from "./components/user-login/user-login.component";
+import {ProfileComponent} from "./components/user-profile/user-profile.component";
 
 const routes: Routes = [
   {path: 'fuelTypes', component: FuelTypeListComponent},
   {path: '', component: HomeComponent},
   {path: 'register', component: UserRegisterComponent},
   {path: 'login', component: UserLoginComponent},
+  {path: 'profile', component: ProfileComponent},
   {path: 'user', component: UsersComponent},
   {path: 'fuelTypes/:id', component: FuelTypeDetailsComponent},
   {path: 'add', component: FuelTypeAddComponent}
