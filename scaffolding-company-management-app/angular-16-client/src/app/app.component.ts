@@ -7,7 +7,7 @@ import {AuthService} from "./services/auth.service";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'Scaffolding Management App';
   private roles: string[] = [];
   isLoggedIn = false;
@@ -17,9 +17,10 @@ export class AppComponent implements OnInit{
 
   constructor(private storageService: StorageService, private authService: AuthService) {
   }
+
   ngOnInit() {
     this.isLoggedIn = this.storageService.isLoggedIn();
-    if(this.isLoggedIn) {
+    if (this.isLoggedIn) {
       const user = this.storageService.getUser();
       this.roles = user.roles;
 
@@ -31,16 +32,8 @@ export class AppComponent implements OnInit{
   }
 
   logout() {
-    this.authService.logout().subscribe({
-      next: res => {
-        console.log(res);
-        this.storageService.clean();
-        this.isLoggedIn = false;
-        window.location.reload();
-      },
-      error: err => {
-        console.log(err);
-      }
-    })
+    this.storageService.clean();
+    this.isLoggedIn = false;
+    window.location.reload();
   }
 }
