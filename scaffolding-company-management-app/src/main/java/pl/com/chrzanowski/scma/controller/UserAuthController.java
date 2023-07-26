@@ -79,7 +79,6 @@ public class UserAuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthTokenFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
         return new ResponseEntity<>(new JWTToken(jwt), headers, HttpStatus.OK);
     }
 

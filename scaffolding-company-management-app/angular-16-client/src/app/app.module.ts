@@ -18,6 +18,7 @@ import {UsersComponent} from './components/users/users.component';
 import {UpdatePopupComponent} from './components/update-popup/update-popup.component';
 import {CommonModule} from "@angular/common";
 import {httpInterceptorProviders} from "./helpers/auth.interceptor";
+import {NgxWebstorageModule} from "ngx-webstorage";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {httpInterceptorProviders} from "./helpers/auth.interceptor";
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     CommonModule,
+    NgxWebstorageModule.forRoot({ prefix: 'scma', separator: '-' }),
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

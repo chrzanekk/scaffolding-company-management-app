@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.storageService.clean();
+    this.authService.logout();
     this.isLoggedIn = false;
     window.location.reload();
   }
