@@ -44,7 +44,7 @@ export class UserLoginComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.loginForm.controls;
   }
-
+//todo create AccountService to take information about user for userProfile also
   login(): void {
     this.submitted = true;
     if (this.loginForm.invalid) {
@@ -53,10 +53,8 @@ export class UserLoginComponent implements OnInit {
       const loginUser = this.createFromForm();
       this.authService.login(loginUser).subscribe({
         next: res => {
-          this.storageService.saveUser(res);
           this.isLoginFailed = false;
           this.isLoggedIn = true;
-          this.roles = this.storageService.getUser().roles;
           this.reloadPage();
         },
         error: err => {

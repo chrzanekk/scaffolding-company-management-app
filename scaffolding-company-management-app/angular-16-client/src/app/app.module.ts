@@ -44,7 +44,7 @@ import {JwtInterceptor} from "./helpers/jwt.interceptor";
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     CommonModule,
-    NgxWebstorageModule.forRoot({ prefix: 'scma', separator: '-' }),
+    NgxWebstorageModule.forRoot({ prefix: '', separator: '' }),
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, httpInterceptorProviders],
   bootstrap: [AppComponent]

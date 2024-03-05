@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   getToken(): string {
-    return this.$localStorage.retrieve('authenticationToken') || this.$sessionStorage.retrieve('authenticationToken') || '';
+    return this.$localStorage.retrieve('authenticationToken') || '';
   }
 
   private authenticateSuccess(response: JwtToken): void {

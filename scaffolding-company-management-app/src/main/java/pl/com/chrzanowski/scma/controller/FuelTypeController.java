@@ -79,5 +79,4 @@ public class FuelTypeController {
         return ResponseEntity.ok().build();
     }
 
-
 }
