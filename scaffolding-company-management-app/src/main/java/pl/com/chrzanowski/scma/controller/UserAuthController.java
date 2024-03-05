@@ -147,6 +147,11 @@ public class UserAuthController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/account")
+    public UserDTO getAccount() {
+        return userService.getUserWithAuthorities();
+    }
+
     private boolean isEmailTaken(String email) {
         return Boolean.TRUE.equals(userService.isEmailExists(email));
     }

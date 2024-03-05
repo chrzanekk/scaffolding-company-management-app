@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.com.chrzanowski.scma.controller.util.SecurityUtils;
 import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
@@ -188,5 +189,15 @@ public class UserServiceImpl implements UserService {
         FieldValidator.validateString(userDTO.getUsername(), "Username");
         FieldValidator.validateString(userDTO.getPassword(), "Password");
         FieldValidator.validateString(userDTO.getEmail(), "E-mail");
+    }
+
+    @Override
+    public UserDTO getUserWithAuthorities() {
+        return userMapper.toDto(SecurityUtils.getCurrentUserLogin()
+                .flatMap(userRepository::findOneWithAuthoritiesByLogin)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "User not" +
+                                " " +
+                                "found")));
     }
 }

@@ -35,5 +35,7 @@ public interface UserService {
 
     Boolean isEmailExists(String email);
 
+    UserDTO getUserWithAuthorities();
+
 
 }
