@@ -19,5 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Boolean existsByUsername(String username);
     @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesByLogin(String login);
+    Optional<User> findOneWithAuthoritiesByUsername(String username);
 }

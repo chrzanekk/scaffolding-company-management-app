@@ -2,14 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {UserLogin} from "../models/user-login.model";
-import {UserRegister} from "../models/user-register.model";
-import {MessageResponse} from "../models/message-response.model";
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 
 type JwtToken = {
   id_token: string;
 };
-
 
 const AUTH_API = 'http://localhost:8080/api/auth';
 
@@ -33,16 +30,10 @@ export class AuthService {
       .pipe(map(response => this.authenticateSuccess(response)));
   };
 
-  register(register: UserRegister): Observable<MessageResponse> {
-    return this.http.post(AUTH_API + '/register', register, httpOptions)
-  }
-
-  logout(): Observable<void> {
-    return new Observable(observer => {
-      this.$localStorage.clear('authenticationToken');
-      this.$sessionStorage.clear('authenticationToken');
-      observer.complete();
-    });
+  logout(): boolean {
+    this.$localStorage.clear('authenticationToken');
+    this.$sessionStorage.clear('authenticationToken');
+    return true;
   }
 
   getToken(): string {
@@ -51,6 +42,6 @@ export class AuthService {
 
   private authenticateSuccess(response: JwtToken): void {
     const jwt = response.id_token;
-      this.$localStorage.store('authenticationToken', jwt);
+    this.$localStorage.store('authenticationToken', jwt);
   }
 }
