@@ -77,7 +77,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(),ERole.ROLE_USER.getRoleName())
-                .antMatchers("/api/auth/account").authenticated();
+                .antMatchers("/api/account/**").authenticated();
 
         http.authenticationProvider(authenticationProvider());
 

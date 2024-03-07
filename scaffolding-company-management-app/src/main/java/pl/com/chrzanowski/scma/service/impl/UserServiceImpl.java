@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUserWithAuthorities() {
         return userMapper.toDto(SecurityUtils.getCurrentUserLogin()
-                .flatMap(userRepository::findOneWithAuthoritiesByUsername)
+                .flatMap(userRepository::findByUsername)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found")));
     }
 }

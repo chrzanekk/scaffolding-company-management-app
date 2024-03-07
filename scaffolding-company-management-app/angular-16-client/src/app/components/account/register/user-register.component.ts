@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {IUserRegister, UserRegister} from "../../models/user-register.model";
-import Validation from "../../utils/validation";
-import {AccountService} from "../../services/account.service";
+import {IUserRegister, UserRegister} from "../../../models/user-register.model";
+import Validation from "../../../utils/validation";
+import {AccountService} from "../../../services/account/account.service";
 
 @Component({
   selector: 'app-user-register',

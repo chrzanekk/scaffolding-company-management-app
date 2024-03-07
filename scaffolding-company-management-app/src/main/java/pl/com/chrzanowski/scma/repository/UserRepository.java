@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.scma.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -18,6 +17,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Boolean existsByEmail(String email);
 
     Boolean existsByUsername(String username);
-    @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesByUsername(String username);
+
 }

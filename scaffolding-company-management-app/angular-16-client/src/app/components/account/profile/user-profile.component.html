@@ -1,17 +1,17 @@
-<div class="container" *ngIf="currentUser; else loggedOut">
+<div class="container" *ngIf="account; else loggedOut">
   <header class="jumbotron">
     <h3>
-      <strong>{{ currentUser.username }}</strong> Profile
+      <strong>{{ account.username }}</strong> Profile
     </h3>
   </header>
   <p>
     <strong>Email:</strong>
-    {{ currentUser.email }}
+    {{ account.email }}
   </p>
 
   <strong>Roles:</strong>
   <ul>
-    <li *ngFor="let role of currentUser.roles">
+    <li *ngFor="let role of authorities">
       {{ role }}
     </li>
   </ul>

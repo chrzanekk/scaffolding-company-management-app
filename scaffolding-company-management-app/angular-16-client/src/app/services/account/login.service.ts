@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AccountService} from "./account.service";
 import {AuthService} from "./auth.service";
-import {UserLogin} from "../models/user-login.model";
+import {UserLogin} from "../../models/user-login.model";
 import {mergeMap, Observable} from "rxjs";
-import {Account} from "../models/account.model";
+import {Account} from "../../models/account.model";
 
 @Injectable({
   providedIn: 'root'

@@ -9,9 +9,9 @@ import {FuelTypeListComponent} from './components/fuel-type-list/fuel-type-list.
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from "@angular/common/http";
 import {HomeComponent} from './components/home/home.component';
-import {ProfileComponent} from './components/user-profile/user-profile.component';
-import {UserRegisterComponent} from './components/user-register/user-register.component';
-import {UserLoginComponent} from './components/user-login/user-login.component';
+import {ProfileComponent} from './components/account/profile/user-profile.component';
+import {UserRegisterComponent} from './components/account/register/user-register.component';
+import {UserLoginComponent} from './components/account/login/user-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from "ngx-toastr";
 import {UsersComponent} from './components/users/users.component';

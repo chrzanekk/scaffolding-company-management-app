@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
-import {Account} from "../models/account.model";
+import {Account} from "../../models/account.model";
 import {catchError, Observable, of, ReplaySubject, shareReplay, tap} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {SessionStorageService} from "ngx-webstorage";
-import {StateStorageService} from "./state-storage.service";
-import {UserRegister} from "../models/user-register.model";
-import {MessageResponse} from "../models/message-response.model";
-import {Eroles} from "../models/enums/eroles.string";
+import {StateStorageService} from "../state-storage.service";
+import {UserRegister} from "../../models/user-register.model";
+import {MessageResponse} from "../../models/message-response.model";
+import {Eroles} from "../../models/enums/eroles.string";
 
 
 const URL = 'http://localhost:8080/api';
 
-const ACCOUNT_API = 'http://localhost:8080/api/account';
+const AUTH_API = URL + '/auth';
+const ACCOUNT_API = URL + '/account'
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -35,7 +36,7 @@ export class AccountService {
   }
 
   register(register: UserRegister): Observable<MessageResponse> {
-    return this.http.post(ACCOUNT_API + '/register', register, httpOptions)
+    return this.http.post(AUTH_API + '/register', register, httpOptions)
   }
 
   save(account: Account): Observable<{}> {
@@ -67,7 +68,7 @@ export class AccountService {
           this.authenticate(account);
           //todo here need to implement in future set locale language
           if (account) {
-            this.navigateToStoredUrl();
+            this.router.navigate([''])
           }
         }),
         shareReplay()
