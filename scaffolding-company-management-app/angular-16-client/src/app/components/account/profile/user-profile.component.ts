@@ -15,11 +15,11 @@ export class ProfileComponent implements OnInit {
   success = false;
   authorities!: Eroles[];
   accountForm = this.fb.group({
-    username: [undefined, [Validators.required,
+    username: ['' , [Validators.required,
       Validators.minLength(4),
       Validators.maxLength(25),
       Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$')]],
-    email: [undefined, [Validators.required,
+    email: ['', [Validators.required,
       Validators.email]],
   });
 
@@ -27,16 +27,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accountService.identity().subscribe(account => {
-      if (account) {
-        this.accountForm.patchValue({
-          username: account.username,
-          email: account.email,
-        });
-        this.account = account;
-        this.authorities = account.authorities;
-      }
-    })
+
   }
 
 }
