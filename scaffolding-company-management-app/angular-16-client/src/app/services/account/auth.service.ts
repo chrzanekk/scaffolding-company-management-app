@@ -22,12 +22,15 @@ export class AuthService {
   constructor(private http: HttpClient, private $localStorage: LocalStorageService, private $sessionStorage: SessionStorageService) {
   }
 
-  login(login: UserLogin): Observable<void> {
+  login(login: UserLogin): Observable<JwtToken> {
     this.$localStorage.clear();
     this.$sessionStorage.clear();
     return this.http
       .post<JwtToken>(AUTH_API + '/login', login)
-      .pipe(map(response => this.authenticateSuccess(response)));
+      .pipe(map(response => {
+        this.authenticateSuccess(response)
+        return response;
+      }));
   };
 
   logout(): boolean {

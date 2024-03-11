@@ -4,7 +4,6 @@ import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../../services/account/auth.service";
 import {Router} from "@angular/router";
 import {UserLogin} from "../../../models/user-login.model";
-import {StorageService} from "../../../services/storage.service";
 import {LoginService} from "../../../services/account/login.service";
 
 @Component({
@@ -27,7 +26,6 @@ export class UserLoginComponent implements OnInit {
               private toastr: ToastrService,
               private authService: AuthService,
               private loginService: LoginService,
-              private storageService: StorageService,
               private router: Router) {
   }
 
@@ -42,6 +40,7 @@ export class UserLoginComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.loginForm.controls;
   }
+  //todo fix this
   login(): void {
     this.submitted = true;
     if (this.loginForm.invalid) {

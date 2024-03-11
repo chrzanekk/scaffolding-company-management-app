@@ -43,7 +43,7 @@ import {NgxWebstorageModule} from "ngx-webstorage";
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     CommonModule,
-    NgxWebstorageModule.forRoot({ prefix: '', separator: '' }),
+    NgxWebstorageModule.forRoot({ prefix: 'ja', separator: '-' }),
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
