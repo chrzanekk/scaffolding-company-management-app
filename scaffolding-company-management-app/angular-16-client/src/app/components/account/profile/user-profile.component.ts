@@ -3,6 +3,7 @@ import {Account} from "../../../models/account.model";
 import {FormBuilder, Validators} from '@angular/forms';
 import {Eroles} from "../../../models/enums/eroles.string";
 import {AuthService} from "../../../services/account/auth.service";
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -11,7 +12,7 @@ import {AuthService} from "../../../services/account/auth.service";
   styleUrls: ['./user-profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  account!: Account;
+  accountCache$: Observable<Account | null>
   success = false;
   authorities!: Eroles[];
   accountForm = this.fb.group({
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit {
   });
 
   constructor(private authService: AuthService, private fb: FormBuilder) {
+    this.accountCache$ = authService.accountCache$;
   }
 
   ngOnInit(): void {
