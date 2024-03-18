@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Account} from "../../../models/account.model";
 import {FormBuilder, Validators} from '@angular/forms';
-import {AccountService} from "../../../services/account/account.service";
 import {Eroles} from "../../../models/enums/eroles.string";
+import {AuthService} from "../../../services/account/auth.service";
 
 
 @Component({
@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
   success = false;
   authorities!: Eroles[];
   accountForm = this.fb.group({
-    username: ['' , [Validators.required,
+    username: ['', [Validators.required,
       Validators.minLength(4),
       Validators.maxLength(25),
       Validators.pattern('^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$')]],
@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
       Validators.email]],
   });
 
-  constructor(private accountService: AccountService, private fb: FormBuilder) {
+  constructor(private authService: AuthService, private fb: FormBuilder) {
   }
 
   ngOnInit(): void {

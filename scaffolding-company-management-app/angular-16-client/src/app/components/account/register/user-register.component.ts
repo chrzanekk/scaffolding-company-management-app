@@ -4,7 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {IUserRegister, UserRegister} from "../../../models/user-register.model";
 import Validation from "../../../utils/validation";
-import {AccountService} from "../../../services/account/account.service";
+import {AuthService} from "../../../services/account/auth.service";
 
 @Component({
   selector: 'app-user-register',
@@ -25,7 +25,7 @@ export class UserRegisterComponent implements OnInit {
 
   constructor(private builder: FormBuilder,
               private toastr: ToastrService,
-              private accountService: AccountService,
+              private authService: AuthService,
               private router: Router) {
 
   }
@@ -68,7 +68,7 @@ export class UserRegisterComponent implements OnInit {
       return;
     } else {
       const registerUser = this.createFromForm();
-      this.accountService.register(registerUser).subscribe(res => {
+      this.authService.register(registerUser).subscribe(() => {
         this.toastr.success('Registered successfully, confirmation email sent');
       })
     }

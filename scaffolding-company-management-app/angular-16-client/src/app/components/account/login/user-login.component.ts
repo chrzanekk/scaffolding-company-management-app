@@ -48,11 +48,11 @@ export class UserLoginComponent implements OnInit {
     } else {
       const loginUser = this.createFromForm();
       this.loginService.login(loginUser).subscribe({
-        next: res => {
+        next: () => {
           this.isLoginFailed = false;
           this.isLoggedIn = true;
         },
-        error: err => {
+        error: (err: { error: { message: string; }; }) => {
           this.errorMessage = err.error.message;
           this.isLoginFailed = true;
         }
