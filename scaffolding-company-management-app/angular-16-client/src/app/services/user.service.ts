@@ -14,7 +14,7 @@ const API_URL = 'http://localhost:8080/api/test/';
 })
 export class UserService {
 
-  public resourceUrl = BASE_URL + '/api/users'
+  public resourceUrl = BASE_URL + 'users'
 
   constructor(private http: HttpClient) {
   }

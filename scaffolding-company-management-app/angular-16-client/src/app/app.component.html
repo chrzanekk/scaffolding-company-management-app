@@ -2,21 +2,11 @@
   <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
     <div class="container-fluid">
 
-      <a href="/" class="navbar-brand">Scaffolding Management App</a>
+      <a href="/" class="navbar-brand" routerLink="">Scaffolding Management App</a>
 
       <ul class="navbar-nav mr-auto" routerLinkActive="active">
         <li class="nav-item">
           <a href="/" class="nav-link" routerLink="">Strona główna</a>
-        </li>
-<!--        <li class="nav-item" *ngIf="showAdminBoard">-->
-<!--          <a href="/admin" class="nav-link" routerLink="admin">Admin Board</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item" *ngIf="showModeratorBoard">-->
-<!--          <a href="/mod" class="nav-link" routerLink="mod">Moderator Board</a>-->
-<!--        </li>-->
-        <li class="nav-item">
-          <a href="/user" class="nav-link" *ngIf="(accountCache$|async) as account" routerLink="user">User</a>
-        </li>
       </ul>
       <ul class="navbar-nav mr-right" routerLinkActive="active" *ngIf="!(accountCache$|async) as account">
         <li class="nav-item" >
@@ -29,10 +19,10 @@
 
       <ul class="navbar-nav ml-auto" *ngIf="(accountCache$|async) as account">
         <li class="nav-item">
-          <a href="/profile" class="nav-link" routerLink="profile">[{{ account.username }}]</a>
+          <a href="/profile" class="nav-link" routerLink="profile">Zalogowany: [{{ account.username }}]</a>
         </li>
         <li class="nav-item">
-          <a href class="nav-link" (click)="logout()">LogOut</a>
+          <a href class="nav-link" (click)="logout()">Wyloguj</a>
         </li>
       </ul>
 

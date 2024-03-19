@@ -9,9 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.scma.controller.util.SecurityUtils;
+import pl.com.chrzanowski.scma.domain.Role;
 import pl.com.chrzanowski.scma.domain.User;
 import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
+import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
 import pl.com.chrzanowski.scma.repository.RoleRepository;
 import pl.com.chrzanowski.scma.repository.UserRepository;
 import pl.com.chrzanowski.scma.service.ConfirmationTokenService;
@@ -192,9 +194,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserWithAuthorities() {
-        return userMapper.toDto(SecurityUtils.getCurrentUserLogin()
-                .flatMap(userRepository::findByUsername)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found")));
+    public UserInfoResponse getUserWithAuthorities() {
+        String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User currentUser = userRepository.findByUsername(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        List<ERole> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
+        return new UserInfoResponse(
+                currentUser.getId(),
+                currentUser.getUsername(),
+                currentUser.getEmail(),
+                currentRoles);
     }
 }

@@ -70,6 +70,7 @@ export class UserRegisterComponent implements OnInit {
       const registerUser = this.createFromForm();
       this.authService.register(registerUser).subscribe(() => {
         this.toastr.success('Registered successfully, confirmation email sent');
+        this.router.navigate([''])
       })
     }
   }

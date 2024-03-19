@@ -4,6 +4,7 @@ package pl.com.chrzanowski.scma.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.scma.payload.request.RegisterRequest;
+import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 import pl.com.chrzanowski.scma.service.filter.user.UserFilter;
 
@@ -35,7 +36,7 @@ public interface UserService {
 
     Boolean isEmailExists(String email);
 
-    UserDTO getUserWithAuthorities();
+    UserInfoResponse getUserWithAuthorities();
 
 
 }

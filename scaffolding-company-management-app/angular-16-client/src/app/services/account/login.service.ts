@@ -18,11 +18,6 @@ export class LoginService {
 
   login(credentials: UserLogin): Observable<Account | null> {
     return this.authService.login(credentials).pipe(mergeMap(()=> this.authService.getUserInfo()))
-    // this.authService.login(credentials).subscribe(
-    //   (jwtToken: JwtToken) => {
-    //     this.authService.getUserInfo().subscribe();
-    //   }
-    // );
   }
 
   logout(): void {

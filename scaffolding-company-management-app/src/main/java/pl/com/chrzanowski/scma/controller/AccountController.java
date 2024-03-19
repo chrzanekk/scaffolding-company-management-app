@@ -3,6 +3,7 @@ package pl.com.chrzanowski.scma.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import pl.com.chrzanowski.scma.payload.response.UserInfoResponse;
 import pl.com.chrzanowski.scma.service.UserService;
 import pl.com.chrzanowski.scma.service.dto.UserDTO;
 
@@ -22,7 +23,7 @@ public class AccountController {
     }
 
     @GetMapping("/get")
-    public UserDTO getAccount() {
+    public UserInfoResponse getAccount() {
         return userService.getUserWithAuthorities();
     }
 
