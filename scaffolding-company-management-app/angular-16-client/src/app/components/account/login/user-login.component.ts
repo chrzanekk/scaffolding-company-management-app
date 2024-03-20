@@ -3,8 +3,10 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../../services/account/auth.service";
 import {Router} from "@angular/router";
-import {UserLogin} from "../../../models/user-login.model";
+import {LoginRequest} from "../../../models/user/login.model";
 import {LoginService} from "../../../services/account/login.service";
+import {Observable} from "rxjs";
+import {Account} from "../../../models/account.model";
 
 @Component({
   selector: 'app-user-login',
@@ -12,6 +14,7 @@ import {LoginService} from "../../../services/account/login.service";
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit {
+  accountCache$: Observable<Account | null>
   submitted = false;
   isLoggedIn = false;
   isLoginFailed = false;
@@ -27,6 +30,7 @@ export class UserLoginComponent implements OnInit {
               private authService: AuthService,
               private loginService: LoginService,
               private router: Router) {
+    this.accountCache$ = authService.accountCache$;
   }
 
   ngOnInit() {
@@ -40,7 +44,7 @@ export class UserLoginComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.loginForm.controls;
   }
-  //todo fix this
+
   login(): void {
     this.submitted = true;
     if (this.loginForm.invalid) {
@@ -51,10 +55,12 @@ export class UserLoginComponent implements OnInit {
         next: () => {
           this.isLoginFailed = false;
           this.isLoggedIn = true;
+          this.toastr.success('Zalogowano pomyślnie');
           this.router.navigate(['']);
         },
         error: (err: { error: { message: string; }; }) => {
           this.errorMessage = err.error.message;
+          this.toastr.error('Błąd logowania: ' + err.error.message)
           this.isLoginFailed = true;
         }
       });
@@ -62,13 +68,9 @@ export class UserLoginComponent implements OnInit {
     }
   }
 
-  reloadPage(): void {
-    window.location.reload();
-  }
-
-  createFromForm(): UserLogin {
+  createFromForm(): LoginRequest {
     return {
-      ...new UserLogin(),
+      ...new LoginRequest(),
       username: this.loginForm.get(['username'])!.value,
       password: this.loginForm.get(['password'])!.value
     };
@@ -78,4 +80,9 @@ export class UserLoginComponent implements OnInit {
     this.submitted = false;
     this.loginForm.reset();
   }
+
+  requestResetPassword() {
+    this.router.navigate(['/init-password-reset'])
+  }
+
 }

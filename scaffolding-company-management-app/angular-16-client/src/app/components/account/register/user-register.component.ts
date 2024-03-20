@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {IUserRegister, UserRegister} from "../../../models/user-register.model";
+import {IRegisterRequest, RegisterRequest} from "../../../models/user/register.model";
 import Validation from "../../../utils/validation";
 import {AuthService} from "../../../services/account/auth.service";
 
@@ -12,8 +12,6 @@ import {AuthService} from "../../../services/account/auth.service";
   styleUrls: ['./user-register.component.css']
 })
 export class UserRegisterComponent implements OnInit {
-  doNotMatch = false;
-  success = false;
   submitted = false;
   registerForm: FormGroup = new FormGroup({
     username: new FormControl(''),
@@ -81,9 +79,9 @@ export class UserRegisterComponent implements OnInit {
   }
 
 
-  createFromForm(): IUserRegister {
+  createFromForm(): IRegisterRequest {
     return {
-      ...new UserRegister(),
+      ...new RegisterRequest(),
       username: this.registerForm.get(['username'])!.value,
       email: this.registerForm.get(['email'])!.value,
       password: this.registerForm.get(['password'])!.value,

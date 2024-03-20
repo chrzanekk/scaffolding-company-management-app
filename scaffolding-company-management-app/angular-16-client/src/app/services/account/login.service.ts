@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthService} from "./auth.service";
-import {UserLogin} from "../../models/user-login.model";
+import {LoginRequest} from "../../models/user/login.model";
 import {mergeMap, Observable} from "rxjs";
 import {Account} from "../../models/account.model";
 
@@ -16,12 +16,8 @@ export class LoginService {
   constructor(private authService: AuthService) {
   }
 
-  login(credentials: UserLogin): Observable<Account | null> {
+  login(credentials: LoginRequest): Observable<Account | null> {
     return this.authService.login(credentials).pipe(mergeMap(()=> this.authService.getUserInfo()))
   }
 
-  logout(): void {
-    this.authService.clearAccount();
-    this.authService.logout();
-  }
 }

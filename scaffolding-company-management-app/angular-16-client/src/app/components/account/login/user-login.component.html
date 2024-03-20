@@ -17,7 +17,7 @@
                      formControlName="username"
                      [ngClass]="{'is-invalid': submitted && f['username'].errors}">
               <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
-                <div *ngIf="f['username'].errors['required']">Nazwa użytkownika jest wymagana</div>
+                <div *ngIf="f['username'].errors?.['required']">Nazwa użytkownika jest wymagana</div>
               </div>
             </div>
 
@@ -30,7 +30,7 @@
                      formControlName="password"
                      [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
               <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-                <div *ngIf="f['password'].errors['required']">Hasło jest wymagane</div>
+                <div *ngIf="f['password'].errors?.['required']">Hasło jest wymagane</div>
               </div>
             </div>
 
@@ -51,8 +51,8 @@
             </div>
           </form>
 
-          <div class="alert alert-success" *ngIf="isLoggedIn">
-            Logged in as {{ roles }}.
+          <div class="alert alert-success" *ngIf="accountCache$|async as account">
+            Logged in as {{ account.username }}.
           </div>
 
         </div>

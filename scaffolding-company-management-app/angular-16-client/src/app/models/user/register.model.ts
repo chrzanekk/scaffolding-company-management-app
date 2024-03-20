@@ -1,13 +1,13 @@
-import {Eroles} from "./enums/eroles.string";
+import {Eroles} from "../enums/eroles.string";
 
-export interface IUserRegister {
+export interface IRegisterRequest {
   username?: string;
   email?: string;
   password?: string;
   role?: Eroles[];
 }
 
-export class UserRegister implements IUserRegister {
+export class RegisterRequest implements IRegisterRequest {
   constructor(public username?: string,
               email?: string,
               password?: string,

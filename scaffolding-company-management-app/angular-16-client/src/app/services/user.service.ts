@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BASE_URL} from "../app.constants";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {User} from "../models/user.model";
+import {User} from "../models/user/user.model";
 
 type EntityResponseType = HttpResponse<User>
 type EntityArrayResponseType = HttpResponse<User[]>

@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, map, Observable} from 'rxjs';
-import {UserLogin} from "../../models/user-login.model";
+import {LoginRequest} from "../../models/user/login.model";
 import {LocalStorageService, SessionStorageService} from 'ngx-webstorage';
 import {Account} from "../../models/account.model";
-import {UserRegister} from "../../models/user-register.model";
+import {RegisterRequest} from "../../models/user/register.model";
 import {MessageResponse} from "../../models/message-response.model";
+import {RequestPasswordReset} from "../../models/user/request-password-reset.model";
 
 type JwtToken = {
   id_token: string;
@@ -24,10 +25,11 @@ const httpOptions = {
 export class AuthService {
   private accountCache = new BehaviorSubject<Account | null>(null);
   accountCache$: Observable<Account | null> = this.accountCache.asObservable();
+
   constructor(private http: HttpClient, private $localStorage: LocalStorageService, private $sessionStorage: SessionStorageService) {
   }
 
-  login(login: UserLogin): Observable<void> {
+  login(login: LoginRequest): Observable<void> {
     this.$localStorage.clear();
     this.$sessionStorage.clear();
     return this.http
@@ -40,6 +42,7 @@ export class AuthService {
   logout(): boolean {
     this.$localStorage.clear('authenticationToken');
     this.$sessionStorage.clear('authenticationToken');
+    this.clearAccount();
     return true;
   }
 
@@ -53,7 +56,7 @@ export class AuthService {
   }
 
   getUserInfo(): Observable<Account | null> {
-    if(this.accountCache.getValue()) {
+    if (this.accountCache.getValue()) {
       return this.accountCache$;
     } else {
       return this.http.get<Account>(ACCOUNT_API + "/get").pipe(map(
@@ -69,7 +72,11 @@ export class AuthService {
     this.accountCache.next(null);
   }
 
-  register(register: UserRegister): Observable<MessageResponse> {
+  register(register: RegisterRequest): Observable<MessageResponse> {
     return this.http.post(AUTH_API + '/register', register, httpOptions)
+  }
+
+  requestPasswordReset(requestPasswordReset: RequestPasswordReset): Observable<MessageResponse> {
+    return this.http.put(AUTH_API + '/request-password-reset', requestPasswordReset, httpOptions)
   }
 }

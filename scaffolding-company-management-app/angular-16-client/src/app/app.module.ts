@@ -15,10 +15,11 @@ import {UserLoginComponent} from './components/account/login/user-login.componen
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from "ngx-toastr";
 import {UsersComponent} from './components/users/users.component';
-import {UpdatePopupComponent} from './components/update-popup/update-popup.component';
 import {CommonModule} from "@angular/common";
 import {httpInterceptorProviders} from "./helpers/auth.interceptor";
 import {NgxWebstorageModule} from "ngx-webstorage";
+import {PasswordResetComponent} from './components/account/password-reset/password-reset.component';
+import {InitPasswordResetComponent} from './components/account/init-password-reset/init-password-reset.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {NgxWebstorageModule} from "ngx-webstorage";
     UserRegisterComponent,
     UserLoginComponent,
     UsersComponent,
-    UpdatePopupComponent,
+    PasswordResetComponent,
+    InitPasswordResetComponent,
 
   ],
   imports: [
@@ -43,7 +45,7 @@ import {NgxWebstorageModule} from "ngx-webstorage";
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     CommonModule,
-    NgxWebstorageModule.forRoot({ prefix: 'ja', separator: '-' }),
+    NgxWebstorageModule.forRoot({prefix: 'ja', separator: '-'}),
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

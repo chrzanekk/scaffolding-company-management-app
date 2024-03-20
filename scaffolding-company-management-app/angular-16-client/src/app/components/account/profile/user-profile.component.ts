@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Account} from "../../../models/account.model";
 import {FormBuilder, Validators} from '@angular/forms';
-import {Eroles} from "../../../models/enums/eroles.string";
 import {AuthService} from "../../../services/account/auth.service";
 import {Observable} from "rxjs";
 
@@ -13,8 +12,6 @@ import {Observable} from "rxjs";
 })
 export class ProfileComponent implements OnInit {
   accountCache$: Observable<Account | null>
-  success = false;
-  authorities?: IterableIterator<Eroles> | undefined;
   accountForm = this.fb.group({
     username: ['', [Validators.required,
       Validators.minLength(4),
@@ -26,12 +23,9 @@ export class ProfileComponent implements OnInit {
 
   constructor(private authService: AuthService, private fb: FormBuilder) {
     this.accountCache$ = authService.accountCache$;
-    // debugger;
   }
 
   ngOnInit(): void {
 
   }
-
-  protected readonly JSON = JSON;
 }
