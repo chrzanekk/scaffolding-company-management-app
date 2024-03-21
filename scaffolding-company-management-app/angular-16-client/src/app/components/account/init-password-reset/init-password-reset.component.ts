@@ -48,8 +48,6 @@ export class InitPasswordResetComponent implements OnInit{
     }
   }
 
-
-
   resetForm() {
     this.submitted = false;
     this.initResetPasswordForm.reset();
