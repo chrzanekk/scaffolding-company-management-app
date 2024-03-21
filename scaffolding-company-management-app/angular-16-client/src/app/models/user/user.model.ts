@@ -1,4 +1,4 @@
-import {Eroles} from "../enums/eroles.string";
+import {Eroles} from "../../shared/constans/eroles.string";
 
 export class User {
   id?: number;

@@ -3,30 +3,26 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {FuelTypeAddComponent} from './components/fuel-type-add/fuel-type-add.component';
-import {FuelTypeDetailsComponent} from './components/fuel-type-details/fuel-type-details.component';
-import {FuelTypeListComponent} from './components/fuel-type-list/fuel-type-list.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from "@angular/common/http";
-import {HomeComponent} from './components/home/home.component';
-import {ProfileComponent} from './components/account/profile/user-profile.component';
-import {UserRegisterComponent} from './components/account/register/user-register.component';
-import {UserLoginComponent} from './components/account/login/user-login.component';
+import {HomeComponent} from './home/home.component';
+import {ProfileComponent} from './account/profile/user-profile.component';
+import {UserRegisterComponent} from './account/register/user-register.component';
+import {UserLoginComponent} from './account/login/user-login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from "ngx-toastr";
-import {UsersComponent} from './components/users/users.component';
+import {UsersComponent} from './entities/users/users.component';
 import {CommonModule} from "@angular/common";
 import {httpInterceptorProviders} from "./helpers/auth.interceptor";
+import {PasswordResetComponent} from './account/password-reset/password-reset.component';
+import {InitPasswordResetComponent} from './account/init-password-reset/init-password-reset.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {NgxWebstorageModule} from "ngx-webstorage";
-import {PasswordResetComponent} from './components/account/password-reset/password-reset.component';
-import {InitPasswordResetComponent} from './components/account/init-password-reset/init-password-reset.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FuelTypeAddComponent,
-    FuelTypeDetailsComponent,
-    FuelTypeListComponent,
     HomeComponent,
     ProfileComponent,
     UserRegisterComponent,
@@ -45,7 +41,9 @@ import {InitPasswordResetComponent} from './components/account/init-password-res
     ReactiveFormsModule,
     ToastrModule.forRoot(),
     CommonModule,
-    NgxWebstorageModule.forRoot({prefix: 'ja', separator: '-'}),
+    NgxWebstorageModule.forRoot({prefix: '', separator: '-'}),
+    NgbModule,
+    FontAwesomeModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
