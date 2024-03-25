@@ -69,7 +69,7 @@ export class AuthService {
   }
 
 
-
+//todo need to implement method to check if user is authenticated?
 
   clearAccount(): void {
     this.accountCache.next(null);

@@ -1,5 +1,6 @@
-export const BASE_URL = 'http://localhost:8080/api/';
-import {environment} from "src/environments/environment";
+import {environment} from "../environments/environments";
+
+export const BASE_URL = environment.SERVER_API_URL;
 
 export const VERSION = environment.VERSION;
 export const DEBUG_INFO_ENABLED = environment.DEBUG_INFO_ENABLED;

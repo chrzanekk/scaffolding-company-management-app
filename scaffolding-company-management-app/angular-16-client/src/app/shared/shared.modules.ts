@@ -3,7 +3,6 @@ import {RouterModule} from '@angular/router';
 import {ToastrModule} from 'ngx-toastr';
 import {SharedLibsModule} from './shared-libs.module';
 import {UtilModule} from './util/util.module';
-import {HasAnyAuthorityDirective} from './auth/has-any-authority.directive';
 
 @NgModule({
   imports: [
@@ -16,11 +15,11 @@ import {HasAnyAuthorityDirective} from './auth/has-any-authority.directive';
     UtilModule
   ],
   declarations: [
-    HasAnyAuthorityDirective,
+    // HasAnyAuthorityDirective,
   ],
   exports: [
     SharedLibsModule,
-    HasAnyAuthorityDirective,
+    // HasAnyAuthorityDirective,
   ],
 })
 export class SharedModule {}

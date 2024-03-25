@@ -1,0 +1,39 @@
+<!--<div id="app">-->
+<!--  <nav class="navbar navbar-expand-sm navbar-dark bg-primary">-->
+<!--    <div class="container-fluid">-->
+
+<!--      <a href="/angular-16-client/src" class="navbar-brand" routerLink="">Scaffolding Management App</a>-->
+
+<!--      <ul class="navbar-nav mr-auto" routerLinkActive="active">-->
+<!--        <li class="nav-item">-->
+<!--          <a href="/angular-16-client/src" class="nav-link" routerLink="">Strona główna</a>-->
+<!--      </ul>-->
+<!--      <ul class="navbar-nav mr-right" routerLinkActive="active" *ngIf="!(accountCache$|async) as account">-->
+<!--        <li class="nav-item" >-->
+<!--          <a href="/register" class="nav-link" routerLink="register">Rejestracja</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a href="/login" class="nav-link" routerLink="login">Logowanie </a>-->
+<!--        </li>-->
+<!--      </ul>-->
+
+<!--      <ul class="navbar-nav ml-auto" *ngIf="(accountCache$|async) as account">-->
+<!--        <li class="nav-item">-->
+<!--          <a href="/profile" class="nav-link" routerLink="profile">Zalogowany: [{{ account.username }}]</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a href class="nav-link" (click)="logout()">Wyloguj</a>-->
+<!--        </li>-->
+<!--      </ul>-->
+
+<!--    </div>-->
+<!--  </nav>-->
+<!--</div>-->
+
+<div>
+  <router-outlet name="navbar"></router-outlet>
+</div>
+
+<div class="content" style="width: auto; display: block;" role="main">
+  <router-outlet></router-outlet>
+</div>
