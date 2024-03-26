@@ -19,7 +19,7 @@ const LAYOUT_ROUTES = [navbarRoute];
       //   loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
       // },
       {
-        path: '',
+        path: 'account',
         loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
       },
       ...LAYOUT_ROUTES,
