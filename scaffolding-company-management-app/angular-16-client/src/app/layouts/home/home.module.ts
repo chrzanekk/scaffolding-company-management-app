@@ -3,11 +3,11 @@ import {RouterModule} from '@angular/router';
 
 import {HOME_ROUTE} from './home.route';
 import {HomeComponent} from './home.component';
-import {SharedModule} from "../shared/shared.modules";
+import {SharedModule} from "../../shared/shared.modules";
 
 @NgModule({
   imports: [SharedModule, RouterModule.forChild([HOME_ROUTE])],
-  declarations: [HomeComponent],
+  declarations: [HomeComponent]
 })
 export class HomeModule {
 }

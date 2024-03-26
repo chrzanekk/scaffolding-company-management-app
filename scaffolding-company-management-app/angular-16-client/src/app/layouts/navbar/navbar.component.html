@@ -2,24 +2,24 @@
   <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
     <div class="container-fluid">
 
-      <a href="/" class="navbar-brand" routerLink="">Scaffolding Management App</a>
+      <a class="navbar-brand" routerLink="/">Scaffolding Management App</a>
 
       <ul class="navbar-nav mr-auto" routerLinkActive="active">
         <li class="nav-item">
-          <a href="/" class="nav-link" routerLink="">Strona główna</a>
+          <a class="nav-link" routerLink="/">Strona główna</a>
       </ul>
       <ul class="navbar-nav mr-right" routerLinkActive="active" *ngIf="!(accountCache$|async) as account">
         <li class="nav-item" >
-          <a href="/register" class="nav-link" routerLink="/register">Rejestracja</a>
+          <a class="nav-link" routerLink="/register">Rejestracja</a>
         </li>
         <li class="nav-item">
-          <a href="/login" class="nav-link" routerLink="/login">Logowanie </a>
+          <a class="nav-link" routerLink="/login">Logowanie </a>
         </li>
       </ul>
 
       <ul class="navbar-nav ml-auto" *ngIf="(accountCache$|async) as account">
         <li class="nav-item">
-          <a href="/profile" class="nav-link" routerLink="/profile">Zalogowany: [{{ account.username }}]</a>
+          <a class="nav-link" routerLink="/profile">Zalogowany: [{{ account.username }}]</a>
         </li>
         <li class="nav-item">
           <a href class="nav-link" (click)="logout()">Wyloguj</a>

@@ -11,7 +11,7 @@ import {CommonModule} from "@angular/common";
 import {httpInterceptorProviders} from "./helpers/auth.interceptor";
 import {NgxWebstorageModule} from "ngx-webstorage";
 import {CoreModule} from "./core/core.module";
-import {HomeModule} from "./home/home.module";
+import {HomeModule} from "./layouts/home/home.module";
 import {SharedModule} from "./shared/shared.modules";
 import {NavbarComponent} from "./layouts/navbar/navbar.component";
 

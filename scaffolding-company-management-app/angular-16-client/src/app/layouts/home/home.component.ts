@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from "../services/user.service";
+import {UserService} from "../../services/user.service";
 import {Observable} from "rxjs";
-import {Account} from "../core/account/account.model";
-import {AuthService} from "../account/auth.service";
-import {Eroles} from "../shared/constans/eroles.string";
+import {Account} from "../../core/account/account.model";
+import {AuthService} from "../../account/auth.service";
+import {Eroles} from "../../shared/constans/eroles.string";
 
 @Component({
   selector: 'app-home',

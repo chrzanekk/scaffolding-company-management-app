@@ -8,7 +8,7 @@ import {Account} from "../../core/account/account.model";
 
 
 @Component({
-  selector: 'jhi-navbar',
+  selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['navbar.css'],
 })
