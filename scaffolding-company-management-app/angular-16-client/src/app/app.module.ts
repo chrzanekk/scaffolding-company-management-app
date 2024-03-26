@@ -12,11 +12,13 @@ import {CoreModule} from "./core/core.module";
 import {HomeModule} from "./layouts/home/home.module";
 import {SharedModule} from "./shared/shared.modules";
 import {NavbarComponent} from "./layouts/navbar/navbar.component";
+import {FooterComponent} from "./layouts/footer/footer.component";
 
 @NgModule({
   declarations: [
     NavbarComponent,
-    MainComponent
+    MainComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
