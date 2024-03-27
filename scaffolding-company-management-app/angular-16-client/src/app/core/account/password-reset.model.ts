@@ -1,10 +1,13 @@
 export interface IPasswordReset {
+  token?: string;
   password?: string;
   confirmPassword?: string;
 }
 
 export class PasswordReset implements IPasswordReset {
-  constructor(password?: string,
-              confirmPassword?: string) {
+  constructor(
+    token?: string,
+    password?: string,
+    confirmPassword?: string) {
   }
 }

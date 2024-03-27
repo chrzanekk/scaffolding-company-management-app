@@ -35,7 +35,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         log.debug("Request to save new password.");
         UserDTO userDTO = userService.getUser(passwordResetTokenDTO.getEmail());
         UserDTO updatedUserDTO =
-                UserDTO.builder(userDTO).password(encoder.encode(request.getNewPasswordHash())).build();
+                UserDTO.builder(userDTO).password(encoder.encode(request.password())).build();
         userService.save(updatedUserDTO);
         passwordResetTokenService.update(PasswordResetTokenDTO.builder(passwordResetTokenDTO)
                 .confirmDate(LocalDateTime.now()).build());

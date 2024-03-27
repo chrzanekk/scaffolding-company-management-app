@@ -150,12 +150,11 @@ public class UserAuthController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/reset-password")
-    public ResponseEntity<?> newPasswordPut(@RequestParam("token") String token,
-                                            @RequestBody NewPasswordPutRequest request) {
-        log.debug("REST request to set new password by token: {}", token);
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> newPasswordPut(@RequestBody NewPasswordPutRequest request) {
+        log.debug("REST request to set new password by token: {}", request.token());
         validatePasswordMatch(request);
-        PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.get(token);
+        PasswordResetTokenDTO passwordResetTokenDTO = passwordResetTokenService.get(request.token());
 
         TokenUtil.validateTokenTime(passwordResetTokenDTO.getCreateDate(), tokenValidityTimeInMinutes);
         MessageResponse response = passwordResetService.saveNewPassword(passwordResetTokenDTO, request);
@@ -172,7 +171,7 @@ public class UserAuthController {
     }
 
     private void validatePasswordMatch(NewPasswordPutRequest request) {
-        if (!request.getNewPasswordHash().equals(request.getNewPasswordHashRepeat())) {
+        if (!request.password().equals(request.confirmPassword())) {
             throw new PasswordNotMatchException("Password not match");
         }
     }

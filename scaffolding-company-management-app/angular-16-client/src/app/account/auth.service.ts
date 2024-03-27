@@ -7,6 +7,7 @@ import {Account} from "../core/account/account.model";
 import {RegisterRequest} from "../core/account/register.model";
 import {MessageResponse} from "../models/message-response.model";
 import {RequestPasswordReset} from "../core/account/request-password-reset.model";
+import {PasswordReset} from "../core/account/password-reset.model";
 
 type JwtToken = {
   id_token: string;
@@ -68,9 +69,6 @@ export class AuthService {
     }
   }
 
-
-//todo need to implement method to check if user is authenticated?
-
   clearAccount(): void {
     this.accountCache.next(null);
   }
@@ -79,7 +77,12 @@ export class AuthService {
     return this.http.post(AUTH_API + '/register', register, httpOptions)
   }
 
-  requestPasswordReset(requestPasswordReset: RequestPasswordReset): Observable<MessageResponse> {
+  initPasswordReset(requestPasswordReset: RequestPasswordReset): Observable<MessageResponse> {
     return this.http.put(AUTH_API + '/request-password-reset', requestPasswordReset, httpOptions)
+  }
+
+  finishPasswordReset(passwordReset: PasswordReset): Observable<MessageResponse> {
+    debugger;
+    return this.http.put(AUTH_API + '/reset-password',passwordReset)
   }
 }

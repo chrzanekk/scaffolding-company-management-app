@@ -44,7 +44,7 @@ export class InitPasswordResetComponent implements OnInit {
       return;
     } else {
       const initResetPassword = this.createFromForm();
-      this.authService.requestPasswordReset(initResetPassword).subscribe({
+      this.authService.initPasswordReset(initResetPassword).subscribe({
         next: () => {
           this.toastr.success('Prośba o zresetowanie hasła została wysłana.')
           this.router.navigate([''])

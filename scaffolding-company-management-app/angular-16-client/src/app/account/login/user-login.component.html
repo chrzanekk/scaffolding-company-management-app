@@ -33,17 +33,24 @@
                 <div *ngIf="f['password'].errors?.['required']">Hasło jest wymagane</div>
               </div>
             </div>
-
+            <div class="ButtonContainer">
+              <button
+                type="submit"
+                class="btn btn-outline-primary">Zaloguj
+            </button>
             <button
-              type="submit"
-              class="btn btn-primary">Zaloguj
+              type="button"
+              (click)="requestResetPassword()"
+              class="btn btn-outline-secondary">Zresetuj hasło
             </button>
             <button
               type="button"
               (click)="resetForm()"
-              class="btn btn-warning float-right"
-            >Wyczyść
+              class="btn btn-outline-warning">Wyczyść
             </button>
+            </div>
+
+
             <div class="form-group">
               <div *ngIf="f.submitted && isLoginFailed" class="alert alert-danger" role="alert">
                 Login failed: {{ errorMessage }}

@@ -82,7 +82,7 @@ export class UserLoginComponent implements OnInit {
   }
 
   requestResetPassword() {
-    this.router.navigate(['/init-password-reset'])
+    this.router.navigate(['account/init-password-reset'])
   }
 
 }
