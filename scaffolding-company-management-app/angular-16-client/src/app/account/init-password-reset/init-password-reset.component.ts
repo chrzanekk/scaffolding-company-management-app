@@ -10,8 +10,10 @@ import {IRequestPasswordReset, RequestPasswordReset} from "../../core/account/re
   templateUrl: './init-password-reset.component.html',
   styleUrls: ['./init-password-reset.component.css']
 })
-export class InitPasswordResetComponent implements OnInit{
+export class InitPasswordResetComponent implements OnInit {
   submitted = false;
+  emailCheckFailed = false;
+  errorMessage = '';
   initResetPasswordForm: FormGroup = new FormGroup({
     email: new FormControl('')
   });
@@ -21,30 +23,39 @@ export class InitPasswordResetComponent implements OnInit{
               private toastr: ToastrService,
               private authService: AuthService,
               private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.initResetPasswordForm = this.builder.group({
-      email: this.builder.control('',[
+      email: this.builder.control('', [
         Validators.required,
         Validators.email])
     });
   }
 
-  get f(): {[key: string]: AbstractControl} {
+  get f(): { [key: string]: AbstractControl } {
     return this.initResetPasswordForm.controls;
   }
 
   processInitPasswordReset() {
     this.submitted = true;
-    if(this.initResetPasswordForm.invalid) {
+    if (this.initResetPasswordForm.invalid) {
       return;
     } else {
       const initResetPassword = this.createFromForm();
-      this.authService.requestPasswordReset(initResetPassword).subscribe(() => {
-        this.toastr.success('Prośba o zresetowanie hasła została wysłana.')
-        this.router.navigate([''])
-      })
+      this.authService.requestPasswordReset(initResetPassword).subscribe({
+        next: () => {
+          this.toastr.success('Prośba o zresetowanie hasła została wysłana.')
+          this.router.navigate([''])
+          this.emailCheckFailed = false;
+        },
+        error: (err: { error: { message: string; }; }) => {
+          this.errorMessage = err.error.message;
+          this.toastr.error('Błąd resetowania: ' + err.error.message)
+          this.emailCheckFailed = true;
+        }
+      });
     }
   }
 
