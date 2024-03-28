@@ -8,13 +8,14 @@ import {RegisterRequest} from "../core/account/register.model";
 import {MessageResponse} from "../models/message-response.model";
 import {RequestPasswordReset} from "../core/account/request-password-reset.model";
 import {PasswordReset} from "../core/account/password-reset.model";
+import {SERVER_API_URL} from "../app.constants";
 
 type JwtToken = {
   id_token: string;
 };
-const URL = 'http://localhost:8080/api';
-const AUTH_API = URL + '/auth';
-const ACCOUNT_API = URL + '/account'
+
+const AUTH_API = SERVER_API_URL + '/auth';
+const ACCOUNT_API = SERVER_API_URL + '/account'
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -83,6 +84,6 @@ export class AuthService {
 
   finishPasswordReset(passwordReset: PasswordReset): Observable<MessageResponse> {
     debugger;
-    return this.http.put(AUTH_API + '/reset-password',passwordReset)
+    return this.http.put(AUTH_API + '/reset-password', passwordReset)
   }
 }
