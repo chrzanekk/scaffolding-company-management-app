@@ -67,13 +67,15 @@ company:
   contactMailto: mailto:test@test.com
 
 platform:
-  url: http://localhost:8080
+  url: http://localhost
+  backendPort: 8080
+  frontendPort: 4200
   name:
     front: Scaffolding App
     panel: Scaffolding App
   replyToEmail: test@test.pl
   fromEmail: Scaffolding App / LocalHost <test@test.pl>
-tokenValidityTimeInMinutes: 15
+tokenValidityTimeInMinutes: 30
 logo:
   frontPath: /img/logos/logorch-1-128.png
   panelPath: /img/logos/logorch-1-128.png

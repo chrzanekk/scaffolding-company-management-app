@@ -14,13 +14,15 @@
       <strong>Roles:</strong>
       <ul>
         <li *ngFor="let role of account.roles">
-          {{role}}
+          {{ role }}
         </li>
       </ul>
     </div>
-
-    <ng-template #loggedOut>
-      <h2>Musisz się zalogować.</h2>
-    </ng-template>
   </div>
+
+
+  <ng-template #loggedOut>
+    <h2>Musisz się zalogować.</h2>
+  </ng-template>
+
 </div>

@@ -12,6 +12,7 @@ import {Observable} from "rxjs";
 })
 export class ProfileComponent implements OnInit {
   accountCache$: Observable<Account | null>
+  authenticated = false;
   accountForm = this.fb.group({
     username: ['', [Validators.required,
       Validators.minLength(4),
@@ -26,6 +27,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.authenticated = this.authService.isAuthenticated();
   }
 }

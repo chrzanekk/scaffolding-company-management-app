@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SERVER_API_URL} from "../app.constants";
+import {SERVER_URL} from "../app.constants";
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {User} from "../models/user/user.model";
@@ -7,14 +7,14 @@ import {User} from "../models/user/user.model";
 type EntityResponseType = HttpResponse<User>
 type EntityArrayResponseType = HttpResponse<User[]>
 
-const API_TEST_URL = SERVER_API_URL + '/api/test/';
+const API_TEST_URL = SERVER_URL + '/api/test/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  public resourceUrl = SERVER_API_URL + '/api/users'
+  public resourceUrl = SERVER_URL + '/api/users'
 
   constructor(private http: HttpClient) {
   }

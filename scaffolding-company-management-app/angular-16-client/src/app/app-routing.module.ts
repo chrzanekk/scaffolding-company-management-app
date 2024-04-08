@@ -23,7 +23,7 @@ const LAYOUT_ROUTES = [navbarRoute];
         loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
       },
       ...LAYOUT_ROUTES,
-    ]
+    ],{useHash: true}
   )],
   exports: [RouterModule]
 })

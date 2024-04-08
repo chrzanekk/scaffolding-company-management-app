@@ -8,14 +8,14 @@ import {RegisterRequest} from "../core/account/register.model";
 import {MessageResponse} from "../models/message-response.model";
 import {RequestPasswordReset} from "../core/account/request-password-reset.model";
 import {PasswordReset} from "../core/account/password-reset.model";
-import {SERVER_API_URL} from "../app.constants";
+import {SERVER_URL} from "../app.constants";
 
 type JwtToken = {
   id_token: string;
 };
 
-const AUTH_API = SERVER_API_URL + '/auth';
-const ACCOUNT_API = SERVER_API_URL + '/account'
+const AUTH_API = SERVER_URL + '/api/auth';
+const ACCOUNT_API = SERVER_URL + '/api/account'
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -26,6 +26,7 @@ const httpOptions = {
 })
 export class AuthService {
   private accountCache = new BehaviorSubject<Account | null>(null);
+  private authenticated = false;
   accountCache$: Observable<Account | null> = this.accountCache.asObservable();
 
   constructor(private http: HttpClient, private $localStorage: LocalStorageService, private $sessionStorage: SessionStorageService) {
@@ -45,7 +46,12 @@ export class AuthService {
     this.$localStorage.clear('authenticationToken');
     this.$sessionStorage.clear('authenticationToken');
     this.clearAccount();
+    this.authenticated = false;
     return true;
+  }
+
+  isAuthenticated(): boolean {
+    return this.authenticated;
   }
 
   getToken(): string {
@@ -54,6 +60,7 @@ export class AuthService {
 
   private authenticateSuccess(response: JwtToken): void {
     const jwt = response.id_token;
+    this.authenticated = true;
     this.$localStorage.store('authenticationToken', jwt);
   }
 
@@ -83,7 +90,6 @@ export class AuthService {
   }
 
   finishPasswordReset(passwordReset: PasswordReset): Observable<MessageResponse> {
-    debugger;
     return this.http.put(AUTH_API + '/reset-password', passwordReset)
   }
 }
