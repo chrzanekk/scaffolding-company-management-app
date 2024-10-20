@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.com.chrzanowski.scma.config.SecurityProblemSupport;
-import pl.com.chrzanowski.scma.domain.enumeration.ERole;
 import pl.com.chrzanowski.scma.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.scma.security.service.UserDetailsServiceImpl;
 
@@ -87,12 +86,14 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test//all").permitAll()
-                        .requestMatchers("/api/test/user").hasAnyAuthority(ERole.ROLE_USER.getRoleName())
-                        .requestMatchers("/api/test/mod").hasAnyAuthority(ERole.ROLE_MODERATOR.getRoleName())
-                        .requestMatchers("/api/test/admin").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName())
-                        .requestMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(), ERole.ROLE_USER.getRoleName())
-                        .requestMatchers("/api/account/**").authenticated()
-                ).build();
+                                //todo this is only fod tests - fixed later
+                                .requestMatchers("/api/**").permitAll()
+//                        .requestMatchers("/api/test/user").hasAnyAuthority(ERole.ROLE_USER.getRoleName())
+//                        .requestMatchers("/api/test/mod").hasAnyAuthority(ERole.ROLE_MODERATOR.getRoleName())
+//                        .requestMatchers("/api/test/admin").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName())
+//                        .requestMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(), ERole.ROLE_USER.getRoleName())
+//                        .requestMatchers("/api/account/**").authenticated()
+                );
 
         http.authenticationProvider(authenticationProvider());
 
